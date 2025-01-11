@@ -27,13 +27,15 @@ public abstract class Win32AutoscaleTestBase {
 
 	@BeforeEach
 	public void setUpTest() {
-		display = Display.getDefault();
-		display.setRescalingAtRuntime(true);
+		Display.getDefault().dispose();
+		DPIUtil.setMonitorSpecificScaling(true);
+		display = new Display();
 		shell = new Shell(display);
 	}
 
 	@AfterEach
 	public void tearDownTest() {
+		DPIUtil.setMonitorSpecificScaling(false);
 		if (shell != null) {
 			shell.dispose();
 		}

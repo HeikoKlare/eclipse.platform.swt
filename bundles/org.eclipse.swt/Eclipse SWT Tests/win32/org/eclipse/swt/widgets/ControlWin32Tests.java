@@ -54,7 +54,10 @@ class ControlWin32Tests extends Win32AutoscaleTestBase {
 
 	@Test
 	public void testDoNotScaleFontCorrectlyInNoAutoScaleSzenario() {
-		display.setRescalingAtRuntime(false);
+		display.dispose();
+		DPIUtil.setMonitorSpecificScaling(false);
+		Display display = new Display();
+		shell = new Shell(display);
 		assertFalse("Autoscale property is not set to false", display.isRescalingAtRuntime());
 
 		int scalingFactor = 2;
