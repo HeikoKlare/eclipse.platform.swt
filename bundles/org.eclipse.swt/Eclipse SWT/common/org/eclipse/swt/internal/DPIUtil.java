@@ -42,9 +42,8 @@ public class DPIUtil {
 	private static int deviceZoom = 100;
 	private static int nativeDeviceZoom = 100;
 
-	private static enum AutoScaleMethod { AUTO, NEAREST, SMOOTH }
-	private static AutoScaleMethod autoScaleMethodSetting = AutoScaleMethod.AUTO;
-	private static AutoScaleMethod autoScaleMethod = AutoScaleMethod.NEAREST;
+	private static enum AutoScaleMethod { NEAREST, SMOOTH }
+	private static AutoScaleMethod autoScaleMethod = AutoScaleMethod.SMOOTH;
 
 	private static String autoScaleValue;
 	private static boolean useCairoAutoScale = false;
@@ -79,10 +78,7 @@ public class DPIUtil {
 	 * <li>"nearest": nearest-neighbor interpolation, may look jagged</li>
 	 * <li>"smooth": smooth edges, may look blurry</li>
 	 * </ul>
-	 * The current default is to use "nearest", except on
-	 * GTK when the deviceZoom is not an integer multiple of 100%.
-	 * The smooth strategy currently doesn't work on Win32 and Cocoa, see
-	 * <a href="https://bugs.eclipse.org/493455">bug 493455</a>.
+	 * The current default is to use "smooth".
 	 */
 	private static final String SWT_AUTOSCALE_METHOD = "swt.autoScale.method";
 
@@ -97,15 +93,16 @@ public class DPIUtil {
 	 * true on GTK or cocoa will be ignored.
 	 */
 	private static final String SWT_AUTOSCALE_UPDATE_ON_RUNTIME = "swt.autoScale.updateOnRuntime";
+
 	static {
 		autoScaleValue = System.getProperty (SWT_AUTOSCALE);
 
 		String value = System.getProperty (SWT_AUTOSCALE_METHOD);
 		if (value != null) {
 			if (AutoScaleMethod.NEAREST.name().equalsIgnoreCase(value)) {
-				autoScaleMethod = autoScaleMethodSetting = AutoScaleMethod.NEAREST;
+				autoScaleMethod = AutoScaleMethod.NEAREST;
 			} else if (AutoScaleMethod.SMOOTH.name().equalsIgnoreCase(value)) {
-				autoScaleMethod = autoScaleMethodSetting = AutoScaleMethod.SMOOTH;
+				autoScaleMethod = AutoScaleMethod.SMOOTH;
 			}
 		}
 	}
@@ -604,13 +601,6 @@ public static void setDeviceZoom (int nativeDeviceZoom) {
 
 	DPIUtil.deviceZoom = deviceZoom;
 	System.setProperty("org.eclipse.swt.internal.deviceZoom", Integer.toString(deviceZoom));
-	if (deviceZoom != 100 && autoScaleMethodSetting == AutoScaleMethod.AUTO) {
-		if (deviceZoom / 100 * 100 == deviceZoom || !"gtk".equals(SWT.getPlatform())) {
-			autoScaleMethod = AutoScaleMethod.NEAREST;
-		} else {
-			autoScaleMethod = AutoScaleMethod.SMOOTH;
-		}
-	}
 }
 
 public static void setUseCairoAutoScale (boolean cairoAutoScale) {
