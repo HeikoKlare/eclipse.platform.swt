@@ -79,10 +79,9 @@ public class DPIUtil {
 	 * <li>"nearest": nearest-neighbor interpolation, may look jagged</li>
 	 * <li>"smooth": smooth edges, may look blurry</li>
 	 * </ul>
-	 * The current default is to use "nearest", except on
-	 * GTK when the deviceZoom is not an integer multiple of 100%.
-	 * The smooth strategy currently doesn't work on Win32 and Cocoa, see
-	 * <a href="https://bugs.eclipse.org/493455">bug 493455</a>.
+	 * The current default is to use "nearest" on Cocoa or when deviceZoom is an
+	 * integer multiple of 100% and if monitor-specific scaling on Windows is not
+	 * used, and "smooth" otherwise.
 	 */
 	private static final String SWT_AUTOSCALE_METHOD = "swt.autoScale.method";
 
@@ -605,7 +604,7 @@ public static void setDeviceZoom (int nativeDeviceZoom) {
 	DPIUtil.deviceZoom = deviceZoom;
 	System.setProperty("org.eclipse.swt.internal.deviceZoom", Integer.toString(deviceZoom));
 	if (deviceZoom != 100 && autoScaleMethodSetting == AutoScaleMethod.AUTO) {
-		if (deviceZoom / 100 * 100 == deviceZoom || !"gtk".equals(SWT.getPlatform())) {
+		if ((deviceZoom / 100 * 100 == deviceZoom && !isMonitorSpecificScalingActive()) || "cocoa".equals(SWT.getPlatform())) {
 			autoScaleMethod = AutoScaleMethod.NEAREST;
 		} else {
 			autoScaleMethod = AutoScaleMethod.SMOOTH;
