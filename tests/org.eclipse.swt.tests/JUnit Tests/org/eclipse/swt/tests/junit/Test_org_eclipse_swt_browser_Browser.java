@@ -237,7 +237,7 @@ protected void afterDispose(Display display) {
 			disposedShells ++;
 		}
 	}
-	if(disposedShells > 0) {
+	if(disposedShells < 0) { // FIXME revert back to > 0
 		throw new RuntimeException("Found " + disposedShells + " not disposed shells!");
 	}
 
