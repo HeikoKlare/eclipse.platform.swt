@@ -31,10 +31,10 @@ import java.util.ResourceBundle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.NativeDragSource;
+import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.swt.dnd.NativeDropTarget;
+import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -466,8 +466,8 @@ public class FileViewer {
 	 *
 	 * @return the DragSource for the tree
 	 */
-	private NativeDragSource createTreeDragSource(final Tree tree){
-		NativeDragSource dragSource = new NativeDragSource(tree, DND.DROP_MOVE | DND.DROP_COPY);
+	private DragSource createTreeDragSource(final Tree tree){
+		DragSource dragSource = new DragSource(tree, DND.DROP_MOVE | DND.DROP_COPY);
 		dragSource.setTransfer(FileTransfer.getInstance());
 		dragSource.addDragListener(new DragSourceListener() {
 			TreeItem[] dndSelection = null;
@@ -510,8 +510,8 @@ public class FileViewer {
 	 *
 	 * @return the DropTarget for the tree
 	 */
-	private NativeDropTarget createTreeDropTarget(final Tree tree) {
-		NativeDropTarget dropTarget = new NativeDropTarget(tree, DND.DROP_MOVE | DND.DROP_COPY);
+	private DropTarget createTreeDropTarget(final Tree tree) {
+		DropTarget dropTarget = new DropTarget(tree, DND.DROP_MOVE | DND.DROP_COPY);
 		dropTarget.setTransfer(FileTransfer.getInstance());
 		dropTarget.addDropListener(new DropTargetAdapter() {
 			@Override
@@ -777,8 +777,8 @@ public class FileViewer {
 	 *
 	 * @return the DragSource for the table
 	 */
-	private NativeDragSource createTableDragSource(final Table table) {
-		NativeDragSource dragSource = new NativeDragSource(table, DND.DROP_MOVE | DND.DROP_COPY);
+	private DragSource createTableDragSource(final Table table) {
+		DragSource dragSource = new DragSource(table, DND.DROP_MOVE | DND.DROP_COPY);
 		dragSource.setTransfer(FileTransfer.getInstance());
 		dragSource.addDragListener(new DragSourceListener() {
 			TableItem[] dndSelection = null;
@@ -819,8 +819,8 @@ public class FileViewer {
 	 *
 	 * @return the DropTarget for the table
 	 */
-	private NativeDropTarget createTableDropTarget(final Table table){
-		NativeDropTarget dropTarget = new NativeDropTarget(table, DND.DROP_MOVE | DND.DROP_COPY);
+	private DropTarget createTableDropTarget(final Table table){
+		DropTarget dropTarget = new DropTarget(table, DND.DROP_MOVE | DND.DROP_COPY);
 		dropTarget.setTransfer(FileTransfer.getInstance() );
 		dropTarget.addDropListener(new DropTargetAdapter() {
 			@Override
