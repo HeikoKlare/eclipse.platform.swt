@@ -14,6 +14,8 @@
 package org.eclipse.swt.widgets;
 
 
+import java.util.*;
+
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.internal.*;
@@ -47,7 +49,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeCoolBar extends NativeComposite {
+public abstract class NativeCoolBar extends NativeComposite implements ICoolBar {
 	NativeCoolItem [] items;
 	NativeCoolItem [] originalItems;
 	boolean locked;
@@ -137,7 +139,7 @@ static int checkStyle (int style) {
 }
 
 @Override
-protected void checkSubclass () {
+public void checkSubclass () {
 	if (!isValidSubclass ()) error (SWT.ERROR_INVALID_SUBCLASS);
 }
 
@@ -263,7 +265,7 @@ void createItem (NativeCoolItem item, int index) {
 	* new item.
 	*/
 	if (index == 0 && count > 0) {
-		getItem (0).setWrap (false);
+		getNativeItem (0).setWrap (false);
 	}
 
 	/* Insert the item */
@@ -330,7 +332,7 @@ void destroyItem (NativeCoolItem item) {
 	NativeCoolItem nextItem = null;
 	if (item.getWrap ()) {
 		if (index + 1 < count) {
-			nextItem = getItem (index + 1);
+			nextItem = getNativeItem (index + 1);
 			ignoreResize = !nextItem.getWrap ();
 		}
 	}
@@ -434,7 +436,12 @@ int getMargin (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeCoolItem getItem (int index) {
+@Override
+public CoolItem getItem (int index) {
+	return getNativeItem(index).getWrapper();
+}
+
+private NativeCoolItem getNativeItem (int index) {
 	checkWidget ();
 	int count = (int)OS.SendMessage (handle, OS.RB_GETBANDCOUNT, 0, 0);
 	if (!(0 <= index && index < count)) error (SWT.ERROR_INVALID_RANGE);
@@ -455,6 +462,7 @@ public NativeCoolItem getItem (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getItemCount () {
 	checkWidget ();
 	return (int)OS.SendMessage (handle, OS.RB_GETBANDCOUNT, 0, 0);
@@ -481,6 +489,7 @@ public int getItemCount () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int [] getItemOrder () {
 	checkWidget ();
 	int count = (int)OS.SendMessage (handle, OS.RB_GETBANDCOUNT, 0, 0);
@@ -518,7 +527,12 @@ public int [] getItemOrder () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeCoolItem [] getItems () {
+@Override
+public CoolItem [] getItems () {
+	return Arrays.stream(getNativeItems()).map(NativeCoolItem::getWrapper).toArray(CoolItem[]::new);
+}
+
+private NativeCoolItem[] getNativeItems() {
 	checkWidget ();
 	int count = (int)OS.SendMessage (handle, OS.RB_GETBANDCOUNT, 0, 0);
 	NativeCoolItem [] result = new NativeCoolItem [count];
@@ -544,6 +558,7 @@ public NativeCoolItem [] getItems () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Point [] getItemSizes () {
 	checkWidget ();
 	Point [] sizes = getItemSizesInPixels();
@@ -618,6 +633,7 @@ boolean isLastItemOfRow (int index) {
  *
  * @since 2.0
  */
+@Override
 public boolean getLocked () {
 	checkWidget ();
 	return locked;
@@ -636,9 +652,10 @@ public boolean getLocked () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int [] getWrapIndices () {
 	checkWidget ();
-	NativeCoolItem [] items = getItems ();
+	NativeCoolItem [] items = getNativeItems ();
 	int [] indices = new int [items.length];
 	int count = 0;
 	for (int i=0; i<items.length; i++) {
@@ -667,11 +684,12 @@ public int [] getWrapIndices () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public int indexOf (NativeCoolItem item) {
+@Override
+public int indexOf (CoolItem item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (item.isDisposed()) error (SWT.ERROR_INVALID_ARGUMENT);
-	return (int)OS.SendMessage (handle, OS.RB_IDTOINDEX, item.id, 0);
+	return (int)OS.SendMessage (handle, OS.RB_IDTOINDEX, Widget.checkNative(item).id, 0);
 }
 
 void resizeToPreferredWidth (int index) {
@@ -804,6 +822,7 @@ void setItemColors (int foreColor, int backColor) {
  *    <li>ERROR_INVALID_ARGUMENT - if item order or sizes is not the same length as the number of items</li>
  * </ul>
  */
+@Override
 public void setItemLayout (int [] itemOrder, int [] wrapIndices, Point [] sizes) {
 	checkWidget ();
 	if (sizes == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -923,6 +942,7 @@ void setItemSizes (Point [] sizes) {
  *
  * @since 2.0
  */
+@Override
 public void setLocked (boolean locked) {
 	checkWidget ();
 	this.locked = locked;
@@ -956,6 +976,7 @@ public void setLocked (boolean locked) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setWrapIndices (int [] indices) {
 	checkWidget ();
 	if (indices == null) indices = new int [0];
@@ -966,7 +987,7 @@ public void setWrapIndices (int [] indices) {
 		}
 	}
 	setRedraw (false);
-	NativeCoolItem [] items = getItems ();
+	NativeCoolItem [] items = getNativeItems ();
 	for (int i=0; i<items.length; i++) {
 		NativeCoolItem item = items [i];
 		if (item.getWrap ()) {
@@ -1212,7 +1233,7 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	int[] indices = coolBar.getWrapIndices();
 	int[] itemOrder = coolBar.getItemOrder();
 
-	NativeCoolItem[] items = coolBar.getItems();
+	NativeCoolItem[] items = coolBar.getNativeItems();
 	for (int index = 0; index < sizes.length; index++) {
 		minSizes[index] = items[index].getMinimumSizeInPixels();
 		prefSizes[index] = items[index].getPreferredSizeInPixels();

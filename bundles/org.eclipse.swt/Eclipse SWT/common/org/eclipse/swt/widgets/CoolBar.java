@@ -14,8 +14,6 @@
 package org.eclipse.swt.widgets;
 
 
-import java.util.*;
-
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.*;
 
@@ -103,8 +101,7 @@ public CoolBar (Composite parent, int style) {
  * </ul>
  */
 public CoolItem getItem (int index) {
-	NativeCoolItem wrappedItem = wrappedCoolBar.getItem(index);
-	return wrappedItem != null ? wrappedItem.getWrapper() : null;
+	return wrappedCoolBar.getItem(index);
 }
 
 /**
@@ -163,7 +160,7 @@ public int [] getItemOrder () {
  * </ul>
  */
 public CoolItem [] getItems () {
-	return Arrays.stream(wrappedCoolBar.getItems()).map(NativeCoolItem::getWrapper).toArray(CoolItem[]::new);
+	return wrappedCoolBar.getItems();
 }
 
 /**
@@ -235,7 +232,7 @@ public int [] getWrapIndices () {
  * </ul>
  */
 public int indexOf (CoolItem item) {
-	return wrappedCoolBar.indexOf(checkNative(item));
+	return wrappedCoolBar.indexOf(item);
 }
 
 /**

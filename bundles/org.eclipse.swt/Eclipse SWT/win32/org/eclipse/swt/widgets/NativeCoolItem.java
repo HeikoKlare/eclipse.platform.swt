@@ -152,7 +152,7 @@ public void addSelectionListener(SelectionListener listener) {
 }
 
 @Override
-protected void checkSubclass () {
+public void checkSubclass () {
 	if (!isValidSubclass ()) error (SWT.ERROR_INVALID_SUBCLASS);
 }
 
@@ -191,7 +191,7 @@ public Point computeSize (int wHint, int hHint) {
 	return DPIUtil.scaleDown(computeSizeInPixels(wHint, hHint), zoom);
 }
 Point computeSizeInPixels (int wHint, int hHint) {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return new Point (0, 0);
 	int width = wHint, height = hHint;
 	if (wHint == SWT.DEFAULT) width = 32;
@@ -227,7 +227,7 @@ public Rectangle getBounds () {
 }
 
 Rectangle getBoundsInPixels () {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return new Rectangle (0, 0, 0, 0);
 	long hwnd = parent.handle;
 	RECT rect = new RECT ();
@@ -249,7 +249,7 @@ Rectangle getBoundsInPixels () {
 
 Rectangle getClientArea () {
 	checkWidget ();
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return new Rectangle (0, 0, 0, 0);
 	long hwnd = parent.handle;
 	RECT insetRect = new RECT ();
@@ -334,7 +334,7 @@ public void setControl (NativeControl control) {
 		if (control.isDisposed()) error (SWT.ERROR_INVALID_ARGUMENT);
 		if (control.parent != parent) error (SWT.ERROR_INVALID_PARENT);
 	}
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	if (this.control != null && this.control.isDisposed ()) {
 		this.control = null;
@@ -387,7 +387,7 @@ public Point getPreferredSize () {
 }
 
 Point getPreferredSizeInPixels () {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return new Point (0, 0);
 	long hwnd = parent.handle;
 	REBARBANDINFO rbBand = new REBARBANDINFO ();
@@ -419,7 +419,7 @@ public void setPreferredSize (int width, int height) {
 }
 
 void setPreferredSizeInPixels (int width, int height) {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	width = Math.max (0, width);
 	height = Math.max (0, height);
@@ -487,7 +487,7 @@ public Point getSize () {
 }
 
 Point getSizeInPixels() {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return new Point (0, 0);
 	long hwnd = parent.handle;
 	RECT rect = new RECT ();
@@ -530,7 +530,7 @@ public void setSize (int width, int height) {
 }
 
 void setSizeInPixels (int width, int height) {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	width = Math.max (0, width);
 	height = Math.max (0, height);
@@ -615,7 +615,7 @@ public Point getMinimumSize () {
 }
 
 Point getMinimumSizeInPixels () {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return new Point (0, 0);
 	long hwnd = parent.handle;
 	REBARBANDINFO rbBand = new REBARBANDINFO ();
@@ -649,7 +649,7 @@ public void setMinimumSize (int width, int height) {
 }
 
 void setMinimumSizeInPixels (int width, int height) {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	width = Math.max (0, width);
 	height = Math.max (0, height);
@@ -700,7 +700,7 @@ public void setMinimumSize (Point size) {
 }
 
 boolean getWrap() {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	long hwnd = parent.handle;
 	REBARBANDINFO rbBand = new REBARBANDINFO ();
 	rbBand.cbSize = REBARBANDINFO.sizeof;
@@ -710,7 +710,7 @@ boolean getWrap() {
 }
 
 void setWrap(boolean wrap) {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	long hwnd = parent.handle;
 	REBARBANDINFO rbBand = new REBARBANDINFO ();
 	rbBand.cbSize = REBARBANDINFO.sizeof;

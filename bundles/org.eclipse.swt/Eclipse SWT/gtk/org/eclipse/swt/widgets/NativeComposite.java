@@ -54,7 +54,7 @@ import org.eclipse.swt.internal.gtk4.*;
  * @see <a href="http://www.eclipse.org/swt/snippets/#composite">Composite snippets</a>
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  */
-public abstract class NativeComposite extends NativeScrollable {
+public abstract class NativeComposite extends NativeScrollable implements IComposite {
 	/**
 	 * the handle to the OS resource
 	 * (Warning: This field is platform dependent)
@@ -238,6 +238,7 @@ NativeControl [] _getTabList () {
  * @deprecated use {@link NativeComposite#layout(NativeControl[], int)} instead
  * @since 3.1
  */
+@Override
 @Deprecated
 public void changed (NativeControl[] changed) {
 	layout(changed, SWT.DEFER);
@@ -548,6 +549,7 @@ void deregister () {
  *
  * @since 3.6
  */
+@Override
 public void drawBackground (GC gc, int x, int y, int width, int height, int offsetX, int offsetY) {
 	checkWidget();
 	Rectangle rect = DPIUtil.autoScaleUp(new Rectangle (x, y, width, height));
@@ -743,6 +745,7 @@ boolean forceFocus (long focusHandle) {
  *
  * @since 3.2
  */
+@Override
 public int getBackgroundMode () {
 	checkWidget ();
 	return backgroundMode;
@@ -769,9 +772,10 @@ public int getBackgroundMode () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeControl [] getChildren () {
+@Override
+public Control [] getChildren () {
 	checkWidget();
-	return _getChildren ();
+	return Arrays.stream(_getChildren ()).map(NativeControl::getWrapper).toArray(Control[]::new);
 }
 
 int getChildrenCount () {
@@ -827,6 +831,7 @@ Rectangle getClientAreaInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Layout getLayout () {
 	checkWidget();
 	return layout;
@@ -848,6 +853,7 @@ public Layout getLayout () {
  *
  * @since 3.1
  */
+@Override
 public boolean getLayoutDeferred () {
 	checkWidget ();
 	return layoutCount > 0 ;
@@ -865,7 +871,8 @@ public boolean getLayoutDeferred () {
  *
  * @see #setTabList
  */
-public NativeControl [] getTabList () {
+@Override
+public Control [] getTabList () {
 	checkWidget ();
 	NativeControl [] tabList = _getTabList ();
 	if (tabList == null) {
@@ -882,7 +889,7 @@ public NativeControl [] getTabList () {
 			}
 		}
 	}
-	return tabList;
+	return Arrays.stream(tabList).map(NativeControl::getWrapper).toArray(Control[]::new);
 }
 
 @Override
@@ -1044,6 +1051,7 @@ long imHandle () {
  *
  * @since 3.1
  */
+@Override
 public boolean isLayoutDeferred () {
 	checkWidget ();
 	return findDeferredControl () != null;
@@ -1082,6 +1090,7 @@ boolean isTabGroup() {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void layout () {
 	checkWidget ();
 	layout (true);
@@ -1125,6 +1134,7 @@ public void layout () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void layout (boolean changed) {
 	checkWidget ();
 	if (layout == null) return;
@@ -1172,6 +1182,7 @@ public void layout (boolean changed) {
  *
  * @since 3.1
  */
+@Override
 public void layout (boolean changed, boolean all) {
 	checkWidget ();
 	if (layout == null && !all) return;
@@ -1214,6 +1225,7 @@ public void layout (boolean changed, boolean all) {
  *
  * @since 3.1
  */
+@Override
 public void layout (NativeControl [] changed) {
 	checkWidget ();
 	if (changed == null) error (SWT.ERROR_INVALID_ARGUMENT);
@@ -1278,6 +1290,7 @@ public void layout (NativeControl [] changed) {
  *
  * @since 3.6
  */
+@Override
 public void layout (NativeControl [] changed, int flags) {
 	checkWidget ();
 	if (changed != null) {
@@ -1620,6 +1633,7 @@ void resizeHandle (int width, int height) {
  *
  * @since 3.2
  */
+@Override
 public void setBackgroundMode (int mode) {
 	checkWidget ();
 	backgroundMode = mode;
@@ -1685,6 +1699,7 @@ public boolean setFocus () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setLayout (Layout layout) {
 	checkWidget();
 	this.layout = layout;
@@ -1712,6 +1727,7 @@ public void setLayout (Layout layout) {
  *
  * @since 3.1
  */
+@Override
 public void setLayoutDeferred (boolean defer) {
 	checkWidget();
 	if (!defer) {
@@ -1795,6 +1811,7 @@ boolean setTabItemFocus (boolean next) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setTabList (NativeControl [] tabList) {
 	checkWidget ();
 	if (tabList != null) {

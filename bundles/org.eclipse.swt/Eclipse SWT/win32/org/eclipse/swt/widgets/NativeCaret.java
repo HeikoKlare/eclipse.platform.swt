@@ -90,7 +90,7 @@ protected NativeCaret (NativeCanvas parent, int style) {
 void createWidget () {
 	isVisible = true;
 	if (parent.getCaret () == null) {
-		parent.setCaret (this);
+		parent.setCaret (this.getWrapper());
 	}
 }
 
@@ -315,7 +315,7 @@ void resizeIME () {
 	if (!OS.GetCaretPos (ptCurrentPos)) return;
 	long hwnd = parent.handle;
 	long hIMC = OS.ImmGetContext (hwnd);
-	NativeIME ime = parent.getIME ();
+	NativeIME ime = Widget.checkNative(parent.getIME ());
 	if (ime != null && ime.isInlineEnabled ()) {
 		Point size = getSizeInPixels ();
 		CANDIDATEFORM lpCandidate = new CANDIDATEFORM ();
