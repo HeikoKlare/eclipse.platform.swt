@@ -281,7 +281,7 @@ NativeTableItem _getItem (int index, boolean create, int count) {
 		if (index >= items.length) return null;
 		if ((style & SWT.VIRTUAL) == 0 || !create) return items [index];
 		if (items [index] != null) return items [index];
-		return items [index] = new NativeTableItem (this, SWT.NONE, -1, false);
+		return items [index] = new TableItem (this.wrap(), SWT.NONE, -1, false).getWrappedWidget();
 	} else {
 		if ((style & SWT.VIRTUAL) == 0 || !create) {
 			if (keyCount == 0) return null;
@@ -298,7 +298,7 @@ NativeTableItem _getItem (int index, boolean create, int count) {
 			//TODO - _checkGrow() doesn't return a value, check keys == null instead
 			if (_checkGrow (count)) {
 				if (items [index] != null) return items [index];
-				return items [index] = new NativeTableItem (this, SWT.NONE, -1, false);
+				return items [index] = new TableItem (this.wrap(), SWT.NONE, -1, false).getWrappedWidget();
 			}
 			keyIndex = -keyIndex - 1;
 			if (keyIndex < keyCount) {
@@ -310,7 +310,7 @@ NativeTableItem _getItem (int index, boolean create, int count) {
 		} else {
 			if (items [keyIndex] != null) return items [keyIndex];
 		}
-		return items [keyIndex] = new NativeTableItem (this, SWT.NONE, -1, false);
+		return items [keyIndex] = new TableItem (this.wrap(), SWT.NONE, -1, false).getWrappedWidget();
 	}
 }
 
@@ -4586,7 +4586,7 @@ public void setItemCount (int count) {
 		}
 	} else {
 		for (int i=itemCount; i<count; i++) {
-			new NativeTableItem (this, SWT.NONE, i, true);
+			new TableItem (this.wrap(), SWT.NONE, i, true).getWrappedWidget();
 		}
 	}
 	if (!isVirtual) setRedraw (true);

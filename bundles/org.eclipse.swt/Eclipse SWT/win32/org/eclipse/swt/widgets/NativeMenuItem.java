@@ -1075,7 +1075,7 @@ public void setToolTipText (String toolTip) {
 			|| (itemToolTip != null && !itemToolTip.isDisposed() && toolTip.equals(itemToolTip.getMessage()))) return;
 
 	if (itemToolTip != null) itemToolTip.dispose();
-	itemToolTip = new MenuItemToolTip (this.getParent().getShell());
+	itemToolTip = new MenuItemToolTip (this.getParent().getShell()).getWrappedWidget();
 	itemToolTip.setMessage (toolTip);
 	itemToolTip.setVisible (false);
 }
@@ -1289,18 +1289,20 @@ private Point calculateRenderedTextSize() {
 	return points;
 }
 
-private static final class MenuItemToolTip extends NativeToolTip {
+private static final class MenuItemToolTip extends ToolTip {
 
 	public MenuItemToolTip(NativeShell parent) {
-		super(parent, 0);
-		maybeEnableDarkSystemTheme(hwndToolTip ());
-	}
-
-	@Override
-	long hwndToolTip() {
-		return parent.menuItemToolTipHandle();
-	}
-
+		super(new NativeToolTip(parent, 0) {
+			{
+				maybeEnableDarkSystemTheme(hwndToolTip ());
+			}
+			@Override
+			long hwndToolTip() {
+				return parent.menuItemToolTipHandle();
+			}
+		});
+		getWrappedWidget().wrapperToolTip = this;
+ 	}
 }
 
 private static void handleDPIChange(Widget widget, int newZoom, float scalingFactor) {
