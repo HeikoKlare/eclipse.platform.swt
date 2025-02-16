@@ -86,12 +86,7 @@ public class Composite extends Scrollable {
  * @see NativeWidget#getStyle
  */
 public Composite (Composite parent, int style) {
-	this.wrappedComposite = new NativeComposite(checkNative(parent), style) {
-		@Override
-		protected Composite wrap() {
-			return Composite.this;
-		}
-	};
+	this.wrappedComposite = new NativeComposite(checkNative(parent), style);
 	this.wrappedComposite.wrapperComposite = this;
 }
 
