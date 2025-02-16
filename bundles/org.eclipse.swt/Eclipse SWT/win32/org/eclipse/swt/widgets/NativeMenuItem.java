@@ -1324,7 +1324,7 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 }
 
 @Override
-protected MenuItem wrap() {
+public MenuItem wrap() {
 	if (wrapperMenuItem == null) {
 		error(SWT.ERROR_NULL_ARGUMENT);
 	}

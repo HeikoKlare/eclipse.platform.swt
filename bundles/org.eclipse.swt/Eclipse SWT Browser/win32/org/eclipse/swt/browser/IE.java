@@ -375,9 +375,9 @@ public void create(Composite parent, int style) {
 				if (!nativeBrowser.isClosing) {
 					LocationListener[] oldLocationListeners = locationListeners;
 					locationListeners = new LocationListener[0];
-					site.ignoreAllMessages = true;
+					site.getWrappedWidget().ignoreAllMessages = true;
 					execute ("window.location.href='about:blank'"); //$NON-NLS-1$
-					site.ignoreAllMessages = false;
+					site.getWrappedWidget().ignoreAllMessages = false;
 					locationListeners = oldLocationListeners;
 				}
 
@@ -445,10 +445,10 @@ public void create(Composite parent, int style) {
 			}
 		}
 	};
-	browser.addListener(SWT.Dispose, listener);
-	browser.addListener(SWT.FocusIn, listener);
-	browser.addListener(SWT.Resize, listener);
-	browser.addListener(SWT.Traverse, listener);
+	nativeBrowser.addListener(SWT.Dispose, listener);
+	nativeBrowser.addListener(SWT.FocusIn, listener);
+	nativeBrowser.addListener(SWT.Resize, listener);
+	nativeBrowser.addListener(SWT.Traverse, listener);
 	site.addListener(SWT.MouseWheel, listener);
 	site.addListener(SWT.Traverse, listener);
 
@@ -1441,7 +1441,7 @@ private void setUntrustedText(boolean value) {
 }
 
 private void updateForceTrusted() {
-	site.isForceTrusted = isAboutBlank && !untrustedText;
+	site.getWrappedWidget().isForceTrusted = isAboutBlank && !untrustedText;
 }
 
 @Override
@@ -1617,7 +1617,7 @@ void handleDOMEvent (OleEvent e) {
 
 		MSG msg = new MSG ();
 		int flags = OS.PM_NOYIELD | (consume ? OS.PM_REMOVE : OS.PM_NOREMOVE);
-		if (OS.PeekMessage (msg, frame.handle, OS.WM_CHAR, OS.WM_CHAR, flags)) {
+		if (OS.PeekMessage (msg, frame.getWrappedWidget().handle, OS.WM_CHAR, OS.WM_CHAR, flags)) {
 			/* a keypress will be received for this key so don't send KeyDown here */
 			event.dispose();
 			return;
