@@ -26,7 +26,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.internal.*;
 import org.eclipse.swt.internal.win32.*;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.NativeComposite;
 
 /**
  * This class provides a bridge between SWT and AWT, so that it
@@ -97,7 +97,7 @@ static synchronized void initializeSwing() {
  *
  * @since 3.2
  */
-public static Frame getFrame (Composite parent) {
+public static Frame getFrame (NativeComposite parent) {
 	if (parent == null) SWT.error (SWT.ERROR_NULL_ARGUMENT);
 	if ((parent.getStyle () & SWT.EMBEDDED) == 0) return null;
 	return (Frame)parent.getData(EMBEDDED_FRAME_KEY);
@@ -126,7 +126,7 @@ public static Frame getFrame (Composite parent) {
  *
  * @since 3.0
  */
-public static Frame new_Frame (final Composite parent) {
+public static Frame new_Frame (final NativeComposite parent) {
 	if (parent == null) SWT.error (SWT.ERROR_NULL_ARGUMENT);
 	if ((parent.getStyle () & SWT.EMBEDDED) == 0) {
 		SWT.error (SWT.ERROR_INVALID_ARGUMENT);
@@ -207,7 +207,7 @@ public static Frame new_Frame (final Composite parent) {
 				break;
 		}
 	};
-	Shell shell = parent.getShell ();
+	NativeShell shell = parent.getShell ();
 	shell.addListener (SWT.Deiconify, shellListener);
 	shell.addListener (SWT.Iconify, shellListener);
 
@@ -219,7 +219,7 @@ public static Frame new_Frame (final Composite parent) {
 	Listener listener = e -> {
 		switch (e.type) {
 			case SWT.Dispose:
-				Shell shell1 = parent.getShell ();
+				NativeShell shell1 = parent.getShell ();
 				shell1.removeListener (SWT.Deiconify, shellListener);
 				shell1.removeListener (SWT.Iconify, shellListener);
 				parent.setVisible(false);
@@ -275,7 +275,7 @@ public static Frame new_Frame (final Composite parent) {
  *
  * @since 3.0
  */
-public static Shell new_Shell (final Display display, final Canvas parent) {
+public static NativeShell new_Shell (final Display display, final Canvas parent) {
 	if (display == null) SWT.error (SWT.ERROR_NULL_ARGUMENT);
 	if (parent == null) SWT.error (SWT.ERROR_NULL_ARGUMENT);
 	long handle = 0;
@@ -287,7 +287,7 @@ public static Shell new_Shell (final Display display, final Canvas parent) {
 	}
 	if (handle == 0) SWT.error (SWT.ERROR_INVALID_ARGUMENT, null, " [peer not created]");
 
-	final Shell shell = Shell.win32_new (display, handle);
+	final NativeShell shell = NativeShell.win32_new (display, handle);
 	final ComponentListener listener = new ComponentAdapter () {
 		@Override
 		public void componentResized (ComponentEvent e) {

@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Caret;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
@@ -44,6 +43,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.NativeControl;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Scale;
@@ -114,7 +114,7 @@ public class ControlsWithAccessibleNamesExample {
 		AccessibleAdapter overrideAccessibleAdapter = new AccessibleAdapter() {
 			@Override
 			public void getName(AccessibleEvent e) {
-				Control control = ((Accessible) e.getSource()).getControl();
+				NativeControl control = ((Accessible) e.getSource()).getControl();
 				if (e.childID == ACC.CHILDID_SELF) {
 					e.result = "Overriding Platform Name For " + control.getData("name") + " (was " + e.result + ")";
 				} else {
@@ -123,7 +123,7 @@ public class ControlsWithAccessibleNamesExample {
 			}
 			@Override
 			public void getHelp(AccessibleEvent e) {
-				Control control = ((Accessible) e.getSource()).getControl();
+				NativeControl control = ((Accessible) e.getSource()).getControl();
 				if (e.childID == ACC.CHILDID_SELF) {
 					e.result = "Overriding Platform Help For " + control.getData("name") + " (was " + e.result + ")";
 				} else {

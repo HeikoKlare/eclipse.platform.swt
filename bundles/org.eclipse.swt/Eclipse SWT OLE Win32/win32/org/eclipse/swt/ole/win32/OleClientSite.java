@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.*;
  * @see <a href="http://www.eclipse.org/swt/snippets/#ole">OLE and ActiveX snippets</a>
  * @see <a href="http://www.eclipse.org/swt/examples.php">SWT Examples: OLEExample, OleWebBrowser</a>
  */
-public class OleClientSite extends Composite {
+public class OleClientSite extends NativeComposite {
 
 	// Interfaces for this Ole Client Container
 	COMObject  iOleClientSite;
@@ -96,7 +96,7 @@ public class OleClientSite extends Composite {
 	static final int STATE_ACTIVE = 4;
 	int state = STATE_NONE;
 
-protected OleClientSite(Composite parent, int style) {
+protected OleClientSite(NativeComposite parent, int style) {
 	/*
 	 * NOTE: this constructor should never be used by itself because it does
 	 * not create an Ole Object
@@ -190,7 +190,7 @@ protected OleClientSite(Composite parent, int style) {
  *     <li>ERROR_INVALID_CLASSID
  * </ul>
  */
-public OleClientSite(Composite parent, int style, File file) {
+public OleClientSite(NativeComposite parent, int style, File file) {
 	this(parent, style);
 	try {
 
@@ -236,7 +236,7 @@ public OleClientSite(Composite parent, int style, File file) {
  *     <li>ERROR_CANNOT_CREATE_OBJECT when failed to create OLE Object
  * </ul>
  */
-public OleClientSite(Composite parent, int style, String progId) {
+public OleClientSite(NativeComposite parent, int style, String progId) {
 	this(parent, style);
 	try {
 		appClsid = getClassID(progId);
@@ -302,7 +302,7 @@ public OleClientSite(Composite parent, int style, String progId) {
  *
  * @noreference This method is not intended to be referenced by clients.
  */
-public OleClientSite(Composite parent, int style, String progId, File file) {
+public OleClientSite(NativeComposite parent, int style, String progId, File file) {
 	this(parent, style);
 	try {
 		if (file == null || file.isDirectory() || !file.exists()) OLE.error(SWT.ERROR_INVALID_ARGUMENT);
@@ -840,8 +840,8 @@ private int GetWindowContext(long ppFrame, long ppDoc, long lprcPosRect, long lp
 	frameInfo.cb = OLEINPLACEFRAMEINFO.sizeof;
 	frameInfo.fMDIApp = 0;
 	frameInfo.hwndFrame = frame.handle;
-	Shell shell = getShell();
-	Menu menubar = shell.getMenuBar();
+	NativeShell shell = getShell();
+	NativeMenu menubar = shell.getMenuBar();
 	if (menubar != null && !menubar.isDisposed()) {
 		long hwnd = shell.handle;
 		int cAccel = (int)OS.SendMessage(hwnd, OS.WM_APP, 0, 0);
@@ -980,7 +980,7 @@ private int OnInPlaceDeactivate() {
 	objIOleInPlaceObject = null;
 	state = STATE_RUNNING;
 	redraw();
-	Shell shell = getShell();
+	NativeShell shell = getShell();
 	if (isFocusControl() || frame.isFocusControl()) {
 		shell.traverse(SWT.TRAVERSE_TAB_NEXT);
 	}
@@ -1033,11 +1033,11 @@ int OnUIDeactivate(int fUndoable) {
 	state = STATE_INPLACEACTIVE;
 	frame.SetActiveObject(0,0);
 	redraw();
-	Shell shell = getShell();
+	NativeShell shell = getShell();
 	if (isFocusControl() || frame.isFocusControl()) {
 		shell.traverse(SWT.TRAVERSE_TAB_NEXT);
 	}
-	Menu menubar = shell.getMenuBar();
+	NativeMenu menubar = shell.getMenuBar();
 	if (menubar == null || menubar.isDisposed())
 		return COM.S_OK;
 

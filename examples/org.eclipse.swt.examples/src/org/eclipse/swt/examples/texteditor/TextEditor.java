@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.NativeBrowser;
 import org.eclipse.swt.custom.Bullet;
 import org.eclipse.swt.custom.PaintObjectEvent;
 import org.eclipse.swt.custom.ST;
@@ -1025,7 +1025,7 @@ public class TextEditor {
 					Shell dialog = new Shell(shell);
 					dialog.setLayout(new FillLayout());
 					dialog.setText(getResourceString("Browser")); //$NON-NLS-1$
-					Browser browser = new Browser(dialog, SWT.NONE);
+					NativeBrowser browser = new NativeBrowser(dialog, SWT.NONE);
 					browser.setUrl(link);
 					dialog.open();
 				}

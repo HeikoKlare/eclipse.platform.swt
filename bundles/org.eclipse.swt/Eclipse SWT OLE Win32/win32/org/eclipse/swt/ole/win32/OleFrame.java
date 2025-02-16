@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.*;
  * @see <a href="http://www.eclipse.org/swt/snippets/#ole">OLE and ActiveX snippets</a>
  * @see <a href="http://www.eclipse.org/swt/examples.php">SWT Examples: OLEExample, OleWebBrowser</a>
  */
-final public class OleFrame extends Composite
+final public class OleFrame extends NativeComposite
 {
 	// Interfaces for this Ole Client Container
 	private COMObject iOleInPlaceFrame;
@@ -55,9 +55,9 @@ final public class OleFrame extends Composite
 
 	private int refCount = 0;
 
-	private MenuItem[] fileMenuItems;
-	private MenuItem[] containerMenuItems;
-	private MenuItem[] windowMenuItems;
+	private NativeMenuItem[] fileMenuItems;
+	private NativeMenuItem[] containerMenuItems;
+	private NativeMenuItem[] windowMenuItems;
 
 	private Listener listener;
 
@@ -90,7 +90,7 @@ final public class OleFrame extends Composite
  *     <li>ERROR_THREAD_INVALID_ACCESS when called from the wrong thread
  * </ul>
  */
-public OleFrame(Composite parent, int style) {
+public OleFrame(NativeComposite parent, int style) {
 	super(parent, style);
 
 	createCOMInterfaces();
@@ -134,7 +134,7 @@ private static void initCheckFocus (final Display display) {
 	display.setData(CHECK_FOCUS, CHECK_FOCUS);
 	final int time = 50;
 	final Runnable[] timer = new Runnable[1];
-	final Control[] lastFocus = new Control[1];
+	final NativeControl[] lastFocus = new NativeControl[1];
 	timer[0] = () -> {
 		if (lastFocus[0] instanceof OleClientSite && !lastFocus[0].isDisposed()) {
 			// ignore popup menus and dialogs
@@ -149,7 +149,7 @@ private static void initCheckFocus (final Display display) {
 			}
 		}
 		if (lastFocus[0] == null || lastFocus[0].isDisposed() || !lastFocus[0].isFocusControl()) {
-			Control currentFocus = display.getFocusControl();
+			NativeControl currentFocus = display.getNativeFocusControl();
 			if (currentFocus instanceof OleFrame) {
 				OleFrame frame = (OleFrame) currentFocus;
 				currentFocus = frame.getCurrentDocument();
@@ -199,7 +199,7 @@ static long getMsgProc(long code, long wParam, long lParam) {
 	int message = msg.message;
 	if (OS.WM_KEYFIRST <= message && message <= OS.WM_KEYLAST) {
 		if (display != null) {
-			Widget widget = null;
+			NativeWidget widget = null;
 			long hwnd = msg.hwnd;
 			while (hwnd != 0) {
 				widget = display.findWidget (hwnd);
@@ -382,7 +382,7 @@ private int GetBorder(long lprectBorder) {
  * @return the application menu items that will appear in the Container location when an OLE Document
  *         is in-place activated.
  */
-public MenuItem[] getContainerMenus(){
+public NativeMenuItem[] getContainerMenus(){
 	return containerMenuItems;
 }
 /**
@@ -399,7 +399,7 @@ public MenuItem[] getContainerMenus(){
  * @return the application menu items that will appear in the File location when an OLE Document
  *         is in-place activated.
  */
-public MenuItem[] getFileMenus(){
+public NativeMenuItem[] getFileMenus(){
 	return fileMenuItems;
 }
 long getIOleInPlaceFrame() {
@@ -438,12 +438,12 @@ private int GetWindow(long phwnd) {
  * @return the application menu items that will appear in the Window location when an OLE Document
  *         is in-place activated.
  */
-public MenuItem[] getWindowMenus(){
+public NativeMenuItem[] getWindowMenus(){
 	return windowMenuItems;
 }
 private int InsertMenus(long hmenuShared, long lpMenuWidths) {
 	// locate menu bar
-	Menu menubar = getShell().getMenuBar();
+	NativeMenu menubar = getShell().getMenuBar();
 	if (menubar == null || menubar.isDisposed()) {
 		OS.MoveMemory(lpMenuWidths, new int[] {0}, 4);
 		return COM.S_OK;
@@ -467,7 +467,7 @@ private int InsertMenus(long hmenuShared, long lpMenuWidths) {
 	int fileMenuCount = 0;
 	int newindex = 0;
 	if (this.fileMenuItems != null) {
-		for (MenuItem item : this.fileMenuItems) {
+		for (NativeMenuItem item : this.fileMenuItems) {
 			if (item != null) {
 				int index = item.getParent().indexOf(item);
 				lpmii.cch = cch;  // lpmii.cch gets updated by GetMenuItemInfo to indicate the
@@ -491,7 +491,7 @@ private int InsertMenus(long hmenuShared, long lpMenuWidths) {
 	// item from the OS.
 	int containerMenuCount = 0;
 	if (this.containerMenuItems != null) {
-		for (MenuItem item : this.containerMenuItems) {
+		for (NativeMenuItem item : this.containerMenuItems) {
 			if (item != null) {
 				int index = item.getParent().indexOf(item);
 				lpmii.cch = cch; // lpmii.cch gets updated by GetMenuItemInfo to indicate the
@@ -515,7 +515,7 @@ private int InsertMenus(long hmenuShared, long lpMenuWidths) {
 	// item from the OS.
 	int windowMenuCount = 0;
 	if (this.windowMenuItems != null) {
-		for (MenuItem item : this.windowMenuItems) {
+		for (NativeMenuItem item : this.windowMenuItems) {
 			if (item != null) {
 				int index = item.getParent().indexOf(item);
 				lpmii.cch = cch; // lpmii.cch gets updated by GetMenuItemInfo to indicate the
@@ -571,7 +571,7 @@ void onFocusIn(Event e) {
 	}
 }
 void onFocusOut(Event e) {
-	Control control = getDisplay().getFocusControl();
+	NativeControl control = getDisplay().getNativeFocusControl();
 	if (OS.GetMenu(shellHandle) != oldMenuHandle && control != null && control.handle != shellHandle)
 		OS.SetMenu(shellHandle, oldMenuHandle);
 }
@@ -620,14 +620,14 @@ private void releaseObjectInterfaces() {
 }
 private int RemoveMenus(long hmenuShared) {
 
-	Menu menubar = getShell().getMenuBar();
+	NativeMenu menubar = getShell().getMenuBar();
 	if (menubar == null || menubar.isDisposed()) return COM.S_FALSE;
 
 	long hMenu = menubar.handle;
 
 	List<LONG> ids = new ArrayList<>();
 	if (this.fileMenuItems != null) {
-		for (MenuItem item : this.fileMenuItems) {
+		for (NativeMenuItem item : this.fileMenuItems) {
 			if (item != null && !item.isDisposed()) {
 				int index = item.getParent().indexOf(item);
 				// get Id from original menubar
@@ -637,7 +637,7 @@ private int RemoveMenus(long hmenuShared) {
 		}
 	}
 	if (this.containerMenuItems != null) {
-		for (MenuItem item : this.containerMenuItems) {
+		for (NativeMenuItem item : this.containerMenuItems) {
 			if (item != null && !item.isDisposed()) {
 				int index = item.getParent().indexOf(item);
 				long id = getMenuItemID(hMenu, index);
@@ -646,7 +646,7 @@ private int RemoveMenus(long hmenuShared) {
 		}
 	}
 	if (this.windowMenuItems != null) {
-		for (MenuItem item : this.windowMenuItems) {
+		for (NativeMenuItem item : this.windowMenuItems) {
 			if (item != null && !item.isDisposed()) {
 				int index = item.getParent().indexOf(item);
 				long id = getMenuItemID(hMenu, index);
@@ -711,7 +711,7 @@ private int SetBorderSpace(long pborderwidths) {
  * @param containerMenus an array of top level MenuItems to be inserted into the Container location of
  *        the menubar
  */
-public void setContainerMenus(MenuItem[] containerMenus){
+public void setContainerMenus(NativeMenuItem[] containerMenus){
 	containerMenuItems = containerMenus;
 }
 OleClientSite getCurrentDocument() {
@@ -743,7 +743,7 @@ void setCurrentDocument(OleClientSite doc) {
  * @param fileMenus an array of top level MenuItems to be inserted into the File location of
  *        the menubar
  */
-public void setFileMenus(MenuItem[] fileMenus){
+public void setFileMenus(NativeMenuItem[] fileMenus){
 	fileMenuItems = fileMenus;
 }
 private int SetMenu(long hmenuShared, long holemenu, long hwndActiveObject) {
@@ -751,7 +751,7 @@ private int SetMenu(long hmenuShared, long holemenu, long hwndActiveObject) {
 	if (objIOleInPlaceActiveObject != null)
 		inPlaceActiveObject = objIOleInPlaceActiveObject.getAddress();
 
-	Menu menubar = getShell().getMenuBar();
+	NativeMenu menubar = getShell().getMenuBar();
 	if (menubar == null || menubar.isDisposed()){
 		return COM.OleSetMenuDescriptor(0, getShell().handle, hwndActiveObject, iOleInPlaceFrame.getAddress(), inPlaceActiveObject);
 	}
@@ -788,7 +788,7 @@ private int SetMenu(long hmenuShared, long holemenu, long hwndActiveObject) {
  * @param windowMenus an array of top level MenuItems to be inserted into the Window location of
  *        the menubar
  */
-public void setWindowMenus(MenuItem[] windowMenus){
+public void setWindowMenus(NativeMenuItem[] windowMenus){
 	windowMenuItems = windowMenus;
 }
 private boolean translateOleAccelerator(MSG msg) {
@@ -797,11 +797,11 @@ private boolean translateOleAccelerator(MSG msg) {
 	return (result != COM.S_FALSE && result != COM.E_NOTIMPL);
 }
 private int TranslateAccelerator(long lpmsg, int wID){
-	Menu menubar = getShell().getMenuBar();
+	NativeMenu menubar = getShell().getMenuBar();
 	if (menubar == null || menubar.isDisposed() || !menubar.isEnabled()) return COM.S_FALSE;
 	if (wID < 0) return COM.S_FALSE;
 
-	Shell shell = menubar.getShell();
+	NativeShell shell = menubar.getShell();
 	long hwnd = shell.handle;
 	long hAccel = OS.SendMessage(hwnd, OS.WM_APP+1, 0, 0);
 	if (hAccel == 0) return COM.S_FALSE;

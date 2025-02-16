@@ -38,7 +38,7 @@ class WebSite extends OleControlSite {
 	static final short [] ACCENTS = new short [] {'~', '`', '\'', '^', '"'};
 	static final String CONSUME_KEY = "org.eclipse.swt.OleFrame.ConsumeKey"; //$NON-NLS-1$
 
-public WebSite(Composite parent, int style, String progId) {
+public WebSite(NativeComposite parent, int style, String progId) {
 	super(parent, style, progId);
 }
 
@@ -280,7 +280,7 @@ int GetExternal(long ppDispatch) {
 
 int GetHostInfo(long pInfo) {
 	int info = IE.DOCHOSTUIFLAG_THEME | IE.DOCHOSTUIFLAG_ENABLE_REDIRECT_NOTIFICATION | IE.DOCHOSTUIFLAG_DPI_AWARE;
-	IE browser = (IE)((Browser)getParent().getParent()).webBrowser;
+	IE browser = (IE)((NativeBrowser)getParent().getParent()).webBrowser;
 	if ((browser.style & SWT.BORDER) == 0) info |= IE.DOCHOSTUIFLAG_NO3DOUTERBORDER;
 	DOCHOSTUIINFO uiInfo = new DOCHOSTUIINFO ();
 	OS.MoveMemory(uiInfo, pInfo, DOCHOSTUIINFO.sizeof);
@@ -316,7 +316,7 @@ int ResizeBorder(long prcBorder, long pUIWindow, int fFrameWindow) {
 }
 
 int ShowContextMenu(int dwID, long ppt, long pcmdtReserved, long pdispReserved) {
-	Browser browser = (Browser)getParent().getParent();
+	NativeBrowser browser = (NativeBrowser)getParent().getParent();
 	Event event = new Event();
 	POINT pt = new POINT();
 	OS.MoveMemory(pt, ppt, POINT.sizeof);
@@ -326,7 +326,7 @@ int ShowContextMenu(int dwID, long ppt, long pcmdtReserved, long pdispReserved) 
 	event.y = pt.y;
 	browser.notifyListeners(SWT.MenuDetect, event);
 	if (!event.doit) return COM.S_OK;
-	Menu menu = browser.getMenu();
+	NativeMenu menu = browser.getMenu();
 	if (menu != null && !menu.isDisposed ()) {
 		if (pt.x != event.x || pt.y != event.y) {
 			menu.setLocation (event.x, event.y);
@@ -349,9 +349,9 @@ int TranslateAccelerator(long lpMsg, long pguidCmdGroup, int nCmdID) {
 	* defined by SWT.  The workaround is to forward the accelerator keys to the parent window
 	* and have Internet Explorer ignore the ones handled by the parent window.
 	*/
-	Menu menubar = getShell().getMenuBar();
+	NativeMenu menubar = getShell().getMenuBar();
 	if (menubar != null && !menubar.isDisposed() && menubar.isEnabled()) {
-		Shell shell = menubar.getShell();
+		NativeShell shell = menubar.getShell();
 		long hwnd = shell.handle;
 		long hAccel = OS.SendMessage(hwnd, OS.WM_APP+1, 0, 0);
 		if (hAccel != 0) {
@@ -489,13 +489,13 @@ int ShowMessage(long hwnd, long lpstrText, long lpstrCaption, int dwType, long l
 }
 
 int ShowHelp(long hwnd, long pszHelpFile, int uCommand, int dwData, long pt, long pDispatchObjectHit) {
-	Browser browser = (Browser)getParent().getParent();
+	NativeBrowser browser = (NativeBrowser)getParent().getParent();
 	Event event = new Event();
 	event.type = SWT.Help;
 	event.display = getDisplay();
-	event.widget = browser;
-	Shell shell = browser.getShell();
-	Control control = browser;
+	event.widget = browser.wrap();
+	NativeShell shell = browser.getShell();
+	NativeControl control = browser;
 	do {
 		if (control.isListening(SWT.Help)) {
 			control.notifyListeners(SWT.Help, event);
@@ -563,7 +563,7 @@ int ProcessUrlAction(long pwszUrl, int dwAction, long pPolicy, int cbPolicy, lon
 	* override default zone elevation settings to allow the action.
 	*/
 	if (dwAction == IE.URLACTION_FEATURE_ZONE_ELEVATION) {
-		IE ie = (IE)((Browser)getParent().getParent()).webBrowser;
+		IE ie = (IE)((NativeBrowser)getParent().getParent()).webBrowser;
 		if (ie.auto != null && ie._getUrl().startsWith(IE.ABOUT_BLANK) && !ie.untrustedText) {
 			if (cbPolicy >= 4) OS.MoveMemory(pPolicy, new int[] {IE.URLPOLICY_ALLOW}, 4);
 			return COM.S_OK;
@@ -593,7 +593,7 @@ int ProcessUrlAction(long pwszUrl, int dwAction, long pPolicy, int cbPolicy, lon
 		}
 	}
 	if (dwAction == IE.URLACTION_SCRIPT_RUN) {
-		IE browser = (IE)((Browser)getParent ().getParent ()).webBrowser;
+		IE browser = (IE)((NativeBrowser)getParent ().getParent ()).webBrowser;
 		policy = browser.jsEnabled ? IE.URLPOLICY_ALLOW : IE.URLPOLICY_DISALLOW;
 	}
 
@@ -622,7 +622,7 @@ boolean canExecuteApplets () {
 	if (IE.IEVersion < 7) return false;
 
 	if (canExecuteApplets == null) {
-		WebBrowser webBrowser = ((Browser)getParent ().getParent ()).webBrowser;
+		WebBrowser webBrowser = ((NativeBrowser)getParent ().getParent ()).webBrowser;
 		String script = "try {var element = document.createElement('object');element.classid='clsid:CAFEEFAC-DEC7-0000-0000-ABCDEFFEDCBA';return element.object.isPlugin2();} catch (err) {};return false;"; //$NON-NLS-1$
 		canExecuteApplets = ((Boolean)webBrowser.evaluate (script));
 		if (canExecuteApplets.booleanValue ()) {
@@ -676,7 +676,7 @@ int Exec(long pguidCmdGroup, int nCmdID, int nCmdExecOpt, long pvaIn, long pvaOu
 		* to test the argument of an undocumented command.
 		*/
 		if (nCmdID == 1 && COM.IsEqualGUID(guid, COM.CGID_Explorer) && ((nCmdExecOpt & 0xFFFF) == 0xA)) {
-			IE browser = (IE)((Browser)getParent().getParent()).webBrowser;
+			IE browser = (IE)((NativeBrowser)getParent().getParent()).webBrowser;
 			browser.toolBar = (nCmdExecOpt & 0xFFFF0000) != 0;
 		}
 	}
@@ -686,7 +686,7 @@ int Exec(long pguidCmdGroup, int nCmdID, int nCmdExecOpt, long pvaIn, long pvaOu
 /* IAuthenticate */
 
 int Authenticate (long hwnd, long szUsername, long szPassword) {
-	IE browser = (IE)((Browser)getParent ().getParent ()).webBrowser;
+	IE browser = (IE)((NativeBrowser)getParent ().getParent ()).webBrowser;
 	for (AuthenticationListener authenticationListener : browser.authenticationListeners) {
 		AuthenticationEvent event = new AuthenticationEvent (browser.browser);
 		event.location = browser.lastNavigateURL;
@@ -748,7 +748,7 @@ int GetIDsOfNames (int riid, long rgszNames, int cNames, int lcid, long rgDispId
 }
 
 int Invoke (int dispIdMember, long riid, int lcid, int dwFlags, long pDispParams, long pVarResult, long pExcepInfo, long pArgErr) {
-	IE ie = (IE)((Browser)getParent ().getParent ()).webBrowser;
+	IE ie = (IE)((NativeBrowser)getParent ().getParent ()).webBrowser;
 	Map<Integer, BrowserFunction> functions = ie.functions;
 	if (functions == null) {
 		if (pVarResult != 0) {
@@ -909,7 +909,7 @@ Variant convertToJS (Object value) {
 	}
 	if (value instanceof Object[]) {
 		/* get IHTMLDocument2 */
-		IE browser = (IE)((Browser)getParent ().getParent ()).webBrowser;
+		IE browser = (IE)((NativeBrowser)getParent ().getParent ()).webBrowser;
 		OleAutomation auto = browser.auto;
 		int[] rgdispid = auto.getIDsOfNames (new String[] {"Document"}); //$NON-NLS-1$
 		if (rgdispid == null) return new Variant ();
