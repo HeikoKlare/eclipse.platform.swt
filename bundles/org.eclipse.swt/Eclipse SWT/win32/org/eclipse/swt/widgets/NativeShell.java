@@ -411,8 +411,8 @@ protected NativeShell (NativeShell parent, int style) {
  *
  * @noreference This method is not intended to be referenced by clients.
  */
-public static NativeShell win32_new (Display display, long handle) {
-	return new NativeShell (display, null, SWT.NO_TRIM, handle, true);
+public static Shell win32_new (Display display, long handle) {
+	return new Shell(new NativeShell (display, null, SWT.NO_TRIM, handle, true));
 }
 
 /**
