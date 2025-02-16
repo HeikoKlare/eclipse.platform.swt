@@ -405,7 +405,7 @@ void setMenu (NativeMenu menu) {
 
 			for (NativeMenuItem item : items) {
 				if ((item.getStyle () & SWT.CASCADE) != 0) {
-					NativeMenu subMenu = item.getMenu ();
+					NativeMenu subMenu = Widget.checkNative(item.getMenu ());
 					if (subMenu != null) {
 						NativeMenuItem [] subItems = subMenu.getItems ();
 						IObjectArray poa2 = createShellLinkArray (subItems);

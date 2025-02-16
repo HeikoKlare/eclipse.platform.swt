@@ -3045,9 +3045,9 @@ public class Accessible {
 			if (control instanceof NativeButton && ((control.getStyle() & SWT.RADIO) != 0)) {
 				positionInGroup = 1;
 				similarItemsInGroup = 1;
-				for (NativeControl child : control.getParent().getChildren()) {
-					if (child instanceof NativeButton && ((child.getStyle() & SWT.RADIO) != 0)) {
-						if (child == control) positionInGroup = similarItemsInGroup;
+				for (Control child : control.getParent().getChildren()) {
+					if (child instanceof Button && ((child.getStyle() & SWT.RADIO) != 0)) {
+						if (Widget.checkNative(child) == control) positionInGroup = similarItemsInGroup;
 						else similarItemsInGroup++;
 					}
 				}

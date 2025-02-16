@@ -272,8 +272,7 @@ public int getID () {
  * </ul>
  */
 public Menu getMenu () {
-	NativeMenu wrappedMenu = wrappedMenuItem.getMenu();
-	return wrappedMenu != null ? wrappedMenu.wrap() : null;
+	return wrappedMenuItem.getMenu();
 }
 
 /**

@@ -86,7 +86,7 @@ NativeTaskItem (NativeTaskBar parent, int style) {
 }
 
 @Override
-protected void checkSubclass () {
+public void checkSubclass () {
 	if (!isValidSubclass ()) error (SWT.ERROR_INVALID_SUBCLASS);
 }
 
@@ -130,9 +130,9 @@ void destroyWidget () {
  * </ul>
  */
 @Override
-public NativeMenu getMenu () {
+public Menu getMenu () {
 	checkWidget ();
-	return menu;
+	return menu != null ? menu.wrap() : null;
 }
 
 /**

@@ -222,7 +222,7 @@ public void addSelectionListener (SelectionListener listener) {
 }
 
 @Override
-protected void checkSubclass () {
+public void checkSubclass () {
 	if (!isValidSubclass ()) error (SWT.ERROR_INVALID_SUBCLASS);
 }
 
@@ -424,9 +424,9 @@ public int getID () {
  * </ul>
  */
 @Override
-public NativeMenu getMenu () {
+public Menu getMenu () {
 	checkWidget ();
-	return menu;
+	return menu.wrap();
 }
 
 @Override
@@ -1317,9 +1317,9 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 		menuItem.setImage (currentImage);
 	}
 	// Refresh the sub menu
-	NativeMenu subMenu = menuItem.getMenu();
+	Menu subMenu = menuItem.getMenu();
 	if (subMenu != null) {
-		DPIZoomChangeRegistry.applyChange(subMenu.wrap(), newZoom, scalingFactor);
+		DPIZoomChangeRegistry.applyChange(subMenu, newZoom, scalingFactor);
 	}
 }
 

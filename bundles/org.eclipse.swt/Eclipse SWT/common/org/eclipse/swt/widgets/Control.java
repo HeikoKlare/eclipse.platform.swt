@@ -832,8 +832,7 @@ public Point getLocation () {
  * </ul>
  */
 public Menu getMenu () {
-	NativeMenu wrappedMenu = getWrappedWidget().getMenu();
-	return wrappedMenu != null ? wrappedMenu.wrap() : null;
+	return getWrappedWidget().getMenu();
 }
 
 /**
@@ -882,8 +881,7 @@ public int getOrientation () {
  * </ul>
  */
 public Composite getParent () {
-	NativeComposite wrappedParent = getWrappedWidget().getParent();
-	return wrappedParent != null ? wrappedParent.wrap() : null;
+	return getWrappedWidget().getParent();
 }
 
 /**
@@ -919,7 +917,7 @@ public Region getRegion () {
  * @see #getParent
  */
 public Shell getShell () {
-	NativeShell wrappedShell = getWrappedWidget().getShell();
+	NativeShell wrappedShell = getWrappedWidget() instanceof NativeControl natCon ? natCon.getShell() : null;
 	return wrappedShell != null ? wrappedShell.wrap() : null;
 }
 
@@ -1146,7 +1144,7 @@ public boolean isVisible () {
  * @see Composite#getChildren
  */
 public void moveAbove (Control control) {
-	getWrappedWidget().moveAbove(checkNative(control));
+	getWrappedWidget().moveAbove(control);
 }
 
 /**
@@ -1170,7 +1168,7 @@ public void moveAbove (Control control) {
  * @see Composite#getChildren
  */
 public void moveBelow (Control control) {
-	getWrappedWidget().moveBelow(checkNative(control));
+	getWrappedWidget().moveBelow(control);
 }
 
 /**
@@ -1946,7 +1944,7 @@ public void setLocation (Point location) {
  * </ul>
  */
 public void setMenu (Menu menu) {
-	getWrappedWidget().setMenu(checkNative(menu));
+	getWrappedWidget().setMenu(menu);
 }
 
 /**
@@ -2386,7 +2384,7 @@ public void update () {
  *	</ul>
  */
 public boolean setParent (Composite parent) {
-	return getWrappedWidget().setParent(checkNative(parent));
+	return getWrappedWidget().setParent(parent);
 }
 
 Decorations menuShell () {
@@ -2394,7 +2392,7 @@ Decorations menuShell () {
 }
 
 @Override
-protected abstract NativeControl getWrappedWidget();
+protected abstract IControl getWrappedWidget();
 
 }
 

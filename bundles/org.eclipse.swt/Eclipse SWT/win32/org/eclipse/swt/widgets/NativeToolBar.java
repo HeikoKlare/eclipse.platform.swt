@@ -193,7 +193,7 @@ void checkBuffered () {
 }
 
 @Override
-protected void checkSubclass () {
+public void checkSubclass () {
 	if (!isValidSubclass ()) error (SWT.ERROR_INVALID_SUBCLASS);
 }
 
@@ -1115,9 +1115,10 @@ void setImageList (ImageList imageList) {
 }
 
 @Override
-public boolean setParent (NativeComposite parent) {
+public boolean setParent (Composite parentWrapper) {
+	NativeComposite parent = Widget.checkNative(parentWrapper);
 	checkWidget ();
-	if (!super.setParent (parent)) return false;
+	if (!super.setParent (parentWrapper)) return false;
 	long hwndParent = parent.handle;
 	OS.SendMessage (handle, OS.TB_SETPARENT, hwndParent, 0);
 	/*
