@@ -105,12 +105,7 @@ public class Slider extends Control {
  * @see NativeWidget#getStyle
  */
 public Slider (Composite parent, int style) {
-	this (new NativeSlider(checkNative(parent), style));
-}
-
-Slider (NativeSlider nativeSlider) {
-	this.wrappedSlider = nativeSlider;
-	this.wrappedSlider.wrapperSlider = this;
+	this.wrappedSlider = new NativeSlider(this, checkNative(parent), style);
 }
 
 /**

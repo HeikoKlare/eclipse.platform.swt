@@ -882,7 +882,7 @@ public int getOrientation () {
  * </ul>
  */
 public Composite getParent () {
-	NativeComposite wrappedParent = getWrappedWidget().getParent();
+	NativeComposite<Composite> wrappedParent = getWrappedWidget().getParent();
 	return wrappedParent != null ? wrappedParent.wrap() : null;
 }
 
@@ -2394,7 +2394,7 @@ Decorations menuShell () {
 }
 
 @Override
-protected abstract NativeControl getWrappedWidget();
+protected abstract NativeControl<? extends Control> getWrappedWidget();
 
 }
 

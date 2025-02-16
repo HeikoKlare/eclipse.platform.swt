@@ -64,7 +64,7 @@ public class TreeItem extends Item {
  * @see NativeWidget#getStyle
  */
 public TreeItem (Tree parent, int style) {
-	this (new NativeTreeItem(checkNative(parent), style));
+	this.wrappedTreeItem = new NativeTreeItem(this, checkNative(parent), style);
 }
 
 /**
@@ -97,7 +97,7 @@ public TreeItem (Tree parent, int style) {
  * @see Tree#setRedraw
  */
 public TreeItem (Tree parent, int style, int index) {
-	this (new NativeTreeItem(checkNative(parent), style, index));
+	this.wrappedTreeItem = new NativeTreeItem(this, checkNative(parent), style, index);
 }
 
 /**
@@ -123,7 +123,7 @@ public TreeItem (Tree parent, int style, int index) {
  * @see NativeWidget#getStyle
  */
 public TreeItem (TreeItem parentItem, int style) {
-	this (new NativeTreeItem(checkNative(parentItem), style));
+	this.wrappedTreeItem = new NativeTreeItem(this, checkNative(parentItem), style);
 }
 
 /**
@@ -152,16 +152,11 @@ public TreeItem (TreeItem parentItem, int style) {
  * @see Tree#setRedraw
  */
 public TreeItem (TreeItem parentItem, int style, int index) {
-	this (new NativeTreeItem(checkNative(parentItem), style, index));
+	this.wrappedTreeItem = new NativeTreeItem(this, checkNative(parentItem), style, index);
 }
 
 TreeItem (Tree parent, int style, long hParent, long hInsertAfter, long hItem) {
-	this (new NativeTreeItem(checkNative(parent), style, hParent, hInsertAfter, hItem));
-}
-
-TreeItem(NativeTreeItem nativeTreeItem) {
-	this.wrappedTreeItem = nativeTreeItem;
-	this.wrappedTreeItem.wrapperTreeItem = this;
+	this.wrappedTreeItem = new NativeTreeItem(this, checkNative(parent), style, hParent, hInsertAfter, hItem);
 }
 
 /**

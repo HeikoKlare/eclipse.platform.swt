@@ -36,9 +36,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeTabItem extends NativeItem {
-	TabItem wrapperTabItem;
-
+public class NativeTabItem extends NativeItem<TabItem> {
 	NativeTabFolder parent;
 	NativeControl control;
 	String toolTipText;
@@ -73,8 +71,8 @@ public class NativeTabItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTabItem (NativeTabFolder parent, int style) {
-	super (parent, style);
+public NativeTabItem (TabItem wrapperTabItem, NativeTabFolder parent, int style) {
+	super (wrapperTabItem, parent, style);
 	this.parent = parent;
 	parent.createItem (this, parent.getItemCount ());
 }
@@ -111,8 +109,8 @@ public NativeTabItem (NativeTabFolder parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTabItem (NativeTabFolder parent, int style, int index) {
-	super (parent, style);
+public NativeTabItem (TabItem wrapperTabItem, NativeTabFolder parent, int style, int index) {
+	super (wrapperTabItem, parent, style);
 	this.parent = parent;
 	parent.createItem (this, index);
 }
@@ -410,14 +408,6 @@ boolean updateTextDirection(int textDirection) {
 public void setToolTipText (String string) {
 	checkWidget();
 	toolTipText = string;
-}
-
-@Override
-protected TabItem wrap() {
-	if (wrapperTabItem == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperTabItem;
 }
 
 }

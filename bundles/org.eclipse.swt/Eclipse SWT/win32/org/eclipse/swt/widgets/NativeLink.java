@@ -44,9 +44,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.1
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeLink extends NativeControl {
-	Link wrapperLink;
-
+public class NativeLink extends NativeControl<Link> {
 	String text;
 	int linkForeground = -1;
 	String [] ids;
@@ -108,8 +106,8 @@ public class NativeLink extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeLink (NativeComposite parent, int style) {
-	super (parent, style);
+public NativeLink (Link wrapperLink, NativeComposite parent, int style) {
+	super (wrapperLink, parent, style);
 }
 
 /**
@@ -747,14 +745,6 @@ LRESULT wmNotifyChild (NMHDR hdr, long wParam, long lParam) {
 			break;
 	}
 	return super.wmNotifyChild (hdr, wParam, lParam);
-}
-
-@Override
-protected Link wrap() {
-	if (wrapperLink== null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperLink;
 }
 
 }

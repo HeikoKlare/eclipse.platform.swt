@@ -41,9 +41,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeSash extends NativeControl {
-	Sash wrapperSash;
-
+public class NativeSash extends NativeControl<Sash> {
 	boolean dragging;
 	int startX, startY, lastX, lastY;
 	final static int INCREMENT = 1;
@@ -79,8 +77,8 @@ public class NativeSash extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeSash (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeSash (Sash wrapperSash, NativeComposite parent, int style) {
+	super (wrapperSash, parent, checkStyle (style));
 }
 
 /**
@@ -408,14 +406,6 @@ LRESULT WM_SETCURSOR (long wParam, long lParam) {
 		return LRESULT.ONE;
 	}
 	return result;
-}
-
-@Override
-protected Sash wrap() {
-	if (wrapperSash == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperSash;
 }
 
 }

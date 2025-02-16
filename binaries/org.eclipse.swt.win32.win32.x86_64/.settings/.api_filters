@@ -599,5 +599,11 @@
                 <message_argument value="NativeComposite"/>
             </message_arguments>
         </filter>
+        <filter id="576778288">
+            <message_arguments>
+                <message_argument value="NativeScrollable&lt;S&gt;"/>
+                <message_argument value="NativeComposite&lt;W&gt;"/>
+            </message_arguments>
+        </filter>
     </resource>
 </component>

@@ -66,7 +66,7 @@ public class ExpandItem extends Item {
  * @see NativeWidget#getStyle
  */
 public ExpandItem (ExpandBar parent, int style) {
-	this (new NativeExpandItem(checkNative(parent), style));
+	this.wrappedExpandItem = new NativeExpandItem(this, checkNative(parent), style);
 }
 
 /**
@@ -100,12 +100,7 @@ public ExpandItem (ExpandBar parent, int style) {
  * @see NativeWidget#getStyle
  */
 public ExpandItem (ExpandBar parent, int style, int index) {
-	this (new NativeExpandItem(checkNative(parent), style, index));
-}
-
-ExpandItem(NativeExpandItem nativeExpandItem) {
-	this.wrappedExpandItem = nativeExpandItem;
-	this.wrappedExpandItem.wrapperExpandItem = this;
+	this.wrappedExpandItem = new NativeExpandItem(this, checkNative(parent), style, index);
 }
 
 /**
@@ -120,7 +115,8 @@ ExpandItem(NativeExpandItem nativeExpandItem) {
  * </ul>
  */
 public Control getControl () {
-	return wrappedExpandItem.getControl().wrap();
+	NativeControl<Control> wrappedControl = wrappedExpandItem.getControl();
+	return wrappedControl != null ? wrappedControl.wrap() : null;
 }
 
 /**

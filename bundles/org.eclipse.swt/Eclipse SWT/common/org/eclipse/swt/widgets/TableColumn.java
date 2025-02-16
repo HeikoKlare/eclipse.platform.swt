@@ -72,7 +72,7 @@ public class TableColumn extends Item {
  * @see NativeWidget#getStyle
  */
 public TableColumn (Table parent, int style) {
-	this (new NativeTableColumn(checkNative(parent), style));
+	this.wrappedTableColumn = new NativeTableColumn(this, checkNative(parent), style);
 }
 
 /**
@@ -113,12 +113,7 @@ public TableColumn (Table parent, int style) {
  * @see NativeWidget#getStyle
  */
 public TableColumn (Table parent, int style, int index) {
-	this (new NativeTableColumn(checkNative(parent), style, index));
-}
-
-TableColumn(NativeTableColumn nativeTableColumn) {
-	this.wrappedTableColumn = nativeTableColumn;
-	this.wrappedTableColumn.wrapperTableColumn = this;
+	this.wrappedTableColumn = new NativeTableColumn(this, checkNative(parent), style, index);
 }
 
 /**

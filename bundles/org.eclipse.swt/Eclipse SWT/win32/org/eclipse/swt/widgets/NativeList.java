@@ -41,9 +41,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeList extends NativeScrollable {
-	List wrapperList;
-
+public class NativeList extends NativeScrollable<List> {
 	static final int INSET = 3;
 	static final long ListProc;
 	static final TCHAR ListClass = new TCHAR (0, "LISTBOX", true);
@@ -84,8 +82,8 @@ public class NativeList extends NativeScrollable {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeList (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeList (List wrapperList, NativeComposite parent, int style) {
+	super (wrapperList, parent, checkStyle (style));
 }
 /**
  * Adds the argument to the end of the receiver's list.
@@ -1862,14 +1860,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 		// Recalculate the Scroll width, as length of items has changed
 		list.setScrollWidth();
 	}
-}
-
-@Override
-protected List wrap() {
-	if (wrapperList == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperList;
 }
 
 }

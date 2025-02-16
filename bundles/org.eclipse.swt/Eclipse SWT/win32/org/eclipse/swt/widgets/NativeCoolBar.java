@@ -47,9 +47,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeCoolBar extends NativeComposite {
-	CoolBar wrapperCoolBar;
-
+public class NativeCoolBar extends NativeComposite<CoolBar> {
 	NativeCoolItem [] items;
 	NativeCoolItem [] originalItems;
 	boolean locked;
@@ -98,8 +96,8 @@ public class NativeCoolBar extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCoolBar (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeCoolBar (CoolBar wrapperCoolBar, NativeComposite parent, int style) {
+	super (wrapperCoolBar, parent, checkStyle (style));
 	/*
 	* Ensure that either of HORIZONTAL or VERTICAL is set.
 	* NOTE: HORIZONTAL and VERTICAL have the same values
@@ -1244,14 +1242,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	}
 	coolBar.setItemLayoutInPixels(itemOrder, indices, scaledSizes);
 	coolBar.updateLayout(true);
-}
-
-@Override
-protected CoolBar wrap() {
-	if (wrapperCoolBar == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperCoolBar;
 }
 
 }

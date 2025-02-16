@@ -77,7 +77,7 @@ public class ToolItem extends Item {
  * @see NativeWidget#getStyle
  */
 public ToolItem (ToolBar parent, int style) {
-	this (new NativeToolItem(checkNative(parent), style));
+	this.wrappedToolItem = new NativeToolItem(this, checkNative(parent), style);
 }
 
 /**
@@ -117,12 +117,7 @@ public ToolItem (ToolBar parent, int style) {
  * @see NativeWidget#getStyle
  */
 public ToolItem (ToolBar parent, int style, int index) {
-	this (new NativeToolItem(checkNative(parent), style, index));
-}
-
-ToolItem(NativeToolItem nativeToolItem) {
-	this.wrappedToolItem = nativeToolItem;
-	this.wrappedToolItem.wrapperToolItem = this;
+	this.wrappedToolItem = new NativeToolItem(this, checkNative(parent), style, index);
 }
 
 /**
@@ -191,7 +186,7 @@ public Rectangle getBounds () {
  * </ul>
  */
 public Control getControl () {
-	NativeControl wrappedControl = wrappedToolItem.getControl();
+	NativeControl<Control> wrappedControl = wrappedToolItem.getControl();
 	return wrappedControl != null ? wrappedControl.wrap() : null;
 }
 

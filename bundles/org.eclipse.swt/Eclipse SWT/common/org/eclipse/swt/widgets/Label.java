@@ -92,12 +92,7 @@ public class Label extends Control {
  * @see NativeWidget#getStyle
  */
 public Label (Composite parent, int style) {
-	this (new NativeLabel(checkNative(parent), style));
-}
-
-Label (NativeLabel nativeLabel) {
-	this.wrappedLabel = nativeLabel;
-	this.wrappedLabel.wrapperLabel = this;
+	this.wrappedLabel = new NativeLabel(this, checkNative(parent), style);
 }
 
 /**

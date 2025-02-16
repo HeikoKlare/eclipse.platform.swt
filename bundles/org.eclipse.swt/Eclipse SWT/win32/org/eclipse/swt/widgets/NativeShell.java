@@ -120,9 +120,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeShell extends NativeDecorations {
-	Shell wrapperShell;
-
+public class NativeShell extends NativeDecorations<Shell> {
 	NativeMenu activeMenu;
 	NativeToolTip [] toolTips;
 	long hwndMDIClient, lpstrTip, toolTipHandle, balloonTipHandle, menuItemToolTipHandle;
@@ -161,8 +159,8 @@ public class NativeShell extends NativeDecorations {
  *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
  * </ul>
  */
-public NativeShell () {
-	this ((Display) null);
+public NativeShell (Shell wrapperShell) {
+	this (wrapperShell, (Display) null);
 }
 
 /**
@@ -204,8 +202,8 @@ public NativeShell () {
  * @see SWT#SYSTEM_MODAL
  * @see SWT#SHEET
  */
-public NativeShell (int style) {
-	this ((Display) null, style);
+public NativeShell (Shell wrapperShell, int style) {
+	this (wrapperShell, (Display) null, style);
 }
 
 /**
@@ -227,8 +225,8 @@ public NativeShell (int style) {
  *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
  * </ul>
  */
-public NativeShell (Display display) {
-	this (display, SWT.SHELL_TRIM);
+public NativeShell (Shell wrapperShell, Display display) {
+	this (wrapperShell, display, SWT.SHELL_TRIM);
 }
 
 /**
@@ -278,12 +276,12 @@ public NativeShell (Display display) {
  * @see SWT#SYSTEM_MODAL
  * @see SWT#SHEET
  */
-public NativeShell (Display display, int style) {
-	this (display, null, style, 0, false);
+public NativeShell (Shell wrapperShell, Display display, int style) {
+	this (wrapperShell, display, null, style, 0, false);
 }
 
-NativeShell (Display display, NativeShell parent, int style, long handle, boolean embedded) {
-	super ();
+NativeShell (Shell wrapperShell, Display display, NativeShell parent, int style, long handle, boolean embedded) {
+	super (wrapperShell);
 	checkSubclass ();
 	if (display == null) display = Display.getCurrent ();
 	if (display == null) display = Display.getDefault ();
@@ -337,8 +335,8 @@ NativeShell (Display display, NativeShell parent, int style, long handle, boolea
  *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
  * </ul>
  */
-public NativeShell (NativeShell parent) {
-	this (parent, SWT.DIALOG_TRIM);
+public NativeShell (Shell wrapperShell, NativeShell parent) {
+	this (wrapperShell, parent, SWT.DIALOG_TRIM);
 }
 
 /**
@@ -390,8 +388,8 @@ public NativeShell (NativeShell parent) {
  * @see SWT#SYSTEM_MODAL
  * @see SWT#SHEET
  */
-public NativeShell (NativeShell parent, int style) {
-	this (parent != null ? parent.display : null, parent, style, 0, false);
+public NativeShell (Shell wrapperShell, NativeShell parent, int style) {
+	this (wrapperShell, parent != null ? parent.display : null, parent, style, 0, false);
 }
 
 /**
@@ -411,8 +409,8 @@ public NativeShell (NativeShell parent, int style) {
  *
  * @noreference This method is not intended to be referenced by clients.
  */
-public static NativeShell win32_new (Display display, long handle) {
-	return new NativeShell (display, null, SWT.NO_TRIM, handle, true);
+public static NativeShell win32_new (Shell wrapperShell, Display display, long handle) {
+	return new NativeShell (wrapperShell, display, null, SWT.NO_TRIM, handle, true);
 }
 
 /**
@@ -434,8 +432,8 @@ public static NativeShell win32_new (Display display, long handle) {
  *
  * @since 3.3
  */
-public static NativeShell internal_new (Display display, long handle) {
-	return new NativeShell (display, null, SWT.NO_TRIM, handle, false);
+public static NativeShell internal_new (Shell wrapperShell, Display display, long handle) {
+	return new NativeShell (wrapperShell, display, null, SWT.NO_TRIM, handle, false);
 }
 
 static int checkStyle (NativeShell parent, int style) {
@@ -2699,14 +2697,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 		return;
 	}
 	shell.layout (null, SWT.DEFER | SWT.ALL | SWT.CHANGED);
-}
-
-@Override
-protected Shell wrap() {
-	if (wrapperShell == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperShell;
 }
 
 }

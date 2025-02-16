@@ -51,7 +51,7 @@ import org.eclipse.swt.graphics.*;
  */
 public class Composite extends Scrollable {
 
-	private final NativeComposite wrappedComposite;
+	private final NativeComposite<Composite> wrappedComposite;
 
 /**
  * Constructs a new instance of this class given its parent
@@ -86,13 +86,7 @@ public class Composite extends Scrollable {
  * @see NativeWidget#getStyle
  */
 public Composite (Composite parent, int style) {
-	this.wrappedComposite = new NativeComposite(checkNative(parent), style) {
-		@Override
-		protected Composite wrap() {
-			return Composite.this;
-		}
-	};
-	this.wrappedComposite.wrapperComposite = this;
+	this.wrappedComposite = new NativeComposite<>(this, checkNative(parent), style);
 }
 
 protected Composite() {
@@ -583,7 +577,7 @@ public String toString() {
 }
 
 @Override
-protected NativeComposite getWrappedWidget() {
+protected NativeComposite<? extends Composite> getWrappedWidget() {
 	if (wrappedComposite == null) {
 		SWT.error (SWT.ERROR_NULL_ARGUMENT, null, " subclass has to overwrite method for retrieving wrapped widget");
 	}

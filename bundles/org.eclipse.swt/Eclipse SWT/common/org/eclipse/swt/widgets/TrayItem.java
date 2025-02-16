@@ -72,12 +72,7 @@ public class TrayItem extends Item {
  * @see NativeWidget#getStyle
  */
 public TrayItem (Tray parent, int style) {
-	this (new NativeTrayItem(checkNative(parent), style));
-}
-
-TrayItem (NativeTrayItem nativeTrayItem) {
-	this.wrappedTrayItem = nativeTrayItem;
-	this.wrappedTrayItem.wrapperTrayItem = this;
+	this.wrappedTrayItem = new NativeTrayItem(this, checkNative(parent), style);
 }
 
 /**

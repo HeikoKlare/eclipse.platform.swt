@@ -40,9 +40,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeToolItem extends NativeItem {
-	ToolItem wrapperToolItem;
-
+public class NativeToolItem extends NativeItem<ToolItem> {
 	NativeToolBar parent;
 	NativeControl control;
 	String toolTipText;
@@ -86,8 +84,8 @@ public class NativeToolItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeToolItem (NativeToolBar parent, int style) {
-	super (parent, checkStyle (style));
+public NativeToolItem (ToolItem wrapperToolItem, NativeToolBar parent, int style) {
+	super (wrapperToolItem, parent, checkStyle (style));
 	this.parent = parent;
 	parent.createItem (this, parent.getItemCount ());
 }
@@ -128,8 +126,8 @@ public NativeToolItem (NativeToolBar parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeToolItem (NativeToolBar parent, int style, int index) {
-	super (parent, checkStyle (style));
+public NativeToolItem (ToolItem wrapperToolItem, NativeToolBar parent, int style, int index) {
+	super (wrapperToolItem, parent, checkStyle (style));
 	this.parent = parent;
 	parent.createItem (this, index);
 }
@@ -1215,14 +1213,6 @@ LRESULT wmCommandChild (long wParam, long lParam) {
 	}
 	sendSelectionEvent (SWT.Selection);
 	return null;
-}
-
-@Override
-protected ToolItem wrap() {
-	if (wrapperToolItem == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperToolItem;
 }
 
 }

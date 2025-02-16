@@ -83,12 +83,7 @@ public class CoolBar extends Composite {
  * @see NativeWidget#getStyle
  */
 public CoolBar (Composite parent, int style) {
-	this (new NativeCoolBar(checkNative(parent), style));
-}
-
-CoolBar(NativeCoolBar nativeCoolBar) {
-	this.wrappedCoolBar = nativeCoolBar;
-	this.wrappedCoolBar.wrapperCoolBar = this;
+	this.wrappedCoolBar = new NativeCoolBar(this, checkNative(parent), style);
 }
 
 /**

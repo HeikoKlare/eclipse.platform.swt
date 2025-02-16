@@ -32,7 +32,7 @@ import org.eclipse.swt.internal.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  */
 
-public abstract class NativeItem extends NativeWidget {
+public abstract class NativeItem<I extends Item> extends NativeWidget<I> {
 	String text;
 	Image image;
 	/**
@@ -73,8 +73,8 @@ public abstract class NativeItem extends NativeWidget {
  * @see SWT
  * @see NativeWidget#getStyle
  */
-public NativeItem (NativeWidget parent, int style) {
-	super (parent, style);
+public NativeItem (I wrapperItem, NativeWidget parent, int style) {
+	super (wrapperItem, parent, style);
 	text = "";
 }
 
@@ -108,8 +108,8 @@ public NativeItem (NativeWidget parent, int style) {
  * @see SWT
  * @see NativeWidget#getStyle
  */
-public NativeItem (NativeWidget parent, int style, int index) {
-	this (parent, style);
+public NativeItem (I wrapperItem, NativeWidget parent, int style, int index) {
+	this (wrapperItem, parent, style);
 }
 
 @Override

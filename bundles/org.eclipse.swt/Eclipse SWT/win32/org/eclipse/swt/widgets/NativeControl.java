@@ -49,9 +49,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeControl extends NativeWidget implements Drawable {
-
-	Control wrapperControl;
+public abstract class NativeControl<W extends Control> extends NativeWidget<W> implements Drawable {
 
 	static {
 		DPIZoomChangeRegistry.registerHandler(NativeControl::handleDPIChange, Control.class);
@@ -84,7 +82,8 @@ public abstract class NativeControl extends NativeWidget implements Drawable {
 /**
  * Prevents uninitialized instances from being created outside the package.
  */
-NativeControl () {
+NativeControl (W wrapperControl) {
+	super(wrapperControl);
 }
 
 /**
@@ -117,8 +116,8 @@ NativeControl () {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeControl (NativeComposite parent, int style) {
-	super (parent, style);
+public NativeControl (W wrapperControl, NativeComposite parent, int style) {
+	super (wrapperControl, parent, style);
 	this.parent = parent;
 	createWidget ();
 }
@@ -5845,14 +5844,6 @@ private static void resizeFont(NativeControl control, int newZoom) {
 	} else {
 		control.setFont(Font.win32_new(font, newZoom));
 	}
-}
-
-@Override
-protected Control wrap() {
-	if (wrapperControl == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperControl;
 }
 
 }

@@ -45,6 +45,10 @@ public class ToolTip extends Widget {
 
 	private final NativeToolTip wrappedToolTip;
 
+ToolTip() {
+	this.wrappedToolTip = null;
+}
+
 /**
  * Constructs a new instance of this class given its parent
  * and a style value describing its behavior and appearance.
@@ -77,12 +81,7 @@ public class ToolTip extends Widget {
  * @see NativeWidget#getStyle
  */
 public ToolTip (Shell parent, int style) {
-	this (new NativeToolTip(checkNative(parent), style));
-}
-
-ToolTip (NativeToolTip nativeToolTip) {
-	this.wrappedToolTip = nativeToolTip;
-	this.wrappedToolTip.wrapperToolTip = this;
+	this.wrappedToolTip = new NativeToolTip(this, checkNative(parent), style);
 }
 
 /**

@@ -119,12 +119,7 @@ public class ScrollBar extends Widget {
  * @see NativeWidget#getStyle
  */
 ScrollBar (Scrollable parent, int style) {
-	this (new NativeScrollBar(checkNative(parent), style));
-}
-
-ScrollBar (NativeScrollBar nativeScrollBar) {
-	this.wrappedScrollBar = nativeScrollBar;
-	this.wrappedScrollBar.wrapperScrollBar = this;
+	this.wrappedScrollBar = new NativeScrollBar(this, checkNative(parent), style);
 }
 
 /**
@@ -254,7 +249,8 @@ public int getPageIncrement () {
  * </ul>
  */
 public Scrollable getParent () {
-	return wrappedScrollBar.getParent().wrap();
+	NativeScrollable<Scrollable> wrappedScrollable = wrappedScrollBar.getParent();
+	return wrappedScrollable != null ? wrappedScrollable.wrap() : null;
 }
 
 /**

@@ -98,9 +98,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeDecorations extends NativeCanvas {
-	Decorations wrapperDecorations;
-
+public class NativeDecorations<W extends Decorations> extends NativeCanvas<W> {
 	Image image, smallImage, largeImage;
 	Image [] images;
 	NativeMenu menuBar;
@@ -121,7 +119,8 @@ public class NativeDecorations extends NativeCanvas {
 /**
  * Prevents uninitialized instances from being created outside the package.
  */
-NativeDecorations () {
+NativeDecorations (W wrapperDecorations) {
+	super(wrapperDecorations);
 }
 
 /**
@@ -163,8 +162,8 @@ NativeDecorations () {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeDecorations (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeDecorations (W wrapperDecorations, NativeComposite parent, int style) {
+	super (wrapperDecorations, parent, checkStyle (style));
 }
 
 void _setMaximized (boolean maximized) {
@@ -1713,14 +1712,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 			DPIZoomChangeRegistry.applyChange(menu.wrap(), newZoom, scalingFactor);
 		}
 	}
-}
-
-@Override
-protected Decorations wrap() {
-	if (wrapperDecorations == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperDecorations;
 }
 
 }

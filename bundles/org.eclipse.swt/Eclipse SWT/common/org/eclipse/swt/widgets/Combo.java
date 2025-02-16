@@ -93,13 +93,9 @@ public class Combo extends Composite {
  * @see NativeWidget#getStyle
  */
 public Combo (Composite parent, int style) {
-	this (new NativeCombo(checkNative(parent), style));
+	this.wrappedCombo = new NativeCombo(this, checkNative(parent), style);
 }
 
-Combo(NativeCombo nativeCombo) {
-	this.wrappedCombo = nativeCombo;
-	this.wrappedCombo.wrapperCombo = this;
-}
 
 /**
  * Adds the argument to the end of the receiver's list.

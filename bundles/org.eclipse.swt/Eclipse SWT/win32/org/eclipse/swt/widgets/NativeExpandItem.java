@@ -37,9 +37,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.2
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeExpandItem extends NativeItem {
-	ExpandItem wrapperExpandItem;
-
+public class NativeExpandItem extends NativeItem<ExpandItem> {
 	NativeExpandBar parent;
 	NativeControl control;
 	boolean expanded, hover;
@@ -81,8 +79,8 @@ public class NativeExpandItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeExpandItem (NativeExpandBar parent, int style) {
-	this (parent, style, checkNull (parent).getItemCount ());
+public NativeExpandItem (ExpandItem wrapperExpandItem, NativeExpandBar parent, int style) {
+	this (wrapperExpandItem, parent, style, checkNull (parent).getItemCount ());
 }
 
 /**
@@ -115,8 +113,8 @@ public NativeExpandItem (NativeExpandBar parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeExpandItem (NativeExpandBar parent, int style, int index) {
-	super (parent, style);
+public NativeExpandItem (ExpandItem wrapperExpandItem, NativeExpandBar parent, int style, int index) {
+	super (wrapperExpandItem, parent, style);
 	this.parent = parent;
 	parent.createItem (this, style, index);
 }
@@ -543,14 +541,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 		int newHeight = Math.round(item.height * scalingFactor);
 		item.setBoundsInPixels(item.x, item.y, newWidth, newHeight, true, true);
 	}
-}
-
-@Override
-protected ExpandItem wrap() {
-	if (wrapperExpandItem == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperExpandItem;
 }
 
 }

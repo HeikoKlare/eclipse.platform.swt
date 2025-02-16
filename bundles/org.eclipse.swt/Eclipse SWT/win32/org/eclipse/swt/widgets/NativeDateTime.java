@@ -47,9 +47,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.3
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeDateTime extends NativeComposite {
-	DateTime wrapperDateTime;
-
+public class NativeDateTime extends NativeComposite<DateTime> {
 	static final int MIN_YEAR = 1752; // Gregorian switchover in North America: September 19, 1752
 	static final int MAX_YEAR = 9999;
 	boolean doubleClick, ignoreSelection;
@@ -156,8 +154,8 @@ public class NativeDateTime extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeDateTime (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeDateTime (DateTime wrapperDateTime, NativeComposite parent, int style) {
+	super (wrapperDateTime, parent, checkStyle (style));
 	if ((this.style & SWT.SHORT) != 0) {
 		String buffer = ((this.style & SWT.DATE) != 0) ? getCustomShortDateFormat() : getCustomShortTimeFormat();
 		TCHAR lpszFormat = new TCHAR (0, buffer, true);
@@ -844,11 +842,4 @@ LRESULT WM_TIMER (long wParam, long lParam) {
 	return code == 0 ? LRESULT.ZERO : new LRESULT(code);
 }
 
-@Override
-protected DateTime wrap() {
-	if (wrapperDateTime== null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperDateTime;
-}
 }

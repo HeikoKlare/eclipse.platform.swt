@@ -89,12 +89,7 @@ public class Button extends Control {
  * @see NativeWidget#getStyle
  */
 public Button (Composite parent, int style) {
-	this (new NativeButton(checkNative(parent), style));
-}
-
-Button(NativeButton nativeButton) {
-	this.wrappedButton = nativeButton;
-	wrappedButton.wrapperButton = this;
+	this.wrappedButton = new NativeButton(this, checkNative(parent), style);
 }
 
 /**

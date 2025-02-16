@@ -113,12 +113,7 @@ public class Table extends Composite {
  * @see NativeWidget#getStyle
  */
 public Table (Composite parent, int style) {
-	this (new NativeTable(checkNative(parent), style));
-}
-
-Table (NativeTable nativeTable) {
-	this.wrappedTable = nativeTable;
-	this.wrappedTable.wrapperTable = this;
+	this.wrappedTable = new NativeTable(this, checkNative(parent), style);
 }
 
 /**

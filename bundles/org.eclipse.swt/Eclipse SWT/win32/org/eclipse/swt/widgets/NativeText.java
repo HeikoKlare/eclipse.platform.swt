@@ -62,9 +62,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeText extends NativeScrollable {
-	Text wrapperText;
-
+public class NativeText extends NativeScrollable<Text> {
 	int tabs, oldStart, oldEnd;
 	boolean doubleClick, ignoreModify, ignoreVerify, ignoreCharacter, allowPasswordChar;
 	String message;
@@ -128,8 +126,8 @@ public class NativeText extends NativeScrollable {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeText (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeText (Text wrapperText, NativeComposite parent, int style) {
+	super (wrapperText, parent, checkStyle (style));
 }
 
 @Override
@@ -3123,14 +3121,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 		return;
 	}
 	text.setMargins();
-}
-
-@Override
-protected Text wrap() {
-	if (wrapperText == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperText;
 }
 
 }

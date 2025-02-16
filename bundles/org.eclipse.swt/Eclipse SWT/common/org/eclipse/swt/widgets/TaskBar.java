@@ -41,12 +41,7 @@ public class TaskBar extends Widget {
 	private final NativeTaskBar wrappedTaskBar;
 
 TaskBar (Display display, int style) {
-	this (new NativeTaskBar(display, style));
-}
-
-TaskBar(NativeTaskBar nativeTaskBar) {
-	this.wrappedTaskBar = nativeTaskBar;
-	this.wrappedTaskBar.wrapperTaskBar = this;
+	this.wrappedTaskBar = new NativeTaskBar(this, display, style);
 }
 
 /**

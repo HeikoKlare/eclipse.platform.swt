@@ -128,12 +128,7 @@ public class Text extends Scrollable {
  * @see NativeWidget#getStyle
  */
 public Text (Composite parent, int style) {
-	this (new NativeText(checkNative(parent), style));
-}
-
-protected Text (NativeText nativeText) {
-	this.wrappedText = nativeText;
-	this.wrappedText.wrapperText = this;
+	this.wrappedText = new NativeText(this, checkNative(parent), style);
 }
 
 /**

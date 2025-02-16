@@ -87,9 +87,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeScrollBar extends NativeWidget {
-	ScrollBar wrapperScrollBar;
-
+public class NativeScrollBar extends NativeWidget<ScrollBar> {
 	NativeScrollable parent;
 	int increment, pageIncrement;
 
@@ -122,8 +120,8 @@ public class NativeScrollBar extends NativeWidget {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-NativeScrollBar (NativeScrollable parent, int style) {
-	super (parent, checkStyle (style));
+NativeScrollBar (ScrollBar wrapperScrollBar, NativeScrollable parent, int style) {
+	super (wrapperScrollBar, parent, checkStyle (style));
 	this.parent = parent;
 	createWidget ();
 }
@@ -1001,11 +999,4 @@ LRESULT wmScrollChild (long wParam, long lParam) {
 	return null;
 }
 
-@Override
-protected ScrollBar wrap() {
-	if (wrapperScrollBar == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperScrollBar;
-}
 }

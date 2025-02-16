@@ -42,9 +42,7 @@ import org.eclipse.swt.widgets.*;
  * @noextend This class is not intended to be subclassed by clients.
  */
 
-public class NativeBrowser extends NativeComposite {
-	Browser wrapperBrowser;
-
+public class NativeBrowser extends NativeComposite<Browser> {
 	WebBrowser webBrowser;
 	int userStyle;
 	boolean isClosing;
@@ -85,8 +83,8 @@ public class NativeBrowser extends NativeComposite {
  *
  * @since 3.0
  */
-public NativeBrowser (Composite parent, int style) {
-	super (checkParent (Widget.checkNative(parent)), checkStyle (style));
+public NativeBrowser (Browser wrapperBrowser, Composite parent, int style) {
+	super (wrapperBrowser, checkParent (Widget.checkNative(parent)), checkStyle (style));
 	userStyle = style;
 
 	String platform = SWT.getPlatform ();
@@ -1203,14 +1201,6 @@ public boolean setUrl (String url, String postData, String[] headers) {
 public void stop () {
 	checkWidget();
 	webBrowser.stop ();
-}
-
-@Override
-protected Browser wrap() {
-	if (wrapperBrowser == null) {
-		SWT.error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperBrowser;
 }
 
 }

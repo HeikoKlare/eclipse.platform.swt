@@ -44,12 +44,7 @@ public class Tray extends Widget {
 	private final NativeTray wrappedTray;
 
 Tray (Display display, int style) {
-	this (new NativeTray(display, style));
-}
-
-Tray (NativeTray nativeTray) {
-	this.wrappedTray = nativeTray;
-	this.wrappedTray.wrapperTray = this;
+	this.wrappedTray = new NativeTray(this, display, style);
 }
 
 /**

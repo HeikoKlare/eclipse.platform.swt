@@ -49,9 +49,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/snippets/#composite">Composite snippets</a>
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  */
-public class NativeComposite extends NativeScrollable {
-	Composite wrapperComposite;
-
+public class NativeComposite<W extends Composite> extends NativeScrollable<W> {
 	Layout layout;
 	WINDOWPOS [] lpwp;
 	NativeControl [] tabList;
@@ -66,7 +64,8 @@ public class NativeComposite extends NativeScrollable {
 /**
  * Prevents uninitialized instances from being created outside the package.
  */
-NativeComposite () {
+NativeComposite (W wrapperComposite) {
+	super (wrapperComposite);
 }
 
 /**
@@ -101,8 +100,8 @@ NativeComposite () {
  * @see SWT#DOUBLE_BUFFERED
  * @see NativeWidget#getStyle
  */
-public NativeComposite (NativeComposite parent, int style) {
-	super (parent, style);
+public NativeComposite (W wrapperComposite, NativeComposite parent, int style) {
+	super (wrapperComposite, parent, style);
 }
 
 NativeControl [] _getChildren () {
@@ -834,7 +833,7 @@ public void layout (NativeControl [] changed, int flags) {
 			while (child != this) {
 				if (composite.layout != null) {
 					composite.state |= LAYOUT_NEEDED;
-					if (!composite.layout.flushCache (child.wrap())) {
+					if (!composite.layout.flushCache ((Control) child.wrap())) {
 						composite.state |= LAYOUT_CHANGED;
 					}
 				}
@@ -1987,14 +1986,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 		DPIZoomChangeRegistry.applyChange(child.wrap(), newZoom, scalingFactor);
 	}
 	composite.redrawInPixels (null, true);
-}
-
-@Override
-protected Composite wrap() {
-	if (wrapperComposite == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperComposite;
 }
 
 }

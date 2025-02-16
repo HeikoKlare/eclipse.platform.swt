@@ -206,6 +206,6 @@ public ScrollBar getVerticalBar () {
 }
 
 @Override
-protected abstract NativeScrollable getWrappedWidget();
+protected abstract NativeScrollable<? extends Scrollable> getWrappedWidget();
 
 }

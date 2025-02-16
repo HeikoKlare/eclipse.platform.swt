@@ -1357,7 +1357,7 @@ boolean filterMessage (MSG msg) {
 	return false;
 }
 
-NativeControl findControl (long handle) {
+NativeControl<? extends Control> findControl (long handle) {
 	if (handle == 0) return null;
 	long hwndOwner = 0;
 	do {
@@ -1900,7 +1900,7 @@ public int getDoubleClickTime () {
  * </ul>
  */
 public Control getFocusControl () {
-	NativeControl nativeFocusControl = getNativeFocusControl();
+	NativeControl<Control> nativeFocusControl = getNativeFocusControl();
 	return nativeFocusControl != null ? nativeFocusControl.wrap() : null;
 }
 
@@ -2655,8 +2655,8 @@ public TaskBar getSystemTaskBar () {
 public Tray getSystemTray () {
 	checkDevice ();
 	if (tray == null) {
-		tray = new NativeTray (this, SWT.NONE);
-		tray.wrapperTray = new Tray(tray);
+		Tray wrapperTray = new Tray (this, SWT.NONE);
+		tray = wrapperTray.getWrappedWidget();
 	}
 	return tray.wrap();
 }

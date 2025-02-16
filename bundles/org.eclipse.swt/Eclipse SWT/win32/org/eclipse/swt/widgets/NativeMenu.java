@@ -42,9 +42,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeMenu extends NativeWidget {
-	Menu wrapperMenu;
-
+public class NativeMenu extends NativeWidget<Menu> {
 	/**
 	 * the handle to the OS resource
 	 * (Warning: This field is platform dependent)
@@ -99,8 +97,8 @@ public class NativeMenu extends NativeWidget {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeMenu (NativeControl parent) {
-	this (checkNull (parent).menuShell (), SWT.POP_UP);
+public NativeMenu (Menu wrapperMenu, NativeControl parent) {
+	this (wrapperMenu, checkNull (parent).menuShell (), SWT.POP_UP);
 }
 
 /**
@@ -140,8 +138,8 @@ public NativeMenu (NativeControl parent) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeMenu (NativeDecorations parent, int style) {
-	this (parent, checkStyle (style), 0);
+public NativeMenu (Menu wrapperMenu, NativeDecorations parent, int style) {
+	this (wrapperMenu, parent, checkStyle (style), 0);
 }
 
 /**
@@ -168,8 +166,8 @@ public NativeMenu (NativeDecorations parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeMenu (NativeMenu parentMenu) {
-	this (checkNull (parentMenu).parent, SWT.DROP_DOWN);
+public NativeMenu (Menu wrapperMenu, NativeMenu parentMenu) {
+	this (wrapperMenu, checkNull (parentMenu).parent, SWT.DROP_DOWN);
 }
 
 /**
@@ -196,12 +194,12 @@ public NativeMenu (NativeMenu parentMenu) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeMenu (NativeMenuItem parentItem) {
-	this (checkNull (parentItem).parent);
+public NativeMenu (Menu wrapperMenu, NativeMenuItem parentItem) {
+	this (wrapperMenu, checkNull (parentItem).parent);
 }
 
-NativeMenu (NativeDecorations parent, int style, long handle) {
-	super (parent, checkStyle (style));
+NativeMenu (Menu wrapperMenu, NativeDecorations parent, int style, long handle) {
+	super (wrapperMenu, parent, checkStyle (style));
 	this.parent = parent;
 	this.handle = handle;
 	createWidget ();
@@ -1376,14 +1374,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	for (NativeMenuItem item : menu.getItems()) {
 		DPIZoomChangeRegistry.applyChange(item.wrap(), newZoom, scalingFactor);
 	}
-}
-
-@Override
-protected Menu wrap() {
-	if (wrapperMenu == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperMenu;
 }
 
 }

@@ -104,9 +104,7 @@ import org.eclipse.swt.widgets.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeDragSource extends NativeWidget {
-	DragSource wrapperDragSource;
-
+public class NativeDragSource extends NativeWidget<DragSource> {
 	// info for registering as a drag source
 	Control control;
 	Listener controlListener;
@@ -362,8 +360,8 @@ public class NativeDragSource extends NativeWidget {
  * @see DND#DROP_MOVE
  * @see DND#DROP_LINK
  */
-public NativeDragSource(Control control, int style) {
-	super(Widget.checkNative(control), checkStyle(style));
+public NativeDragSource(DragSource wrapperDragSource, Control control, int style) {
+	super(wrapperDragSource, Widget.checkNative(control), checkStyle(style));
 	this.control = control;
 	if (control.getData(DND.DRAG_SOURCE_KEY) != null) {
 		DND.error(DND.ERROR_CANNOT_INIT_DRAG);
@@ -824,14 +822,6 @@ public void setDragSourceEffect(DragSourceEffect effect) {
  */
 public void setTransfer(Transfer... transferAgents){
 	this.transferAgents = transferAgents;
-}
-
-@Override
-protected DragSource wrap() {
-	if (wrapperDragSource == null) {
-		SWT.error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperDragSource;
 }
 
 }

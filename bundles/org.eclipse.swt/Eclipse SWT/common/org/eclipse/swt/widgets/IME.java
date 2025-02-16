@@ -69,12 +69,7 @@ public class IME extends Widget {
  * @see NativeWidget#getStyle
  */
 public IME (Canvas parent, int style) {
-	this (new NativeIME(checkNative(parent), style));
-}
-
-IME(NativeIME nativeIME) {
-	this.wrappedIME = nativeIME;
-	this.wrappedIME.wrapperIME = this;
+	this.wrappedIME = new NativeIME(this, checkNative(parent), style);
 }
 
 /**

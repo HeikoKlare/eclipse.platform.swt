@@ -75,9 +75,7 @@ import org.eclipse.swt.widgets.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeDropTarget extends NativeWidget {
-	DropTarget wrapperDropTarget;
-
+public class NativeDropTarget extends NativeWidget<DropTarget> {
 	Control control;
 	Listener controlListener;
 	Transfer[] transferAgents = new Transfer[0];
@@ -132,8 +130,8 @@ public class NativeDropTarget extends NativeWidget {
  * @see DND#DROP_MOVE
  * @see DND#DROP_LINK
  */
-public NativeDropTarget(Control control, int style) {
-	super (Widget.checkNative(control), checkStyle(style));
+public NativeDropTarget(DropTarget wrapperDropTarget, Control control, int style) {
+	super (wrapperDropTarget, Widget.checkNative(control), checkStyle(style));
 	this.control = control;
 	if (control.getData(DND.DROP_TARGET_KEY) != null) {
 		DND.error(DND.ERROR_CANNOT_INIT_DROP);
@@ -791,14 +789,6 @@ boolean setEventData(DNDEvent event, long pDataObject, int grfKeyState, int pt_x
 public void setTransfer(Transfer... transferAgents){
 	if (transferAgents == null) DND.error(SWT.ERROR_NULL_ARGUMENT);
 	this.transferAgents = transferAgents;
-}
-
-@Override
-protected DropTarget wrap() {
-	if (wrapperDropTarget == null) {
-		SWT.error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperDropTarget;
 }
 
 }

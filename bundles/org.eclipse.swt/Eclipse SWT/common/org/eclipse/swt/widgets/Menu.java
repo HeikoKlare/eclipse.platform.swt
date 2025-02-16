@@ -115,11 +115,6 @@ public Menu (Decorations parent, int style) {
 	this (parent, style, 0);
 }
 
-Menu(NativeMenu nativeMenu) {
-	this.wrappedMenu = nativeMenu;
-	this.wrappedMenu.wrapperMenu = this;
-}
-
 /**
  * Constructs a new instance of this class given its parent
  * (which must be a <code>Menu</code>) and sets the style
@@ -177,7 +172,7 @@ public Menu (MenuItem parentItem) {
 }
 
 Menu (Decorations parent, int style, long handle) {
-	this (new NativeMenu(checkNative(parent), style, handle));
+	this.wrappedMenu = new NativeMenu(this, checkNative(parent), style, handle);
 }
 
 /**
@@ -343,7 +338,7 @@ public int getOrientation () {
  * </ul>
  */
 public Decorations getParent () {
-	NativeDecorations wrappedDecorations = wrappedMenu.getParent();
+	NativeDecorations<Decorations> wrappedDecorations = wrappedMenu.getParent();
 	return wrappedDecorations != null ? wrappedDecorations.wrap() : null;
 }
 

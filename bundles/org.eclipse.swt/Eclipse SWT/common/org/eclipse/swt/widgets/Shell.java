@@ -255,7 +255,7 @@ public Shell (Display display, int style) {
 }
 
 Shell (Display display, Shell parent, int style, long handle, boolean embedded) {
-	this(new NativeShell(display, checkNative(parent), style, handle, embedded));
+	this.wrappedShell = new NativeShell(this, display, checkNative(parent), style, handle, embedded);
 }
 
 /**
@@ -356,12 +356,6 @@ public Shell (Shell parent, int style) {
  */
 public static Shell win32_new (Display display, long handle) {
 	return new Shell (display, null, SWT.NO_TRIM, handle, true);
-}
-
-Shell(NativeShell nativeShell) {
-	super(nativeShell);
-	this.wrappedShell = nativeShell;
-	this.wrappedShell.wrapperShell = this;
 }
 
 /**

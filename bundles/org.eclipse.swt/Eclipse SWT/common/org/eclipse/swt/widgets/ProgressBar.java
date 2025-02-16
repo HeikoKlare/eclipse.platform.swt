@@ -73,12 +73,7 @@ public class ProgressBar extends Control {
  * @see NativeWidget#getStyle
  */
 public ProgressBar (Composite parent, int style) {
-	this (new NativeProgressBar(checkNative(parent), style));
-}
-
-ProgressBar (NativeProgressBar nativeProgressBar) {
-	this.wrappedProgressBar = nativeProgressBar;
-	this.wrappedProgressBar.wrapperProgressBar = this;
+	this.wrappedProgressBar = new NativeProgressBar(this, checkNative(parent), style);
 }
 
 /**

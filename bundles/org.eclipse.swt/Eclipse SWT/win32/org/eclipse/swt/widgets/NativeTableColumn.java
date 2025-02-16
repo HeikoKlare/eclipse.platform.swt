@@ -38,9 +38,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeTableColumn extends NativeItem {
-	TableColumn wrapperTableColumn;
-
+public class NativeTableColumn extends NativeItem<TableColumn> {
 	NativeTable parent;
 	boolean resizable, moveable;
 	String toolTipText;
@@ -82,8 +80,8 @@ public class NativeTableColumn extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTableColumn (NativeTable parent, int style) {
-	super (parent, checkStyle (style));
+public NativeTableColumn (TableColumn wrapperTableColumn, NativeTable parent, int style) {
+	super (wrapperTableColumn, parent, checkStyle (style));
 	resizable = true;
 	this.parent = parent;
 	parent.createItem (this, parent.getColumnCount ());
@@ -126,8 +124,8 @@ public NativeTableColumn (NativeTable parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTableColumn (NativeTable parent, int style, int index) {
-	super (parent, checkStyle (style));
+public NativeTableColumn (TableColumn wrapperTableColumn, NativeTable parent, int style, int index) {
+	super (wrapperTableColumn, parent, checkStyle (style));
 	resizable = true;
 	this.parent = parent;
 	parent.createItem (this, index);
@@ -904,14 +902,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	if (image != null) {
 		tableColumn.setImage(image);
 	}
-}
-
-@Override
-protected TableColumn wrap() {
-	if (wrapperTableColumn == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperTableColumn;
 }
 
 }

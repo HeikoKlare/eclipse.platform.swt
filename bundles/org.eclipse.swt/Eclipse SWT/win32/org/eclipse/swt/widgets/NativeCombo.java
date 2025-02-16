@@ -60,9 +60,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeCombo extends NativeComposite {
-	Combo wrapperCombo;
-
+public class NativeCombo extends NativeComposite<Combo> {
 	boolean noSelection, ignoreDefaultSelection, ignoreCharacter, ignoreModify, ignoreResize, lockText;
 	int scrollWidth, visibleCount;
 	long cbtHook;
@@ -143,8 +141,8 @@ public class NativeCombo extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCombo (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeCombo (Combo wrapperCombo, NativeComposite parent, int style) {
+	super (wrapperCombo, parent, checkStyle (style));
 	this.style |= SWT.H_SCROLL;
 }
 
@@ -3369,14 +3367,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 		combo.scrollWidth = 0;
 		combo.setScrollWidth();
 	}
-}
-
-@Override
-protected Combo wrap() {
-	if (wrapperCombo == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperCombo;
 }
 
 }

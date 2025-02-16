@@ -115,12 +115,7 @@ public class Tree extends Composite {
  * @see NativeWidget#getStyle
  */
 public Tree (Composite parent, int style) {
-	this (new NativeTree(checkNative(parent), style));
-}
-
-Tree (NativeTree nativeTree) {
-	this.wrappedTree = nativeTree;
-	this.wrappedTree.wrapperTree = this;
+	this.wrappedTree = new NativeTree(this, checkNative(parent), style);
 }
 
 /**

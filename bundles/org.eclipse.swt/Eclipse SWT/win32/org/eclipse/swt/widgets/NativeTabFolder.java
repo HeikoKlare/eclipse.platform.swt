@@ -50,9 +50,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeTabFolder extends NativeComposite {
-	TabFolder wrapperTabFolder;
-
+public class NativeTabFolder extends NativeComposite<TabFolder> {
 	NativeTabItem [] items;
 	ImageList imageList;
 	static final long TabFolderProc;
@@ -125,8 +123,8 @@ public class NativeTabFolder extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTabFolder (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeTabFolder (TabFolder wrapperTabFolder, NativeComposite parent, int style) {
+	super (wrapperTabFolder, parent, checkStyle (style));
 }
 
 /**
@@ -237,7 +235,7 @@ void createItem (NativeTabItem item, int index) {
 	*/
 	if (count == 0) {
 		Event event = new Event ();
-		event.item = new TabItem(items [0]);
+		event.item = items [0].wrap();
 		sendSelectionEvent (SWT.Selection, event, true);
 		// the widget could be destroyed at this point
 	}
@@ -1143,14 +1141,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 		DPIZoomChangeRegistry.applyChange(tabFolder.items[i].wrap(), newZoom, scalingFactor);
 	}
 	tabFolder.layout(true, true);
-}
-
-@Override
-protected TabFolder wrap() {
-	if (wrapperTabFolder == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperTabFolder;
 }
 
 }

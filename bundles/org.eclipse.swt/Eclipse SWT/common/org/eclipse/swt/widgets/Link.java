@@ -71,12 +71,7 @@ public class Link extends Control {
  * @see NativeWidget#getStyle
  */
 public Link (Composite parent, int style) {
-	this (new NativeLink(checkNative(parent), style));
-}
-
-Link(NativeLink nativeLink) {
-	this.wrappedLink = nativeLink;
-	this.wrappedLink.wrapperLink = this;
+	this.wrappedLink = new NativeLink(this, checkNative(parent), style);
 }
 
 /**

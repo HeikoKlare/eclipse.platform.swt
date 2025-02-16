@@ -36,7 +36,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeScrollable extends NativeControl {
+public abstract class NativeScrollable<S extends Scrollable> extends NativeControl<S> {
 	NativeScrollBar horizontalBar, verticalBar;
 
 	/**
@@ -49,7 +49,8 @@ public abstract class NativeScrollable extends NativeControl {
 /**
  * Prevents uninitialized instances from being created outside the package.
  */
-NativeScrollable () {
+NativeScrollable (S wrapperScrollable) {
+	super (wrapperScrollable);
 }
 
 /**
@@ -81,8 +82,8 @@ NativeScrollable () {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeScrollable (NativeComposite parent, int style) {
-	super (parent, style);
+public NativeScrollable (S wrapperScrollable, NativeComposite parent, int style) {
+	super (wrapperScrollable, parent, style);
 }
 
 @Override
@@ -148,8 +149,7 @@ void createHandle () {
 }
 
 NativeScrollBar createScrollBar (int type) {
-	NativeScrollBar bar = new NativeScrollBar (this, type);
-	bar.wrapperScrollBar = new ScrollBar(bar);
+	NativeScrollBar bar = new ScrollBar(this.wrap(), type).getWrappedWidget();
 	if ((state & CANVAS) != 0) {
 		bar.setMaximum (100);
 		bar.setThumb (10);
@@ -518,8 +518,5 @@ LRESULT wmScroll (NativeScrollBar bar, boolean update, long hwnd, int msg, long 
 	bar.wmScrollChild (wParam, lParam);
 	return result;
 }
-
-@Override
-protected abstract Scrollable wrap();
 
 }

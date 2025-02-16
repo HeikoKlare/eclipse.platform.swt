@@ -50,8 +50,8 @@ import org.eclipse.swt.internal.win32.*;
  * @see #checkSubclass
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  */
-public abstract class NativeWidget {
-	Widget wrapperWidget;
+public abstract class NativeWidget<W extends Widget> {
+	private W wrapperWidget;
 
 	/**
 	 * the native zoom of the monitor in percent
@@ -145,8 +145,9 @@ public abstract class NativeWidget {
 /**
  * Prevents uninitialized instances from being created outside the package.
  */
-NativeWidget () {
+NativeWidget (W wrapperWidget) {
 	notifyCreationTracker();
+	this.wrapperWidget = wrapperWidget;
 }
 
 /**
@@ -178,9 +179,10 @@ NativeWidget () {
  * @see #checkSubclass
  * @see #getStyle
  */
-public NativeWidget (NativeWidget parent, int style) {
+public NativeWidget (W wrapperWidget, NativeWidget parent, int style) {
 	checkSubclass ();
 	checkParent (parent);
+	this.wrapperWidget = wrapperWidget;
 	this.style = style;
 	this.nativeZoom = parent != null ? parent.nativeZoom : DPIUtil.getNativeDeviceZoom();
 	display = parent.display;
@@ -2674,7 +2676,7 @@ int getSystemMetrics(int nIndex) {
 	return OS.GetSystemMetrics(nIndex);
 }
 
-protected Widget wrap() {
+protected W wrap() {
 	return wrapperWidget;
 }
 

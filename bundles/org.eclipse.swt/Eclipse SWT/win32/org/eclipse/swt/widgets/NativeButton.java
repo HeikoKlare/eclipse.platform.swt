@@ -48,9 +48,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeButton extends NativeControl {
-	Button wrapperButton;
-
+public class NativeButton extends NativeControl<Button> {
 	String text = "", message = "";
 	Image image, disabledImage;
 	ImageList imageList;
@@ -108,8 +106,8 @@ public class NativeButton extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeButton (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeButton (Button wrapperButton, NativeComposite parent, int style) {
+	super (wrapperButton, parent, checkStyle (style));
 	refreshCheckSize(this.nativeZoom);
 }
 
@@ -1573,14 +1571,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 		button._setImage(button.image);
 		button.updateImageList();
 	}
-}
-
-@Override
-protected Button wrap() {
-	if (wrapperButton == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperButton;
 }
 
 }

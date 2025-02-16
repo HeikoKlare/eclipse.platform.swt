@@ -76,12 +76,7 @@ public class Spinner extends Composite {
  * @see NativeWidget#getStyle
  */
 public Spinner (Composite parent, int style) {
-	this (new NativeSpinner(checkNative(parent), style));
-}
-
-Spinner (NativeSpinner nativeSpinner) {
-	this.wrappedSpinner = nativeSpinner;
-	this.wrappedSpinner.wrapperSpinner = this;
+	this.wrappedSpinner = new NativeSpinner(this, checkNative(parent), style);
 }
 
 /**

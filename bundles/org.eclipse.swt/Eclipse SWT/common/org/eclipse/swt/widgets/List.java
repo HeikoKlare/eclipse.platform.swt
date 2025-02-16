@@ -72,12 +72,7 @@ public class List extends Scrollable {
  * @see NativeWidget#getStyle
  */
 public List (Composite parent, int style) {
-	this (new NativeList(checkNative(parent), style));
-}
-
-protected List (NativeList nativeList) {
-	this.wrappedList = nativeList;
-	this.wrappedList.wrapperList = this;
+	this.wrappedList = new NativeList(this, checkNative(parent), style);
 }
 
 /**

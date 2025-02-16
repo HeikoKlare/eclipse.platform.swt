@@ -69,7 +69,7 @@ public class TabItem extends Item {
  * @see NativeWidget#getStyle
  */
 public TabItem (TabFolder parent, int style) {
-	this (new NativeTabItem(checkNative(parent), style));
+	this.wrappedTabItem = new NativeTabItem(this, checkNative(parent), style);
 }
 
 /**
@@ -105,12 +105,7 @@ public TabItem (TabFolder parent, int style) {
  * @see NativeWidget#getStyle
  */
 public TabItem (TabFolder parent, int style, int index) {
-	this (new NativeTabItem(checkNative(parent), style, index));
-}
-
-TabItem(NativeTabItem nativeTabItem) {
-	this.wrappedTabItem = nativeTabItem;
-	this.wrappedTabItem.wrapperTabItem = this;
+	this.wrappedTabItem = new NativeTabItem(this, checkNative(parent), style, index);
 }
 
 /**
@@ -126,7 +121,8 @@ TabItem(NativeTabItem nativeTabItem) {
  * </ul>
  */
 public Control getControl () {
-	return wrappedTabItem.getControl().wrap();
+	NativeControl<Control> wrappedControl = wrappedTabItem.getControl();
+	return wrappedControl != null ? wrappedControl.wrap() : null;
 }
 
 /**

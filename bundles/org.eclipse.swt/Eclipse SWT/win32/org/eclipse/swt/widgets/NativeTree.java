@@ -77,9 +77,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeTree extends NativeComposite {
-	Tree wrapperTree;
-
+public class NativeTree extends NativeComposite<Tree> {
 	NativeTreeItem [] items;
 	NativeTreeColumn [] columns;
 	int columnCount;
@@ -170,8 +168,8 @@ public class NativeTree extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTree (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeTree (Tree wrapperTree, NativeComposite parent, int style) {
+	super (wrapperTree, parent, checkStyle (style));
 }
 
 static int checkStyle (int style) {
@@ -262,7 +260,7 @@ NativeTreeItem _getItem (long hItem) {
 
 NativeTreeItem _getItem (long hItem, int id) {
 	if ((style & SWT.VIRTUAL) == 0) return items [id];
-	return id != -1 ? items [id] : new NativeTreeItem (this, SWT.NONE, -1, -1, hItem);
+	return id != -1 ? items [id] : new TreeItem (this.wrap(), SWT.NONE, -1, -1, hItem).getWrappedWidget();
 }
 
 @Override
@@ -4191,7 +4189,7 @@ public void setInsertMark (NativeTreeItem item, boolean before) {
 /**
  * Sets the number of root-level items contained in the receiver.
  * <p>
- * The fastest way to insert many items is documented in {@link NativeTreeItem#NativeTreeItem(NativeTree,int,int)}
+ * The fastest way to insert many items is documented in {@link NativeTreeItem#NativeTreeItem(TreeItem,NativeTree,int,int)}
  * and {@link NativeTreeItem#setItemCount}
  *
  * @param count the number of items
@@ -4324,7 +4322,7 @@ void setItemCount (int count, long hParent) {
 			}
 		} else {
 			for (int i = 0; i < numInserted; i++) {
-				new NativeTreeItem (this, SWT.NONE, hParent, itemInsertAfter, 0);
+				new TreeItem (this.wrap(), SWT.NONE, hParent, itemInsertAfter, 0).getWrappedWidget();
 			}
 		}
 	}
@@ -8306,14 +8304,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	tree.setScrollWidth();
 	// Reset of CheckBox Size required (if SWT.Check is not set, this is a no-op)
 	tree.setCheckboxImageList();
-}
-
-@Override
-protected Tree wrap() {
-	if (wrapperTree == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperTree;
 }
 
 }

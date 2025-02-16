@@ -36,9 +36,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeTableItem extends NativeItem {
-	TableItem wrapperTableItem;
-
+public class NativeTableItem extends NativeItem<TableItem> {
 	NativeTable parent;
 	String [] strings;
 	Image [] images;
@@ -82,8 +80,8 @@ public class NativeTableItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTableItem (NativeTable parent, int style) {
-	this (parent, style, checkNull (parent).getItemCount (), true);
+public NativeTableItem (TableItem wrapperTableItem, NativeTable parent, int style) {
+	this (wrapperTableItem, parent, style, checkNull (parent).getItemCount (), true);
 }
 
 /**
@@ -118,12 +116,12 @@ public NativeTableItem (NativeTable parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTableItem (NativeTable parent, int style, int index) {
-	this (parent, style, index, true);
+public NativeTableItem (TableItem wrapperTableItem, NativeTable parent, int style, int index) {
+	this (wrapperTableItem, parent, style, index, true);
 }
 
-NativeTableItem (NativeTable parent, int style, int index, boolean create) {
-	super (parent, style);
+NativeTableItem (TableItem wrapperTableItem, NativeTable parent, int style, int index, boolean create) {
+	super (wrapperTableItem, parent, style);
 	this.parent = parent;
 	if (create) parent.createItem (this, index);
 }
@@ -1290,14 +1288,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 			cellFonts[index] = cellFont == null ? null : Font.win32_new(cellFont, shell.nativeZoom);
 		}
 	}
-}
-
-@Override
-protected TableItem wrap() {
-	if (wrapperTableItem == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperTableItem;
 }
 
 }

@@ -41,16 +41,15 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/examples.php">SWT Example: ControlExample</a>
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  */
-public class NativeCanvas extends NativeComposite {
-	Canvas wrapperCanvas;
-
+public class NativeCanvas<W extends Canvas> extends NativeComposite<W> {
 	NativeCaret caret;
 	NativeIME ime;
 
 /**
  * Prevents uninitialized instances from being created outside the package.
  */
-NativeCanvas () {
+NativeCanvas (W wrapperCanvas) {
+	super(wrapperCanvas);
 }
 
 /**
@@ -79,8 +78,8 @@ NativeCanvas () {
  * @see SWT
  * @see NativeWidget#getStyle
  */
-public NativeCanvas (NativeComposite parent, int style) {
-	super (parent, style);
+public NativeCanvas (W wrapperCanvas, NativeComposite parent, int style) {
+	super (wrapperCanvas, parent, style);
 }
 
 /**
@@ -480,14 +479,6 @@ LRESULT WM_WINDOWPOSCHANGING (long wParam, long lParam) {
 	boolean isFocus = (style & SWT.RIGHT_TO_LEFT) != 0 && caret != null && caret.isFocusCaret ();
 	if (isFocus) caret.killFocus ();
 	return result;
-}
-
-@Override
-protected Canvas wrap() {
-	if (wrapperCanvas == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperCanvas;
 }
 
 }

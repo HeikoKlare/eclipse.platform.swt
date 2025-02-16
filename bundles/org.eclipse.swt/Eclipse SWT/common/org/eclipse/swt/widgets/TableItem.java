@@ -69,7 +69,7 @@ public class TableItem extends Item {
  * @see NativeWidget#getStyle
  */
 public TableItem (Table parent, int style) {
-	this (new NativeTableItem(checkNative(parent), style));
+	this.wrappedTableItem = new NativeTableItem(this, checkNative(parent), style);
 }
 
 /**
@@ -105,16 +105,11 @@ public TableItem (Table parent, int style) {
  * @see NativeWidget#getStyle
  */
 public TableItem (Table parent, int style, int index) {
-	this (new NativeTableItem(checkNative(parent), style, index));
+	this.wrappedTableItem = new NativeTableItem(this, checkNative(parent), style, index);
 }
 
 TableItem (Table parent, int style, int index, boolean create) {
-	this (new NativeTableItem(checkNative(parent), style, index, create));
-}
-
-TableItem(NativeTableItem nativeTableItem) {
-	this.wrappedTableItem = nativeTableItem;
-	this.wrappedTableItem.wrapperTableItem = this;
+	this.wrappedTableItem = new NativeTableItem(this, checkNative(parent), style, index, create);
 }
 
 /**

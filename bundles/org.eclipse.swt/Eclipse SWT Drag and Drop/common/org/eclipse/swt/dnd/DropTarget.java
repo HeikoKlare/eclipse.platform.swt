@@ -108,12 +108,7 @@ public class DropTarget extends Widget {
  * @see DND#DROP_LINK
  */
 public DropTarget(Control control, int style) {
-	this (new NativeDropTarget(control, style));
-}
-
-DropTarget(NativeDropTarget nativeDropTarget) {
-	this.wrappedDropTarget = nativeDropTarget;
-	this.wrappedDropTarget.wrapperDropTarget = this;
+	this.wrappedDropTarget = new NativeDropTarget(this, control, style);
 }
 
 static int checkStyle (int style) {

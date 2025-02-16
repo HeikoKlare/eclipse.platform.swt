@@ -76,12 +76,7 @@ public class Browser extends Composite {
  * @since 3.0
  */
 public Browser (Composite parent, int style) {
-	this.wrappedBrowser = new NativeBrowser(parent, style) {
-		@Override
-		protected Browser wrap() {
-			return Browser.this;
-		}
-	};
+	this.wrappedBrowser = new NativeBrowser(this, parent, style);
 }
 
 /**

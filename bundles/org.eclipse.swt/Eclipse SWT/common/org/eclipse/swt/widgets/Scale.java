@@ -73,12 +73,7 @@ public class Scale extends Control {
  * @see NativeWidget#getStyle
  */
 public Scale (Composite parent, int style) {
-	this (new NativeScale(checkNative(parent), style));
-}
-
-Scale (NativeScale nativeScale) {
-	this.wrappedScale = nativeScale;
-	this.wrappedScale.wrapperScale = this;
+	this.wrappedScale = new NativeScale(this, checkNative(parent), style);
 }
 
 /**

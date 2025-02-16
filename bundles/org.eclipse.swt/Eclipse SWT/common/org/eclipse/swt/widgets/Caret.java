@@ -68,12 +68,7 @@ public class Caret extends Widget {
  * @see NativeWidget#getStyle
  */
 public Caret (Canvas parent, int style) {
-	this (new NativeCaret(checkNative(parent), style));
-}
-
-Caret(NativeCaret nativeCaret) {
-	this.wrappedCaret = nativeCaret;
-	this.wrappedCaret.wrapperCaret = this;
+	this.wrappedCaret = new NativeCaret(this, checkNative(parent), style);
 }
 
 /**
@@ -145,7 +140,7 @@ public Point getLocation () {
  * </ul>
  */
 public Canvas getParent () {
-	NativeCanvas wrappedCanvas = wrappedCaret.getParent();
+	NativeCanvas<Canvas> wrappedCanvas = wrappedCaret.getParent();
 	return wrappedCanvas != null ? wrappedCanvas.wrap() : null;
 }
 

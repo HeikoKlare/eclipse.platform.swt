@@ -40,9 +40,7 @@ import org.eclipse.swt.internal.win32.*;
  *
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeTaskBar extends NativeWidget {
-	TaskBar wrapperTaskBar;
-
+public class NativeTaskBar extends NativeWidget<TaskBar> {
 	int itemCount;
 	NativeTaskItem [] items = new NativeTaskItem [4];
 	ITaskbarList3 mTaskbarList3;
@@ -65,7 +63,8 @@ public class NativeTaskBar extends NativeWidget {
 		EXE_PATH = buffer;
 	}
 
-NativeTaskBar (Display display, int style) {
+NativeTaskBar (TaskBar wrapperTaskBar, Display display, int style) {
+	super (wrapperTaskBar);
 	this.display = display;
 	createHandle ();
 	reskinWidget ();
@@ -291,8 +290,7 @@ public NativeTaskItem getItem (NativeShell shell) {
 			return item;
 		}
 	}
-	NativeTaskItem item = new NativeTaskItem (this, SWT.NONE);
-	item.wrapperTaskItem = new TaskItem(item);
+	NativeTaskItem item = new TaskItem(this.wrap(), SWT.NONE).getWrappedWidget();
 	if (shell != null) item.setShell (shell);
 	return item;
 }
@@ -435,14 +433,6 @@ void setMenu (NativeMenu menu) {
 		if (hr != OS.S_OK) error (SWT.ERROR_INVALID_ARGUMENT);
 	}
 	pDestList.Release ();
-}
-
-@Override
-protected TaskBar wrap() {
-	if (wrapperTaskBar == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperTaskBar;
 }
 
 }

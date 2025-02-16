@@ -79,12 +79,7 @@ public class ExpandBar extends Composite {
  * @see NativeWidget#getStyle
  */
 public ExpandBar (Composite parent, int style) {
-	this (new NativeExpandBar(checkNative(parent), style));
-}
-
-ExpandBar(NativeExpandBar nativeExpandBar) {
-	this.wrappedExpandBar = nativeExpandBar;
-	this.wrappedExpandBar.wrapperExpandBar = this;
+	this.wrappedExpandBar = new NativeExpandBar(this, checkNative(parent), style);
 }
 
 /**

@@ -41,9 +41,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeScale extends NativeControl {
-	Scale wrapperScale;
-
+public class NativeScale extends NativeControl<Scale> {
 	boolean ignoreResize, ignoreSelection;
 	static final long TrackBarProc;
 	static final TCHAR TrackBarClass = new TCHAR (0, OS.TRACKBAR_CLASS, true);
@@ -104,8 +102,8 @@ public class NativeScale extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeScale (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeScale (Scale wrapperScale, NativeComposite parent, int style) {
+	super (wrapperScale, parent, checkStyle (style));
 }
 
 /**
@@ -589,14 +587,6 @@ LRESULT wmScrollChild (long wParam, long lParam) {
 		// widget could be disposed at this point
 	}
 	return null;
-}
-
-@Override
-protected Scale wrap() {
-	if (wrapperScale == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperScale;
 }
 
 }

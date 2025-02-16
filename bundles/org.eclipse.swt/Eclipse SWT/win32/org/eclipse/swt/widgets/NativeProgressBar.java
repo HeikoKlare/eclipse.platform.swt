@@ -39,9 +39,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeProgressBar extends NativeControl {
-	ProgressBar wrapperProgressBar;
-
+public class NativeProgressBar extends NativeControl<ProgressBar> {
 	static final int DELAY = 100;
 	static final int TIMER_ID = 100;
 	static final int MINIMUM_WIDTH = 100;
@@ -105,8 +103,8 @@ public class NativeProgressBar extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeProgressBar (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeProgressBar (ProgressBar wrapperProgressBar, NativeComposite parent, int style) {
+	super (wrapperProgressBar, parent, checkStyle (style));
 }
 
 @Override
@@ -459,11 +457,4 @@ LRESULT WM_TIMER (long wParam, long lParam) {
 	return result;
 }
 
-@Override
-protected ProgressBar wrap() {
-	if (wrapperProgressBar == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperProgressBar;
-}
 }

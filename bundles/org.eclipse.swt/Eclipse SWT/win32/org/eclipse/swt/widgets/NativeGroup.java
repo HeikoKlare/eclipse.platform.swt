@@ -43,9 +43,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeGroup extends NativeComposite {
-	Group wrapperGroup;
-
+public class NativeGroup extends NativeComposite<Group> {
 	String text = "";
 	static final int CLIENT_INSET = 3;
 	static final long GroupProc;
@@ -103,8 +101,8 @@ public class NativeGroup extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeGroup (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeGroup (Group wrapperGroup, NativeComposite parent, int style) {
+	super (wrapperGroup, parent, checkStyle (style));
 }
 
 @Override
@@ -625,14 +623,6 @@ LRESULT WM_WINDOWPOSCHANGING (long wParam, long lParam) {
 		OS.InvalidateRect (handle, rect, true);
 	}
 	return result;
-}
-
-@Override
-protected Group wrap() {
-	if (wrapperGroup == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperGroup;
 }
 
 }

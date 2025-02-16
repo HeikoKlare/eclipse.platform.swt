@@ -77,12 +77,7 @@ public class Group extends Composite {
  * @see NativeWidget#getStyle
  */
 public Group (Composite parent, int style) {
-	this (new NativeGroup(checkNative(parent), style));
-}
-
-Group(NativeGroup nativeGroup) {
-	this.wrappedGroup = nativeGroup;
-	this.wrappedGroup.wrapperGroup = this;
+	this.wrappedGroup = new NativeGroup(this, checkNative(parent), style);
 }
 
 /**

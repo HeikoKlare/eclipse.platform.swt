@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.*;
  * @since 3.2
  */
 
-public class NativeGLCanvas extends NativeCanvas {
+public class NativeGLCanvas extends NativeCanvas<GLCanvas> {
 	long context;
 	int pixelFormat;
 	static final String USE_OWNDC_KEY = "org.eclipse.swt.internal.win32.useOwnDC"; //$NON-NLS-1$
@@ -45,8 +45,8 @@ public class NativeGLCanvas extends NativeCanvas {
  *     <li>ERROR_UNSUPPORTED_DEPTH when the requested attributes cannot be provided</li>
  * </ul>
  */
-public NativeGLCanvas (NativeComposite parent, int style, GLData data) {
-	super (parent, checkStyle (parent, style));
+public NativeGLCanvas (GLCanvas wrapperCanvas, NativeComposite parent, int style, GLData data) {
+	super (wrapperCanvas, parent, checkStyle (parent, style));
 	parent.getDisplay ().setData (USE_OWNDC_KEY, false);
 	if (data == null) SWT.error (SWT.ERROR_NULL_ARGUMENT);
 	PIXELFORMATDESCRIPTOR pfd = new PIXELFORMATDESCRIPTOR ();

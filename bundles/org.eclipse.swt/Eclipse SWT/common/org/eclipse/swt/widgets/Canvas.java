@@ -41,7 +41,7 @@ import org.eclipse.swt.graphics.*;
  */
 public class Canvas extends Composite {
 
-	private NativeCanvas wrappedCanvas;
+	private final NativeCanvas<Canvas> wrappedCanvas;
 
 /**
  * Constructs a new instance of this class given its parent
@@ -70,15 +70,11 @@ public class Canvas extends Composite {
  * @see NativeWidget#getStyle
  */
 public Canvas (Composite parent, int style) {
-	this (new NativeCanvas(checkNative(parent), style));
-}
-
-Canvas(NativeCanvas nativeCanvas) {
-	this.wrappedCanvas = nativeCanvas;
-	wrappedCanvas.wrapperCanvas = this;
+	this.wrappedCanvas = new NativeCanvas<>(this, checkNative(parent), style);
 }
 
 protected Canvas() {
+	this.wrappedCanvas = null;
 }
 
 /**
@@ -221,7 +217,7 @@ public void setIME (IME ime) {
 }
 
 @Override
-protected NativeCanvas getWrappedWidget() {
+protected NativeCanvas<? extends Canvas> getWrappedWidget() {
 	if (wrappedCanvas == null) {
 		SWT.error (SWT.ERROR_NULL_ARGUMENT, null, " subclass has to overwrite method for retrieving wrapped widget");
 	}

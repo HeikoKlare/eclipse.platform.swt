@@ -97,7 +97,7 @@ import org.eclipse.swt.graphics.*;
  * @noextend This class is not intended to be subclassed by clients.
  */
 public class Decorations extends Canvas {
-	private final NativeDecorations wrappedDecorations;
+	private final NativeDecorations<Decorations> wrappedDecorations;
 
 /**
  * Constructs a new instance of this class given its parent
@@ -139,13 +139,11 @@ public class Decorations extends Canvas {
  * @see NativeWidget#getStyle
  */
 public Decorations (Composite parent, int style) {
-	this (new NativeDecorations(checkNative(parent), style));
+	this.wrappedDecorations = new NativeDecorations<>(this, checkNative(parent), style);
 }
 
-Decorations(NativeDecorations nativeDecorations) {
-	super(nativeDecorations);
-	this.wrappedDecorations = nativeDecorations;
-	this.wrappedDecorations.wrapperDecorations = this;
+protected Decorations() {
+	this.wrappedDecorations = null;
 }
 
 @Override
@@ -488,7 +486,7 @@ Decorations menuShell () {
 }
 
 @Override
-protected NativeDecorations getWrappedWidget() {
+protected NativeDecorations<? extends Decorations> getWrappedWidget() {
 	return wrappedDecorations;
 }
 

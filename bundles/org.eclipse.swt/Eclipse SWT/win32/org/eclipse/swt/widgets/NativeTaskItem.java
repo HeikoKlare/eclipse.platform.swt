@@ -35,9 +35,7 @@ import org.eclipse.swt.internal.win32.*;
  *
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeTaskItem extends NativeItem {
-	TaskItem wrapperTaskItem;
-
+public class NativeTaskItem extends NativeItem<TaskItem> {
 	NativeTaskBar parent;
 	NativeShell shell;
 	boolean hasTaskbarButton = false;
@@ -79,8 +77,8 @@ public class NativeTaskItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-NativeTaskItem (NativeTaskBar parent, int style) {
-	super (parent, style);
+NativeTaskItem (TaskItem wrapperTaskItem, NativeTaskBar parent, int style) {
+	super (wrapperTaskItem, parent, style);
 	this.parent = parent;
 	parent.createItem (this, -1);
 }
@@ -594,14 +592,6 @@ void updateText () {
 	long hIcon = renderTextIcon();
 	parent.mTaskbarList3.SetOverlayIcon(shell.handle, hIcon, 0);
 	OS.DestroyIcon (hIcon);
-}
-
-@Override
-protected TaskItem wrap() {
-	if (wrapperTaskItem == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperTaskItem;
 }
 
 }

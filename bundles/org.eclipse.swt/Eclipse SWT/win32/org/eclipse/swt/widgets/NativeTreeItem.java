@@ -37,9 +37,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeTreeItem extends NativeItem {
-	TreeItem wrapperTreeItem;
-
+public class NativeTreeItem extends NativeItem<TreeItem> {
 	/**
 	 * the handle to the OS resource
 	 * (Warning: This field is platform dependent)
@@ -70,7 +68,7 @@ public class NativeTreeItem extends NativeItem {
  * Constructs <code>TreeItem</code> and <em>inserts</em> it into <code>Tree</code>.
  * Item is inserted as last direct child of the tree.
  * <p>
- * The fastest way to insert many items is documented in {@link NativeTreeItem#NativeTreeItem(NativeTree,int,int)}
+ * The fastest way to insert many items is documented in {@link NativeTreeItem#NativeTreeItem(TreeItem,NativeTree,int,int)}
  * and {@link NativeTreeItem#setItemCount}
  *
  * @param parent a tree control which will be the parent of the new instance (cannot be null)
@@ -88,8 +86,8 @@ public class NativeTreeItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTreeItem (NativeTree parent, int style) {
-	this (parent, style, OS.TVI_ROOT, OS.TVI_LAST, 0);
+public NativeTreeItem (TreeItem wrapperTreeItem, NativeTree parent, int style) {
+	this (wrapperTreeItem, parent, style, OS.TVI_ROOT, OS.TVI_LAST, 0);
 }
 
 /**
@@ -121,15 +119,15 @@ public NativeTreeItem (NativeTree parent, int style) {
  * @see NativeWidget#getStyle
  * @see NativeTree#setRedraw
  */
-public NativeTreeItem (NativeTree parent, int style, int index) {
-	this (parent, style, OS.TVI_ROOT, findPrevious (parent, index), 0);
+public NativeTreeItem (TreeItem wrapperTreeItem, NativeTree parent, int style, int index) {
+	this (wrapperTreeItem, parent, style, OS.TVI_ROOT, findPrevious (parent, index), 0);
 }
 
 /**
  * Constructs <code>TreeItem</code> and <em>inserts</em> it into <code>Tree</code>.
  * Item is inserted as last direct child of the specified <code>TreeItem</code>.
  * <p>
- * The fastest way to insert many items is documented in {@link NativeTreeItem#NativeTreeItem(NativeTree,int,int)}
+ * The fastest way to insert many items is documented in {@link NativeTreeItem#NativeTreeItem(TreeItem,NativeTree,int,int)}
  * and {@link NativeTreeItem#setItemCount}
  *
  * @param parentItem a tree control which will be the parent of the new instance (cannot be null)
@@ -147,15 +145,15 @@ public NativeTreeItem (NativeTree parent, int style, int index) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTreeItem (NativeTreeItem parentItem, int style) {
-	this (checkNull (parentItem).parent, style, parentItem.handle, OS.TVI_LAST, 0);
+public NativeTreeItem (TreeItem wrapperTreeItem, NativeTreeItem parentItem, int style) {
+	this (wrapperTreeItem, checkNull (parentItem).parent, style, parentItem.handle, OS.TVI_LAST, 0);
 }
 
 /**
  * Constructs <code>TreeItem</code> and <em>inserts</em> it into <code>Tree</code>.
  * Item is inserted as <code>index</code> direct child of the specified <code>TreeItem</code>.
  * <p>
- * The fastest way to insert many items is documented in {@link NativeTreeItem#NativeTreeItem(NativeTree,int,int)}
+ * The fastest way to insert many items is documented in {@link NativeTreeItem#NativeTreeItem(TreeItem,NativeTree,int,int)}
  * and {@link NativeTreeItem#setItemCount}
  *
  * @param parentItem a tree control which will be the parent of the new instance (cannot be null)
@@ -176,12 +174,12 @@ public NativeTreeItem (NativeTreeItem parentItem, int style) {
  * @see NativeWidget#getStyle
  * @see NativeTree#setRedraw
  */
-public NativeTreeItem (NativeTreeItem parentItem, int style, int index) {
-	this (checkNull (parentItem).parent, style, parentItem.handle, findPrevious (parentItem, index), 0);
+public NativeTreeItem (TreeItem wrapperTreeItem, NativeTreeItem parentItem, int style, int index) {
+	this (wrapperTreeItem, checkNull (parentItem).parent, style, parentItem.handle, findPrevious (parentItem, index), 0);
 }
 
-NativeTreeItem (NativeTree parent, int style, long hParent, long hInsertAfter, long hItem) {
-	super (parent, style);
+NativeTreeItem (TreeItem wrapperTreeItem, NativeTree parent, int style, long hParent, long hInsertAfter, long hItem) {
+	super (wrapperTreeItem, parent, style);
 	this.parent = parent;
 	parent.createItem (this, hParent, hInsertAfter, hItem);
 }
@@ -1839,14 +1837,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	for (NativeTreeItem item : treeItem.getItems()) {
 		DPIZoomChangeRegistry.applyChange(item.wrap(), newZoom, scalingFactor);
 	}
-}
-
-@Override
-protected TreeItem wrap() {
-	if (wrapperTreeItem == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperTreeItem;
 }
 
 }

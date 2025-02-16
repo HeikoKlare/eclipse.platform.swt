@@ -41,9 +41,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.4
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeIME extends NativeWidget {
-	IME wrapperIME;
-
+public class NativeIME extends NativeWidget<IME> {
 	NativeCanvas parent;
 	int caretOffset;
 	int startOffset;
@@ -58,12 +56,6 @@ public class NativeIME extends NativeWidget {
 	static final int UNDERLINE_IME_DOT = 1 << 16;
 	static final int UNDERLINE_IME_DASH = 2 << 16;
 	static final int UNDERLINE_IME_THICK = 3 << 16;
-
-/**
- * Prevents uninitialized instances from being created outside the package.
- */
-NativeIME () {
-}
 
 /**
  * Constructs a new instance of this class given its parent
@@ -92,8 +84,8 @@ NativeIME () {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeIME (NativeCanvas parent, int style) {
-	super (parent, style);
+public NativeIME (IME wrapperIME, NativeCanvas parent, int style) {
+	super (wrapperIME, parent, style);
 	this.parent = parent;
 	createWidget ();
 }
@@ -588,14 +580,6 @@ LRESULT WM_LBUTTONDOWN (long wParam, long lParam) {
 		OS.ImmReleaseContext (hwnd, hIMC);
 	}
 	return null;
-}
-
-@Override
-protected IME wrap() {
-	if (wrapperIME== null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperIME;
 }
 
 }

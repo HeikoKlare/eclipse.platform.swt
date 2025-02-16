@@ -39,9 +39,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeMenuItem extends NativeItem {
-	MenuItem wrapperMenuItem;
-
+public class NativeMenuItem extends NativeItem<MenuItem> {
 	NativeMenu parent, menu;
 	long hBitmap;
 	int id, accelerator, userId;
@@ -93,8 +91,8 @@ public class NativeMenuItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeMenuItem (NativeMenu parent, int style) {
-	super (parent, checkStyle (style));
+public NativeMenuItem (MenuItem wrapperMenuItem, NativeMenu parent, int style) {
+	super (wrapperMenuItem, parent, checkStyle (style));
 	this.parent = parent;
 	parent.createItem (this, parent.getItemCount ());
 }
@@ -135,8 +133,8 @@ public NativeMenuItem (NativeMenu parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeMenuItem (NativeMenu parent, int style, int index) {
-	super (parent, checkStyle (style));
+public NativeMenuItem (MenuItem wrapperMenuItem, NativeMenu parent, int style, int index) {
+	super (wrapperMenuItem, parent, checkStyle (style));
 	this.parent = parent;
 	parent.createItem (this, index);
 }
@@ -1075,7 +1073,7 @@ public void setToolTipText (String toolTip) {
 			|| (itemToolTip != null && !itemToolTip.isDisposed() && toolTip.equals(itemToolTip.getMessage()))) return;
 
 	if (itemToolTip != null) itemToolTip.dispose();
-	itemToolTip = new MenuItemToolTip (this.getParent().getShell());
+	itemToolTip = new MenuItemToolTip (this.getParent().getShell()).getWrappedWidget();
 	itemToolTip.setMessage (toolTip);
 	itemToolTip.setVisible (false);
 }
@@ -1289,16 +1287,24 @@ private Point calculateRenderedTextSize() {
 	return points;
 }
 
-private static final class MenuItemToolTip extends NativeToolTip {
+private static final class MenuItemToolTip extends ToolTip {
+
+	private final NativeToolTip nativeToolTip;
 
 	public MenuItemToolTip(NativeShell parent) {
-		super(parent, 0);
-		maybeEnableDarkSystemTheme(hwndToolTip ());
-	}
-
-	@Override
-	long hwndToolTip() {
-		return parent.menuItemToolTipHandle();
+		this.nativeToolTip = new NativeToolTip(this, parent, 0) {
+			{
+				maybeEnableDarkSystemTheme(hwndToolTip ());
+			}
+			@Override
+			long hwndToolTip() {
+				return parent.menuItemToolTipHandle();
+			}
+			@Override
+			protected ToolTip wrap() {
+				return MenuItemToolTip.this;
+			}
+		};
 	}
 
 }
@@ -1319,14 +1325,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	if (subMenu != null) {
 		DPIZoomChangeRegistry.applyChange(subMenu.wrap(), newZoom, scalingFactor);
 	}
-}
-
-@Override
-protected MenuItem wrap() {
-	if (wrapperMenuItem == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperMenuItem;
 }
 
 }

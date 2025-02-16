@@ -38,9 +38,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.0
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeTrayItem extends NativeItem {
-	TrayItem wrapperTrayItem;
-
+public class NativeTrayItem extends NativeItem<TrayItem> {
 	NativeTray parent;
 	int id;
 	Image image2, highlightImage;
@@ -78,8 +76,8 @@ public class NativeTrayItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTrayItem (NativeTray parent, int style) {
-	super (parent, style);
+public NativeTrayItem (TrayItem wrapperTrayItem, NativeTray parent, int style) {
+	super (wrapperTrayItem, parent, style);
 	this.parent = parent;
 	parent.createItem (this, parent.getItemCount ());
 	createUpdateWidget (true);
@@ -571,14 +569,6 @@ public void setVisible (boolean visible) {
 	iconData.dwStateMask = OS.NIS_HIDDEN;
 	OS.Shell_NotifyIcon (OS.NIM_MODIFY, iconData);
 	if (!visible) sendEvent (SWT.Hide);
-}
-
-@Override
-protected TrayItem wrap() {
-	if (wrapperTrayItem == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperTrayItem;
 }
 
 }

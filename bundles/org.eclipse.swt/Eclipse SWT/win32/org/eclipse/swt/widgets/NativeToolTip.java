@@ -43,9 +43,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.2
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeToolTip extends NativeWidget {
-	ToolTip wrapperToolTip;
-
+public class NativeToolTip extends NativeWidget<ToolTip> {
 	NativeShell parent;
 	NativeTrayItem item;
 	String text = "", message = "";
@@ -84,8 +82,8 @@ public class NativeToolTip extends NativeWidget {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeToolTip (NativeShell parent, int style) {
-	super (parent, checkStyle (style));
+public NativeToolTip (ToolTip wrapperToolTip, NativeShell parent, int style) {
+	super (wrapperToolTip, parent, checkStyle (style));
 	this.parent = parent;
 	checkOrientation (parent);
 	parent.createToolTip (this);
@@ -552,15 +550,6 @@ public void setVisible (boolean visible) {
 			//TODO - hide the tray item
 		}
 	}
-}
-
-@Override
-protected ToolTip wrap() {
-	if (wrapperToolTip== null) {
-		wrapperToolTip = new ToolTip(this);
-		//error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperToolTip;
 }
 
 }

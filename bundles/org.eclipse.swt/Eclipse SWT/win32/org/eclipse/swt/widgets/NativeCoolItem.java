@@ -37,9 +37,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeCoolItem extends NativeItem {
-	CoolItem wrapperCoolItem;
-
+public class NativeCoolItem extends NativeItem<CoolItem> {
 	NativeCoolBar parent;
 	NativeControl control;
 	int id;
@@ -75,8 +73,8 @@ public class NativeCoolItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCoolItem (NativeCoolBar parent, int style) {
-	super (parent, style);
+public NativeCoolItem (CoolItem wrapperCoolItem, NativeCoolBar parent, int style) {
+	super (wrapperCoolItem, parent, style);
 	this.parent = parent;
 	parent.createItem (this, parent.getItemCount ());
 }
@@ -113,8 +111,8 @@ public NativeCoolItem (NativeCoolBar parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCoolItem (NativeCoolBar parent, int style, int index) {
-	super (parent, style);
+public NativeCoolItem (CoolItem wrapperCoolItem, NativeCoolBar parent, int style, int index) {
+	super (wrapperCoolItem, parent, style);
 	this.parent = parent;
 	parent.createItem (this, index);
 }
@@ -751,14 +749,6 @@ public void removeSelectionListener(SelectionListener listener) {
 	if (eventTable == null) return;
 	eventTable.unhook (SWT.Selection, listener);
 	eventTable.unhook (SWT.DefaultSelection,listener);
-}
-
-@Override
-protected CoolItem wrap() {
-	if (wrapperCoolItem == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperCoolItem;
 }
 
 }

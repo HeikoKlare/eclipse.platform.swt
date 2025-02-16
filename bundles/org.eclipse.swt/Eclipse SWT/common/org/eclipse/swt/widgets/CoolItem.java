@@ -70,7 +70,7 @@ public class CoolItem extends Item {
  * @see NativeWidget#getStyle
  */
 public CoolItem (CoolBar parent, int style) {
-	this (new NativeCoolItem(checkNative(parent), style));
+	this.wrappedCoolItem = new NativeCoolItem(this, checkNative(parent), style);
 }
 
 /**
@@ -106,12 +106,7 @@ public CoolItem (CoolBar parent, int style) {
  * @see NativeWidget#getStyle
  */
 public CoolItem (CoolBar parent, int style, int index) {
-	this (new NativeCoolItem(checkNative(parent), style, index));
-}
-
-CoolItem(NativeCoolItem nativeCoolItem) {
-	this.wrappedCoolItem = nativeCoolItem;
-	this.wrappedCoolItem.wrapperCoolItem = this;
+	this.wrappedCoolItem = new NativeCoolItem(this, checkNative(parent), style, index);
 }
 
 /**
@@ -206,7 +201,8 @@ public Rectangle getBounds () {
  * </ul>
  */
 public Control getControl () {
-	return wrappedCoolItem.getControl().wrap();
+	NativeControl<Control> wrappedControl = wrappedCoolItem.getControl();
+	return wrappedControl != null ? wrappedControl.wrap() : null;
 }
 
 /**

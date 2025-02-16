@@ -37,13 +37,12 @@ import org.eclipse.swt.*;
  * @since 3.0
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeTray extends NativeWidget {
-	Tray wrapperTray;
-
+public class NativeTray extends NativeWidget<Tray> {
 	int itemCount;
 	NativeTrayItem [] items = new NativeTrayItem [4];
 
-NativeTray (Display display, int style) {
+NativeTray (Tray wrapperTray, Display display, int style) {
+	super (wrapperTray);
 	this.display = display;
 	reskinWidget ();
 }
@@ -158,11 +157,4 @@ void reskinChildren (int flags) {
 	super.reskinChildren (flags);
 }
 
-@Override
-protected Tray wrap() {
-	if (wrapperTray == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperTray;
-}
 }

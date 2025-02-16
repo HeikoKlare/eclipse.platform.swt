@@ -43,9 +43,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeTracker extends NativeWidget {
-	Tracker wrapperTracker;
-
+public class NativeTracker extends NativeWidget<Tracker> {
 	NativeControl parent;
 	boolean tracking, cancelled, stippled;
 	Rectangle [] rectangles = new Rectangle [0], proportions = rectangles;
@@ -96,8 +94,8 @@ public class NativeTracker extends NativeWidget {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTracker (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeTracker (Tracker wrapperTracker, NativeComposite parent, int style) {
+	super (wrapperTracker, parent, checkStyle (style));
 	this.parent = parent;
 }
 
@@ -136,7 +134,8 @@ public NativeTracker (NativeComposite parent, int style) {
  * @see SWT#DOWN
  * @see SWT#RESIZE
  */
-public NativeTracker (Display display, int style) {
+public NativeTracker (Tracker wrapperTracker, Display display, int style) {
+	super (wrapperTracker);
 	if (display == null) display = Display.getCurrent ();
 	if (display == null) display = Display.getDefault ();
 	if (!display.isValidThread ()) {
@@ -1227,14 +1226,6 @@ LRESULT wmMouse (int message, long wParam, long lParam) {
 	}
 	tracking = message != OS.WM_LBUTTONUP;
 	return null;
-}
-
-@Override
-protected Tracker wrap() {
-	if (wrapperTracker == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperTracker;
 }
 
 }

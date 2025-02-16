@@ -69,12 +69,7 @@ public class TaskItem extends Item {
  * @see NativeWidget#getStyle
  */
 TaskItem (TaskBar parent, int style) {
-	this (new NativeTaskItem(checkNative(parent), style));
-}
-
-TaskItem(NativeTaskItem nativeTaskItem) {
-	this.wrappedTaskItem = nativeTaskItem;
-	this.wrappedTaskItem.wrapperTaskItem = this;
+	this.wrappedTaskItem = new NativeTaskItem(this, checkNative(parent), style);
 }
 
 /**

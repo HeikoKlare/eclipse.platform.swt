@@ -37,9 +37,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeCaret extends NativeWidget {
-	Caret wrapperCaret;
-
+public class NativeCaret extends NativeWidget<Caret> {
 	/** The Caret last updated on the OS-level */
 	private static NativeCaret currentCaret;
 
@@ -83,8 +81,8 @@ static {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCaret (NativeCanvas parent, int style) {
-	super (parent, style);
+public NativeCaret (Caret wrapperCaret, NativeCanvas parent, int style) {
+	super (wrapperCaret, parent, style);
 	this.parent = parent;
 	createWidget ();
 }
@@ -684,14 +682,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	if (caret.font != null) {
 		caret.setFont(caret.font);
 	}
-}
-
-@Override
-protected Caret wrap() {
-	if (wrapperCaret == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperCaret;
 }
 
 }

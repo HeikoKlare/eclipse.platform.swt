@@ -189,7 +189,7 @@ public abstract class Widget {
 		return shell != null ? shell.getWrappedWidget() : null;
 	}
 
-	private final NativeWidget wrappedWidget;
+	private final NativeWidget<? extends Widget> wrappedWidget;
 
 /**
  * Returns a style with exactly one style bit set out of
@@ -249,13 +249,8 @@ static int checkBits (int style, int int0, int int1, int int2, int int3, int int
  * @see #getStyle
  */
 public Widget (Widget parent, int style) {
-	this.wrappedWidget = new NativeWidget(checkNative(parent), style) {
-		@Override
-		protected Widget wrap() {
-			return Widget.this;
-		}
+	this.wrappedWidget = new NativeWidget<>(this, checkNative(parent), style) {
 	};
-	wrappedWidget.wrapperWidget = this;
 }
 
 protected Widget() {
@@ -849,7 +844,7 @@ public String toString () {
 	return getWrappedWidget().toString();
 }
 
-protected NativeWidget getWrappedWidget() {
+protected NativeWidget<? extends Widget> getWrappedWidget() {
 	if (wrappedWidget == null) {
 		SWT.error (SWT.ERROR_NULL_ARGUMENT, null, " subclass has to overwrite method for retrieving wrapped widget");
 	}

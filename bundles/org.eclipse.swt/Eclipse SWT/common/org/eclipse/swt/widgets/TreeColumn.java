@@ -74,7 +74,7 @@ public class TreeColumn extends Item {
  * @see NativeWidget#getStyle
  */
 public TreeColumn (Tree parent, int style) {
-	this (new NativeTreeColumn(checkNative(parent), style));
+	this.wrappedTreeColumn = new NativeTreeColumn(this, checkNative(parent), style);
 }
 
 /**
@@ -115,12 +115,7 @@ public TreeColumn (Tree parent, int style) {
  * @see NativeWidget#getStyle
  */
 public TreeColumn (Tree parent, int style, int index) {
-	this (new NativeTreeColumn(checkNative(parent), style, index));
-}
-
-TreeColumn(NativeTreeColumn nativeTreeColumn) {
-	this.wrappedTreeColumn = nativeTreeColumn;
-	this.wrappedTreeColumn.wrapperTreeColumn = this;
+	this.wrappedTreeColumn = new NativeTreeColumn(this, checkNative(parent), style, index);
 }
 
 /**

@@ -44,12 +44,7 @@ public class GLCanvas extends Canvas {
  * </ul>
  */
 public GLCanvas (Composite parent, int style, GLData data) {
-	wrappedGLCanvas = new NativeGLCanvas(Widget.checkNative(parent), style, data) {
-		@Override
-		protected Canvas wrap() {
-			return GLCanvas.this;
-		}
-	};
+	this.wrappedGLCanvas = new NativeGLCanvas(this, Widget.checkNative(parent), style, data);
 }
 
 /**

@@ -78,7 +78,7 @@ public class Tracker extends Widget {
  * @see NativeWidget#getStyle
  */
 public Tracker (Composite parent, int style) {
-	this (new NativeTracker(checkNative(parent), style));
+	this.wrappedTracker = new NativeTracker(this, checkNative(parent), style);
 }
 
 /**
@@ -117,12 +117,7 @@ public Tracker (Composite parent, int style) {
  * @see SWT#RESIZE
  */
 public Tracker (Display display, int style) {
-	this(new NativeTracker(display, style));
-}
-
-Tracker (NativeTracker nativeTracker) {
-	this.wrappedTracker = nativeTracker;
-	this.wrappedTracker.wrapperTracker = this;
+	this.wrappedTracker = new NativeTracker(this, display, style);
 }
 
 /**

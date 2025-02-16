@@ -85,12 +85,7 @@ public class DateTime extends Composite {
  * @see NativeWidget#getStyle
  */
 public DateTime (Composite parent, int style) {
-	this (new NativeDateTime(checkNative(parent), style));
-}
-
-DateTime(NativeDateTime nativeDateTime) {
-	this.wrappedDateTime = nativeDateTime;
-	this.wrappedDateTime.wrapperDateTime = this;
+	this.wrappedDateTime = new NativeDateTime(this, checkNative(parent), style);
 }
 
 /**

@@ -76,7 +76,7 @@ public class MenuItem extends Item {
  * @see NativeWidget#getStyle
  */
 public MenuItem (Menu parent, int style) {
-	this(new NativeMenuItem(checkNative(parent), style));
+	this.wrappedMenuItem = new NativeMenuItem(this, checkNative(parent), style);
 }
 
 /**
@@ -116,12 +116,7 @@ public MenuItem (Menu parent, int style) {
  * @see NativeWidget#getStyle
  */
 public MenuItem (Menu parent, int style, int index) {
-	this(new NativeMenuItem(checkNative(parent), style, index));
-}
-
-MenuItem(NativeMenuItem nativeMenuItem) {
-	this.wrappedMenuItem = nativeMenuItem;
-	this.wrappedMenuItem.wrapperMenuItem = this;
+	this.wrappedMenuItem = new NativeMenuItem(this, checkNative(parent), style, index);
 }
 
 /**

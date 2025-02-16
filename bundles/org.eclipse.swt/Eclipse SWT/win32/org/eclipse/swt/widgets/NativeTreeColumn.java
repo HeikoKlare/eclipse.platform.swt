@@ -40,9 +40,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.1
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeTreeColumn extends NativeItem {
-	TreeColumn wrapperTreeColumn;
-
+public class NativeTreeColumn extends NativeItem<TreeColumn> {
 	NativeTree parent;
 	boolean resizable, moveable;
 	String toolTipText;
@@ -84,8 +82,8 @@ public class NativeTreeColumn extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTreeColumn (NativeTree parent, int style) {
-	super (parent, checkStyle (style));
+public NativeTreeColumn (TreeColumn wrapperTreeColumn, NativeTree parent, int style) {
+	super (wrapperTreeColumn, parent, checkStyle (style));
 	resizable = true;
 	this.parent = parent;
 	parent.createItem (this, parent.getColumnCount ());
@@ -128,8 +126,8 @@ public NativeTreeColumn (NativeTree parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTreeColumn (NativeTree parent, int style, int index) {
-	super (parent, checkStyle (style));
+public NativeTreeColumn (TreeColumn wrapperTreeColumn, NativeTree parent, int style, int index) {
+	super (wrapperTreeColumn, parent, checkStyle (style));
 	resizable = true;
 	this.parent = parent;
 	parent.createItem (this, index);
@@ -777,14 +775,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	if (image != null) {
 		treeColumn.setImage(image);
 	}
-}
-
-@Override
-protected TreeColumn wrap() {
-	if (wrapperTreeColumn == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperTreeColumn;
 }
 
 }

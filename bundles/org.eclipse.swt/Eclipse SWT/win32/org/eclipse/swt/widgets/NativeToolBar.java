@@ -49,9 +49,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeToolBar extends NativeComposite {
-	ToolBar wrapperToolBar;
-
+public class NativeToolBar extends NativeComposite<ToolBar> {
 	int lastFocusId, lastArrowId, lastHotId, _width, _height, _count = -1, _wHint = -1, _hHint = -1;
 	long currentToolItemToolTip;
 	NativeToolItem [] items;
@@ -110,8 +108,8 @@ public class NativeToolBar extends NativeComposite {
  * @see NativeWidget#checkSubclass()
  * @see NativeWidget#getStyle()
  */
-public NativeToolBar (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeToolBar (ToolBar wrapperToolBar, NativeComposite parent, int style) {
+	super (wrapperToolBar, parent, checkStyle (style));
 	/*
 	* Ensure that either of HORIZONTAL or VERTICAL is set.
 	* NOTE: HORIZONTAL and VERTICAL have the same values
@@ -1807,14 +1805,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	toolBar.setHotImageList(toolBar.getHotImageList());
 	OS.SendMessage(toolBar.handle, OS.TB_AUTOSIZE, 0, 0);
 	toolBar.layout(true);
-}
-
-@Override
-protected ToolBar wrap() {
-	if (wrapperToolBar == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperToolBar;
 }
 
 }

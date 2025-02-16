@@ -73,9 +73,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeSlider extends NativeControl {
-	Slider wrapperSlider;
-
+public class NativeSlider extends NativeControl<Slider> {
 	int increment, pageIncrement;
 	boolean ignoreFocus;
 	static final long ScrollBarProc;
@@ -115,8 +113,8 @@ public class NativeSlider extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeSlider (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeSlider (Slider wrapperSlider, NativeComposite parent, int style) {
+	super (wrapperSlider, parent, checkStyle (style));
 }
 
 /**
@@ -802,14 +800,6 @@ LRESULT wmScrollChild (long wParam, long lParam) {
 	sendSelectionEvent (SWT.Selection, event, true);
 	// the widget could be destroyed at this point
 	return null;
-}
-
-@Override
-protected Slider wrap() {
-	if (wrapperSlider == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperSlider;
 }
 
 }

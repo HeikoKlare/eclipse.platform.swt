@@ -44,9 +44,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.1
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeSpinner extends NativeComposite {
-	Spinner wrapperSpinner;
-
+public class NativeSpinner extends NativeComposite<Spinner> {
 	long hwndText, hwndUpDown;
 	boolean ignoreModify, ignoreCharacter;
 	int pageIncrement, digits;
@@ -108,8 +106,8 @@ public class NativeSpinner extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeSpinner (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeSpinner (Spinner wrapperSpinner, NativeComposite parent, int style) {
+	super (wrapperSpinner, parent, checkStyle (style));
 }
 
 @Override
@@ -1473,14 +1471,6 @@ LRESULT wmScrollChild (long wParam, long lParam) {
 			break;
 	}
 	return super.wmScrollChild (wParam, lParam);
-}
-
-@Override
-protected Spinner wrap() {
-	if (wrapperSpinner == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperSpinner;
 }
 
 }

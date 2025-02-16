@@ -47,9 +47,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.2
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class NativeExpandBar extends NativeComposite {
-	ExpandBar wrapperExpandBar;
-
+public class NativeExpandBar extends NativeComposite<ExpandBar> {
 	NativeExpandItem[] items;
 	int itemCount;
 	NativeExpandItem focusItem;
@@ -89,8 +87,8 @@ public class NativeExpandBar extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeExpandBar (NativeComposite parent, int style) {
-	super (parent, checkStyle (style));
+public NativeExpandBar (ExpandBar wrapperExpandBar, NativeComposite parent, int style) {
+	super (wrapperExpandBar, parent, checkStyle (style));
 }
 
 /**
@@ -882,14 +880,6 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	}
 	expandBar.layoutItems(0, true);
 	expandBar.redraw();
-}
-
-@Override
-protected ExpandBar wrap() {
-	if (wrapperExpandBar == null) {
-		error(SWT.ERROR_NULL_ARGUMENT);
-	}
-	return wrapperExpandBar;
 }
 
 }
