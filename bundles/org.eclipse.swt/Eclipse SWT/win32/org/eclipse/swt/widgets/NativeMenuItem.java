@@ -93,7 +93,7 @@ public class NativeMenuItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeMenuItem (NativeMenu parent, int style) {
+protected NativeMenuItem (NativeMenu parent, int style) {
 	super (parent, checkStyle (style));
 	this.parent = parent;
 	parent.createItem (this, parent.getItemCount ());
@@ -135,7 +135,7 @@ public NativeMenuItem (NativeMenu parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeMenuItem (NativeMenu parent, int style, int index) {
+protected NativeMenuItem (NativeMenu parent, int style, int index) {
 	super (parent, checkStyle (style));
 	this.parent = parent;
 	parent.createItem (this, index);

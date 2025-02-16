@@ -75,7 +75,7 @@ public class NativeCoolItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCoolItem (NativeCoolBar parent, int style) {
+protected NativeCoolItem (NativeCoolBar parent, int style) {
 	super (parent, style);
 	this.parent = parent;
 	parent.createItem (this, parent.getItemCount ());
@@ -113,7 +113,7 @@ public NativeCoolItem (NativeCoolBar parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCoolItem (NativeCoolBar parent, int style, int index) {
+protected NativeCoolItem (NativeCoolBar parent, int style, int index) {
 	super (parent, style);
 	this.parent = parent;
 	parent.createItem (this, index);

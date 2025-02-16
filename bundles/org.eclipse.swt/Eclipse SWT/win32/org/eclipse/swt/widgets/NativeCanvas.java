@@ -79,7 +79,7 @@ NativeCanvas () {
  * @see SWT
  * @see NativeWidget#getStyle
  */
-public NativeCanvas (NativeComposite parent, int style) {
+protected NativeCanvas (NativeComposite parent, int style) {
 	super (parent, style);
 }
 

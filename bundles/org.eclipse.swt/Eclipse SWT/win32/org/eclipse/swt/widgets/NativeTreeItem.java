@@ -88,7 +88,7 @@ public class NativeTreeItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTreeItem (NativeTree parent, int style) {
+protected NativeTreeItem (NativeTree parent, int style) {
 	this (parent, style, OS.TVI_ROOT, OS.TVI_LAST, 0);
 }
 
@@ -121,7 +121,7 @@ public NativeTreeItem (NativeTree parent, int style) {
  * @see NativeWidget#getStyle
  * @see NativeTree#setRedraw
  */
-public NativeTreeItem (NativeTree parent, int style, int index) {
+protected NativeTreeItem (NativeTree parent, int style, int index) {
 	this (parent, style, OS.TVI_ROOT, findPrevious (parent, index), 0);
 }
 
@@ -147,7 +147,7 @@ public NativeTreeItem (NativeTree parent, int style, int index) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTreeItem (NativeTreeItem parentItem, int style) {
+protected NativeTreeItem (NativeTreeItem parentItem, int style) {
 	this (checkNull (parentItem).parent, style, parentItem.handle, OS.TVI_LAST, 0);
 }
 
@@ -176,7 +176,7 @@ public NativeTreeItem (NativeTreeItem parentItem, int style) {
  * @see NativeWidget#getStyle
  * @see NativeTree#setRedraw
  */
-public NativeTreeItem (NativeTreeItem parentItem, int style, int index) {
+protected NativeTreeItem (NativeTreeItem parentItem, int style, int index) {
 	this (checkNull (parentItem).parent, style, parentItem.handle, findPrevious (parentItem, index), 0);
 }
 

@@ -83,7 +83,7 @@ static {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCaret (NativeCanvas parent, int style) {
+protected NativeCaret (NativeCanvas parent, int style) {
 	super (parent, style);
 	this.parent = parent;
 	createWidget ();

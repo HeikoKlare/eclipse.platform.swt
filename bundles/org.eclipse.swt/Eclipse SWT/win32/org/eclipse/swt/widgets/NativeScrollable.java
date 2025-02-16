@@ -81,7 +81,7 @@ NativeScrollable () {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeScrollable (NativeComposite parent, int style) {
+protected NativeScrollable (NativeComposite parent, int style) {
 	super (parent, style);
 }
 
@@ -148,6 +148,7 @@ void createHandle () {
 }
 
 NativeScrollBar createScrollBar (int type) {
+	// TODO FACADE This is wrong
 	NativeScrollBar bar = new NativeScrollBar (this, type);
 	bar.wrapperScrollBar = new ScrollBar(bar);
 	if ((state & CANVAS) != 0) {

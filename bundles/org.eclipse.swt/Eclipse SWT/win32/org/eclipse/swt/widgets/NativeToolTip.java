@@ -84,7 +84,7 @@ public class NativeToolTip extends NativeWidget {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeToolTip (NativeShell parent, int style) {
+protected NativeToolTip (NativeShell parent, int style) {
 	super (parent, checkStyle (style));
 	this.parent = parent;
 	checkOrientation (parent);

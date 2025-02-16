@@ -108,7 +108,7 @@ public class NativeButton extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeButton (NativeComposite parent, int style) {
+protected NativeButton (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 	refreshCheckSize(this.nativeZoom);
 }
