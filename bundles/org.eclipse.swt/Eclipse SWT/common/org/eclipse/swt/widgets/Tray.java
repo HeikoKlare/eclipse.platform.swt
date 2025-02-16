@@ -47,7 +47,7 @@ Tray (Display display, int style) {
 	this (new NativeTray(display, style));
 }
 
-Tray (NativeTray nativeTray) {
+private Tray (NativeTray nativeTray) {
 	this.wrappedTray = nativeTray;
 	this.wrappedTray.wrapperTray = this;
 }

@@ -103,7 +103,7 @@ public ExpandItem (ExpandBar parent, int style, int index) {
 	this (new NativeExpandItem(checkNative(parent), style, index));
 }
 
-ExpandItem(NativeExpandItem nativeExpandItem) {
+private ExpandItem(NativeExpandItem nativeExpandItem) {
 	this.wrappedExpandItem = nativeExpandItem;
 	this.wrappedExpandItem.wrapperExpandItem = this;
 }

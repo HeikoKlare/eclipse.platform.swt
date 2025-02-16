@@ -71,7 +71,7 @@ public Caret (Canvas parent, int style) {
 	this (new NativeCaret(checkNative(parent), style));
 }
 
-Caret(NativeCaret nativeCaret) {
+private Caret(NativeCaret nativeCaret) {
 	this.wrappedCaret = nativeCaret;
 	this.wrappedCaret.wrapperCaret = this;
 }

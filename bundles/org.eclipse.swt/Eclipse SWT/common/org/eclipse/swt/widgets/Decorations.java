@@ -14,8 +14,10 @@
 package org.eclipse.swt.widgets;
 
 
+import java.awt.*;
+
 import org.eclipse.swt.*;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * Instances of this class provide the appearance and
@@ -142,15 +144,18 @@ public Decorations (Composite parent, int style) {
 	this (new NativeDecorations(checkNative(parent), style));
 }
 
-Decorations(NativeDecorations nativeDecorations) {
-	super(nativeDecorations);
+private Decorations(NativeDecorations nativeDecorations) {
 	this.wrappedDecorations = nativeDecorations;
 	this.wrappedDecorations.wrapperDecorations = this;
 }
 
+protected Decorations() {
+	this.wrappedDecorations = null;
+}
+
 @Override
 public void dispose () {
-	wrappedDecorations.dispose();
+	getWrappedWidget().dispose();
 }
 
 /**
@@ -167,7 +172,7 @@ public void dispose () {
  * @see #setDefaultButton(Button)
  */
 public Button getDefaultButton () {
-	NativeButton wrappedButton = wrappedDecorations.getDefaultButton();
+	NativeButton wrappedButton = getWrappedWidget().getDefaultButton();
 	return wrappedButton != null ? wrappedButton.wrap() : null;
 }
 
@@ -193,7 +198,7 @@ public Button getDefaultButton () {
  * </ul>
  */
 public Image getImage () {
-	return wrappedDecorations.getImage();
+	return getWrappedWidget().getImage();
 }
 
 /**
@@ -224,7 +229,7 @@ public Image getImage () {
  * @since 3.0
  */
 public Image [] getImages () {
-	return wrappedDecorations.getImages();
+	return getWrappedWidget().getImages();
 }
 
 /**
@@ -241,7 +246,7 @@ public Image [] getImages () {
  * @see #setMaximized
  */
 public boolean getMaximized () {
-	return wrappedDecorations.getMaximized();
+	return getWrappedWidget().getMaximized();
 }
 
 /**
@@ -256,7 +261,7 @@ public boolean getMaximized () {
  * </ul>
  */
 public Menu getMenuBar () {
-	NativeMenu wrappedMenu = wrappedDecorations.getMenuBar();
+	NativeMenu wrappedMenu = getWrappedWidget().getMenuBar();
 	return wrappedMenu != null ? wrappedMenu.wrap() : null;
 }
 
@@ -274,7 +279,7 @@ public Menu getMenuBar () {
  * @see #setMinimized
  */
 public boolean getMinimized () {
-	return wrappedDecorations.getMinimized();
+	return getWrappedWidget().getMinimized();
 }
 
 /**
@@ -291,12 +296,12 @@ public boolean getMinimized () {
  * </ul>
  */
 public String getText () {
-	return wrappedDecorations.getText();
+	return getWrappedWidget().getText();
 }
 
 @Override
 public boolean isReparentable () {
-	return wrappedDecorations.isReparentable();
+	return getWrappedWidget().isReparentable();
 }
 
 /**
@@ -325,11 +330,11 @@ public boolean isReparentable () {
  * </ul>
  */
 public void setDefaultButton (Button button) {
-	wrappedDecorations.setDefaultButton(checkNative(button));
+	getWrappedWidget().setDefaultButton(checkNative(button));
 }
 
 void setDefaultButton (Button button, boolean save) {
-	wrappedDecorations.setDefaultButton(checkNative(button), save);
+	getWrappedWidget().setDefaultButton(checkNative(button), save);
 }
 
 /**
@@ -350,7 +355,7 @@ void setDefaultButton (Button button, boolean save) {
  * </ul>
  */
 public void setImage (Image image) {
-	wrappedDecorations.setImage(image);
+	getWrappedWidget().setImage(image);
 }
 
 /**
@@ -378,7 +383,7 @@ public void setImage (Image image) {
  * @since 3.0
  */
 public void setImages (Image [] images) {
-	wrappedDecorations.setImages(images);
+	getWrappedWidget().setImages(images);
 }
 
 /**
@@ -405,7 +410,7 @@ public void setImages (Image [] images) {
  * @see #setMinimized
  */
 public void setMaximized (boolean maximized) {
-	wrappedDecorations.setMaximized(maximized);
+	getWrappedWidget().setMaximized(maximized);
 }
 
 /**
@@ -424,7 +429,7 @@ public void setMaximized (boolean maximized) {
  * </ul>
  */
 public void setMenuBar (Menu menu) {
-	wrappedDecorations.setMenuBar(checkNative(menu));
+	getWrappedWidget().setMenuBar(checkNative(menu));
 }
 
 /**
@@ -451,12 +456,12 @@ public void setMenuBar (Menu menu) {
  * @see #setMaximized
  */
 public void setMinimized (boolean minimized) {
-	wrappedDecorations.setMinimized(minimized);
+	getWrappedWidget().setMinimized(minimized);
 }
 
 @Override
 public void setOrientation (int orientation) {
-	wrappedDecorations.setOrientation(orientation);
+	getWrappedWidget().setOrientation(orientation);
 }
 
 /**
@@ -479,7 +484,7 @@ public void setOrientation (int orientation) {
  * </ul>
  */
 public void setText (String string) {
-	wrappedDecorations.setText(string);
+	getWrappedWidget().setText(string);
 }
 
 @Override
@@ -489,6 +494,9 @@ Decorations menuShell () {
 
 @Override
 protected NativeDecorations getWrappedWidget() {
+	if (wrappedDecorations == null) {
+		SWT.error (SWT.ERROR_NULL_ARGUMENT, null, " subclass has to overwrite method for retrieving wrapped widget");
+	}
 	return wrappedDecorations;
 }
 

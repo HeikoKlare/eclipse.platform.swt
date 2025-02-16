@@ -88,7 +88,7 @@ public DateTime (Composite parent, int style) {
 	this (new NativeDateTime(checkNative(parent), style));
 }
 
-DateTime(NativeDateTime nativeDateTime) {
+private DateTime(NativeDateTime nativeDateTime) {
 	this.wrappedDateTime = nativeDateTime;
 	this.wrappedDateTime.wrapperDateTime = this;
 }

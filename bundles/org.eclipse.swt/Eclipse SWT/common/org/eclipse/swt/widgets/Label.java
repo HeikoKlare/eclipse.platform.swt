@@ -95,7 +95,7 @@ public Label (Composite parent, int style) {
 	this (new NativeLabel(checkNative(parent), style));
 }
 
-Label (NativeLabel nativeLabel) {
+private Label (NativeLabel nativeLabel) {
 	this.wrappedLabel = nativeLabel;
 	this.wrappedLabel.wrapperLabel = this;
 }

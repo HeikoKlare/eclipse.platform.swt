@@ -337,8 +337,7 @@ public Shell (Shell parent, int style) {
 	this (parent != null ? parent.getDisplay() : null, parent, style, 0, false);
 }
 
-Shell(NativeShell nativeShell) {
-	super(nativeShell);
+private Shell(NativeShell nativeShell) {
 	this.wrappedShell = nativeShell;
 	this.wrappedShell.wrapperShell = this;
 }

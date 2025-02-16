@@ -159,7 +159,7 @@ TreeItem (Tree parent, int style, long hParent, long hInsertAfter, long hItem) {
 	this (new NativeTreeItem(checkNative(parent), style, hParent, hInsertAfter, hItem));
 }
 
-TreeItem(NativeTreeItem nativeTreeItem) {
+private TreeItem(NativeTreeItem nativeTreeItem) {
 	this.wrappedTreeItem = nativeTreeItem;
 	this.wrappedTreeItem.wrapperTreeItem = this;
 }

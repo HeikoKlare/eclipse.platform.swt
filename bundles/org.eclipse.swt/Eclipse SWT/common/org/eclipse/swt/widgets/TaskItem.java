@@ -72,7 +72,7 @@ TaskItem (TaskBar parent, int style) {
 	this (new NativeTaskItem(checkNative(parent), style));
 }
 
-TaskItem(NativeTaskItem nativeTaskItem) {
+private TaskItem(NativeTaskItem nativeTaskItem) {
 	this.wrappedTaskItem = nativeTaskItem;
 	this.wrappedTaskItem.wrapperTaskItem = this;
 }

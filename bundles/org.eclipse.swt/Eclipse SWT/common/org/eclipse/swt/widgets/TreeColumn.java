@@ -118,7 +118,7 @@ public TreeColumn (Tree parent, int style, int index) {
 	this (new NativeTreeColumn(checkNative(parent), style, index));
 }
 
-TreeColumn(NativeTreeColumn nativeTreeColumn) {
+private TreeColumn(NativeTreeColumn nativeTreeColumn) {
 	this.wrappedTreeColumn = nativeTreeColumn;
 	this.wrappedTreeColumn.wrapperTreeColumn = this;
 }

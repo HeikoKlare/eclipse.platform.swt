@@ -116,7 +116,7 @@ public Table (Composite parent, int style) {
 	this (new NativeTable(checkNative(parent), style));
 }
 
-Table (NativeTable nativeTable) {
+private Table (NativeTable nativeTable) {
 	this.wrappedTable = nativeTable;
 	this.wrappedTable.wrapperTable = this;
 }

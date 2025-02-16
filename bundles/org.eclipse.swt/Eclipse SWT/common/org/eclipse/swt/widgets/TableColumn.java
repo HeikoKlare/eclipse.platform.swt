@@ -116,7 +116,7 @@ public TableColumn (Table parent, int style, int index) {
 	this (new NativeTableColumn(checkNative(parent), style, index));
 }
 
-TableColumn(NativeTableColumn nativeTableColumn) {
+private TableColumn(NativeTableColumn nativeTableColumn) {
 	this.wrappedTableColumn = nativeTableColumn;
 	this.wrappedTableColumn.wrapperTableColumn = this;
 }

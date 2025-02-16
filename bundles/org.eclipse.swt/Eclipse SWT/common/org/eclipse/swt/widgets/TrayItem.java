@@ -75,7 +75,7 @@ public TrayItem (Tray parent, int style) {
 	this (new NativeTrayItem(checkNative(parent), style));
 }
 
-TrayItem (NativeTrayItem nativeTrayItem) {
+private TrayItem (NativeTrayItem nativeTrayItem) {
 	this.wrappedTrayItem = nativeTrayItem;
 	this.wrappedTrayItem.wrapperTrayItem = this;
 }

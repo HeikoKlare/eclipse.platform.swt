@@ -76,7 +76,7 @@ public Sash (Composite parent, int style) {
 	this (new NativeSash(checkNative(parent), style));
 }
 
-Sash(NativeSash nativeSash) {
+private Sash(NativeSash nativeSash) {
 	this.wrappedSash = nativeSash;
 	this.wrappedSash.wrapperSash = this;
 }

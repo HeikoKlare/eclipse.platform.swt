@@ -115,7 +115,7 @@ public Menu (Decorations parent, int style) {
 	this (parent, style, 0);
 }
 
-Menu(NativeMenu nativeMenu) {
+private Menu(NativeMenu nativeMenu) {
 	this.wrappedMenu = nativeMenu;
 	this.wrappedMenu.wrapperMenu = this;
 }

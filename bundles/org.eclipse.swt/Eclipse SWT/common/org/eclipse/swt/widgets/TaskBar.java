@@ -44,7 +44,7 @@ TaskBar (Display display, int style) {
 	this (new NativeTaskBar(display, style));
 }
 
-TaskBar(NativeTaskBar nativeTaskBar) {
+private TaskBar(NativeTaskBar nativeTaskBar) {
 	this.wrappedTaskBar = nativeTaskBar;
 	this.wrappedTaskBar.wrapperTaskBar = this;
 }

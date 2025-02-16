@@ -73,9 +73,9 @@ public Canvas (Composite parent, int style) {
 	this (new NativeCanvas(checkNative(parent), style));
 }
 
-Canvas(NativeCanvas nativeCanvas) {
+private Canvas(NativeCanvas nativeCanvas) {
 	this.wrappedCanvas = nativeCanvas;
-	wrappedCanvas.wrapperCanvas = this;
+	this.wrappedCanvas.wrapperCanvas = this;
 }
 
 protected Canvas() {

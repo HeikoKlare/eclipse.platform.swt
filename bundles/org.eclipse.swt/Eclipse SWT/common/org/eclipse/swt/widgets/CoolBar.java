@@ -86,7 +86,7 @@ public CoolBar (Composite parent, int style) {
 	this (new NativeCoolBar(checkNative(parent), style));
 }
 
-CoolBar(NativeCoolBar nativeCoolBar) {
+private CoolBar(NativeCoolBar nativeCoolBar) {
 	this.wrappedCoolBar = nativeCoolBar;
 	this.wrappedCoolBar.wrapperCoolBar = this;
 }

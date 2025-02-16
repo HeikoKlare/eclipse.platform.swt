@@ -79,7 +79,7 @@ public Spinner (Composite parent, int style) {
 	this (new NativeSpinner(checkNative(parent), style));
 }
 
-Spinner (NativeSpinner nativeSpinner) {
+private Spinner (NativeSpinner nativeSpinner) {
 	this.wrappedSpinner = nativeSpinner;
 	this.wrappedSpinner.wrapperSpinner = this;
 }

@@ -120,7 +120,7 @@ public ToolItem (ToolBar parent, int style, int index) {
 	this (new NativeToolItem(checkNative(parent), style, index));
 }
 
-ToolItem(NativeToolItem nativeToolItem) {
+private ToolItem(NativeToolItem nativeToolItem) {
 	this.wrappedToolItem = nativeToolItem;
 	this.wrappedToolItem.wrapperToolItem = this;
 }

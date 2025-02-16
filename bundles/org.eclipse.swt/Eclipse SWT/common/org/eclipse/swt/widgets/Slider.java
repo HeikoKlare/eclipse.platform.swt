@@ -108,7 +108,7 @@ public Slider (Composite parent, int style) {
 	this (new NativeSlider(checkNative(parent), style));
 }
 
-Slider (NativeSlider nativeSlider) {
+private Slider (NativeSlider nativeSlider) {
 	this.wrappedSlider = nativeSlider;
 	this.wrappedSlider.wrapperSlider = this;
 }

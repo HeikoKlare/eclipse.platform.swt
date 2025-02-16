@@ -72,7 +72,7 @@ public IME (Canvas parent, int style) {
 	this (new NativeIME(checkNative(parent), style));
 }
 
-IME(NativeIME nativeIME) {
+private IME(NativeIME nativeIME) {
 	this.wrappedIME = nativeIME;
 	this.wrappedIME.wrapperIME = this;
 }
