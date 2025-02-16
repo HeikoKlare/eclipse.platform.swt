@@ -368,7 +368,7 @@ protected NativeDragSource(Control control, int style) {
 	if (control.getData(DND.DRAG_SOURCE_KEY) != null) {
 		DND.error(DND.ERROR_CANNOT_INIT_DRAG);
 	}
-	control.setData(DND.DRAG_SOURCE_KEY, this);
+	control.setData(DND.DRAG_SOURCE_KEY, this.wrap());
 
 	controlListener = event -> {
 		if (event.type == SWT.Dispose) {
@@ -448,11 +448,11 @@ private void createCOMInterfaces() {
 }
 
 @Override
-protected void checkSubclass() {
-	String name = getClass().getName();
-	String validName = NativeDragSource.class.getName();
-	if (!validName.equals(name)) {
-		DND.error(SWT.ERROR_INVALID_SUBCLASS);
+protected void checkSubclass () {
+	String name = getClass().getName ();
+	String validName = NativeDragSource.class.getPackageName();
+	if (!name.startsWith(validName)) {
+		DND.error (SWT.ERROR_INVALID_SUBCLASS);
 	}
 }
 

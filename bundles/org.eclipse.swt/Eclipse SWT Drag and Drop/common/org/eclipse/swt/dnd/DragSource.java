@@ -134,11 +134,12 @@ public class DragSource extends Widget {
  * @see DND#DROP_LINK
  */
 public DragSource(Control control, int style) {
-	this (new NativeDragSource(control, style));
-}
-
-private DragSource(NativeDragSource nativeDragSource) {
-	this.wrappedDragSource = nativeDragSource;
+	this.wrappedDragSource = new NativeDragSource(control, style) {
+		@Override
+		protected DragSource wrap() {
+			return DragSource.this;
+		}
+	};
 	this.wrappedDragSource.wrapperDragSource = this;
 }
 

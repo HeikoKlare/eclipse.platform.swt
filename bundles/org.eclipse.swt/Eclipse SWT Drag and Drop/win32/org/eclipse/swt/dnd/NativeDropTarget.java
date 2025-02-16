@@ -138,7 +138,7 @@ protected NativeDropTarget(Control control, int style) {
 	if (control.getData(DND.DROP_TARGET_KEY) != null) {
 		DND.error(DND.ERROR_CANNOT_INIT_DROP);
 	}
-	control.setData(DND.DROP_TARGET_KEY, this);
+	control.setData(DND.DROP_TARGET_KEY, this.wrap());
 	createCOMInterfaces();
 	this.AddRef();
 
@@ -224,8 +224,8 @@ int AddRef() {
 @Override
 protected void checkSubclass () {
 	String name = getClass().getName ();
-	String validName = NativeDropTarget.class.getName();
-	if (!validName.equals(name)) {
+	String validName = NativeDropTarget.class.getPackageName();
+	if (!name.startsWith(validName)) {
 		DND.error (SWT.ERROR_INVALID_SUBCLASS);
 	}
 }
