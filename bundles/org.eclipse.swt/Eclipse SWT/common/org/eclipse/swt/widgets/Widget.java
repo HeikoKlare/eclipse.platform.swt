@@ -65,6 +65,10 @@ public abstract class Widget {
 		return menuItem != null ? menuItem.getWrappedWidget() : null;
 	}
 
+	public static NativeMenuItem[] checkNative(MenuItem[] menuItems) {
+		return menuItems != null ? Arrays.stream(menuItems).map(Widget::checkNative).toArray(NativeMenuItem[]::new) : null;
+	}
+
 	static NativeTabFolder checkNative(TabFolder tabFolder) {
 		return tabFolder != null ? tabFolder.getWrappedWidget() : null;
 	}
