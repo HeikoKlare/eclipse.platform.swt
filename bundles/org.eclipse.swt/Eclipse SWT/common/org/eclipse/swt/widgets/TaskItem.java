@@ -89,8 +89,7 @@ private TaskItem(NativeTaskItem nativeTaskItem) {
  * </ul>
  */
 public Menu getMenu () {
-	NativeMenu wrappedMenu = wrappedTaskItem.getMenu();
-	return wrappedMenu != null ? wrappedMenu.wrap() : null;
+	return wrappedTaskItem.getMenu();
 }
 
 /**

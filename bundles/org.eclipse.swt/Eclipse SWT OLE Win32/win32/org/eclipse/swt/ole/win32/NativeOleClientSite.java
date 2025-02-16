@@ -112,7 +112,7 @@ protected NativeOleClientSite(NativeComposite parent, int style) {
 			frame = (NativeOleFrame)parent;
 			break;
 		}
-		parent = parent.getParent();
+		parent = Widget.checkNative(parent.getParent());
 	}
 	if (frame == null) OLE.error(SWT.ERROR_INVALID_ARGUMENT);
 	frame.AddRef();

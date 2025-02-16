@@ -1188,7 +1188,7 @@ public NativeShell [] getShells () {
 	for (NativeShell activeshell : shells) {
 		NativeControl shell = activeshell;
 		do {
-			shell = shell.getParent ();
+			shell = Widget.checkNative(shell.getParent ());
 		} while (shell != null && shell != this);
 		if (shell == this) count++;
 	}
@@ -1197,7 +1197,7 @@ public NativeShell [] getShells () {
 	for (NativeShell activeshell : shells) {
 		NativeControl shell = activeshell;
 		do {
-			shell = shell.getParent ();
+			shell = Widget.checkNative(shell.getParent ());
 		} while (shell != null && shell != this);
 		if (shell == this) {
 			result [index++] = activeshell;
