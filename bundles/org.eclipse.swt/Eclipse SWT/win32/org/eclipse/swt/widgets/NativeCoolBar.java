@@ -98,7 +98,7 @@ public class NativeCoolBar extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCoolBar (NativeComposite parent, int style) {
+protected NativeCoolBar (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 	/*
 	* Ensure that either of HORIZONTAL or VERTICAL is set.

@@ -128,7 +128,7 @@ public class NativeText extends NativeScrollable {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeText (NativeComposite parent, int style) {
+protected NativeText (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 }
 

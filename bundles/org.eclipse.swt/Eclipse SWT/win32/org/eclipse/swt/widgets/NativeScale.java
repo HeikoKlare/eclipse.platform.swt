@@ -104,7 +104,7 @@ public class NativeScale extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeScale (NativeComposite parent, int style) {
+protected NativeScale (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 }
 

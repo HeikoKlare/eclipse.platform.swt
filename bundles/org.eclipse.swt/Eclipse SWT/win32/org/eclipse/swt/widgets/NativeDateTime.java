@@ -156,7 +156,7 @@ public class NativeDateTime extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeDateTime (NativeComposite parent, int style) {
+protected NativeDateTime (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 	if ((this.style & SWT.SHORT) != 0) {
 		String buffer = ((this.style & SWT.DATE) != 0) ? getCustomShortDateFormat() : getCustomShortTimeFormat();

@@ -152,7 +152,7 @@ public class NativeTable extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTable (NativeComposite parent, int style) {
+protected NativeTable (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 }
 

@@ -291,8 +291,7 @@ public NativeTaskItem getItem (NativeShell shell) {
 			return item;
 		}
 	}
-	NativeTaskItem item = new NativeTaskItem (this, SWT.NONE);
-	item.wrapperTaskItem = new TaskItem(item);
+	NativeTaskItem item = new TaskItem (this.wrap(), SWT.NONE).getWrappedWidget();
 	if (shell != null) item.setShell (shell);
 	return item;
 }

@@ -101,7 +101,7 @@ NativeComposite () {
  * @see SWT#DOUBLE_BUFFERED
  * @see NativeWidget#getStyle
  */
-public NativeComposite (NativeComposite parent, int style) {
+protected NativeComposite (NativeComposite parent, int style) {
 	super (parent, style);
 }
 
