@@ -25,10 +25,10 @@ import org.eclipse.swt.SWTError;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.NativeDragSource;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.NativeDropTarget;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -75,7 +75,7 @@ public class DNDExample {
 	private Transfer[] dragTypes = new Transfer[0];
 	private Control dragControl;
 	private int dragControlType = 0;
-	private DragSource dragSource;
+	private NativeDragSource dragSource;
 	private String dragDataText;
 	private String dragDataRTF;
 	private String dragDataHTML;
@@ -88,7 +88,7 @@ public class DNDExample {
 	private int dropFeedback = 0;
 	private int dropDefaultOperation = 0;
 	private Transfer[] dropTypes = new Transfer[0];
-	private DropTarget dropTarget;
+	private NativeDropTarget dropTarget;
 	private Control dropControl;
 	private int dropControlType = 0;
 	private Composite defaultParent;
@@ -206,7 +206,7 @@ private void createDragOperations(Composite parent) {
 
 private void createDragSource() {
 	if (dragSource != null) dragSource.dispose();
-	dragSource = new DragSource(dragControl, dragOperation);
+	dragSource = new NativeDragSource(dragControl, dragOperation);
 	dragSource.setTransfer(dragTypes);
 	dragSource.addDragListener(new DragSourceListener() {
 		@Override
@@ -735,7 +735,7 @@ private void createDropOperations(Composite parent) {
 
 private void createDropTarget() {
 	if (dropTarget != null) dropTarget.dispose();
-	dropTarget = new DropTarget(dropControl, dropOperation);
+	dropTarget = new NativeDropTarget(dropControl, dropOperation);
 	dropTarget.setTransfer(dropTypes);
 	dropTarget.addDropListener(new DropTargetListener() {
 		@Override

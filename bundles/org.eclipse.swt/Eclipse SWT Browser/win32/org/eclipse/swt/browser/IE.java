@@ -265,7 +265,7 @@ class IE extends WebBrowser {
 @Override
 public void create(Composite parent, int style) {
 	this.style = style;
-	frame = new OleFrame(browser, SWT.NONE);
+	frame = new OleFrame(nativeBrowser, SWT.NONE);
 
 	try {
 		site = new WebSite(frame, SWT.NONE, ProgId);
@@ -372,7 +372,7 @@ public void create(Composite parent, int style) {
 				e.type = SWT.NONE;
 
 				/* invoke onbeforeunload handlers */
-				if (!browser.isClosing) {
+				if (!nativeBrowser.isClosing) {
 					LocationListener[] oldLocationListeners = locationListeners;
 					locationListeners = new LocationListener[0];
 					site.ignoreAllMessages = true;
@@ -425,7 +425,7 @@ public void create(Composite parent, int style) {
 				 * listen for traversals and re-perform the traversal on the
 				 * appropriate control.
 				 */
-				if (e.detail == SWT.TRAVERSE_TAB_PREVIOUS && e.widget instanceof WebSite) {
+				if (e.detail == SWT.TRAVERSE_TAB_PREVIOUS) { // TODO FACADE && e.widget instanceof WebSite) {
 					/* otherwise will traverse to the Browser control */
 					browser.traverse(SWT.TRAVERSE_TAB_PREVIOUS, e);
 					e.doit = false;
@@ -639,7 +639,7 @@ public void create(Composite parent, int style) {
 							globalDispatch = 0;
 
 							/* re-install registered functions iff needed */
-							IE ie = (IE)browser.webBrowser;
+							IE ie = (IE)nativeBrowser.webBrowser;
 							if (ie.installFunctionsOnDocumentComplete) {
 								ie.installFunctionsOnDocumentComplete = false;
 								Iterator<BrowserFunction> elements1 = functions.values().iterator ();
@@ -834,8 +834,8 @@ public void create(Composite parent, int style) {
 						openWindowListener.open(newEvent2);
 					}
 					IE browser = null;
-					if (newEvent2.browser != null && newEvent2.browser.webBrowser instanceof IE) {
-						browser = (IE)newEvent2.browser.webBrowser;
+					if (newEvent2.browser != null && newEvent2.browser.getWrappedWidget().webBrowser instanceof IE) {
+						browser = (IE)newEvent2.browser.getWrappedWidget().webBrowser;
 					}
 					boolean doit2 = browser != null && !browser.browser.isDisposed();
 					if (doit2) {

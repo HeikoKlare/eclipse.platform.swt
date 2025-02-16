@@ -96,7 +96,7 @@ public class OleControlSite extends OleClientSite
  *
  * @since 3.5
  */
-public OleControlSite(Composite parent, int style, File file) {
+public OleControlSite(NativeComposite parent, int style, File file) {
 	super(parent, style, file);
 
 	// Init site properties
@@ -125,7 +125,7 @@ public OleControlSite(Composite parent, int style, File file) {
  *     <li>ERROR_CANNOT_CREATE_LICENSED_OBJECT when failed to create a licensed OLE Object
  * </ul>
  */
-public OleControlSite(Composite parent, int style, String progId) {
+public OleControlSite(NativeComposite parent, int style, String progId) {
 	super(parent, style);
 	try {
 
@@ -232,7 +232,7 @@ public OleControlSite(Composite parent, int style, String progId) {
  *
  * @since 3.5
  */
-public OleControlSite(Composite parent, int style, String progId, File file) {
+public OleControlSite(NativeComposite parent, int style, String progId, File file) {
 	super(parent, style, progId, file);
 
 	// Init site properties
