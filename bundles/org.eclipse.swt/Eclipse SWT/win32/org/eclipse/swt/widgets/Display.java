@@ -2655,8 +2655,8 @@ public TaskBar getSystemTaskBar () {
 public Tray getSystemTray () {
 	checkDevice ();
 	if (tray == null) {
-		tray = new NativeTray (this, SWT.NONE);
-		tray.wrapperTray = new Tray(tray);
+		Tray wrapperTray = new Tray (this, SWT.NONE);
+		tray = wrapperTray.getWrappedWidget();
 	}
 	return tray.wrap();
 }
