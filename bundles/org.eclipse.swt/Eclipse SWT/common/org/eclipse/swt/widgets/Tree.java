@@ -118,7 +118,7 @@ public Tree (Composite parent, int style) {
 	this (new NativeTree(checkNative(parent), style));
 }
 
-Tree (NativeTree nativeTree) {
+private Tree (NativeTree nativeTree) {
 	this.wrappedTree = nativeTree;
 	this.wrappedTree.wrapperTree = this;
 }

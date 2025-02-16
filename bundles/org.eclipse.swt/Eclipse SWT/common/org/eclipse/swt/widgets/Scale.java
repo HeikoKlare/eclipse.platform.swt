@@ -76,7 +76,7 @@ public Scale (Composite parent, int style) {
 	this (new NativeScale(checkNative(parent), style));
 }
 
-Scale (NativeScale nativeScale) {
+private Scale (NativeScale nativeScale) {
 	this.wrappedScale = nativeScale;
 	this.wrappedScale.wrapperScale = this;
 }

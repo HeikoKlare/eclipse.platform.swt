@@ -88,7 +88,7 @@ public TabFolder (Composite parent, int style) {
 	this (new NativeTabFolder(checkNative(parent), style));
 }
 
-TabFolder(NativeTabFolder nativeTabFolder) {
+private TabFolder(NativeTabFolder nativeTabFolder) {
 	this.wrappedTabFolder = nativeTabFolder;
 	this.wrappedTabFolder.wrapperTabFolder = this;
 }

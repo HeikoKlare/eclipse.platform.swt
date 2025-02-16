@@ -358,8 +358,7 @@ public static Shell win32_new (Display display, long handle) {
 	return new Shell (display, null, SWT.NO_TRIM, handle, true);
 }
 
-Shell(NativeShell nativeShell) {
-	super(nativeShell);
+private Shell(NativeShell nativeShell) {
 	this.wrappedShell = nativeShell;
 	this.wrappedShell.wrapperShell = this;
 }

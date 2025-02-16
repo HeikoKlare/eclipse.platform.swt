@@ -131,7 +131,7 @@ public Text (Composite parent, int style) {
 	this (new NativeText(checkNative(parent), style));
 }
 
-protected Text (NativeText nativeText) {
+private Text (NativeText nativeText) {
 	this.wrappedText = nativeText;
 	this.wrappedText.wrapperText = this;
 }

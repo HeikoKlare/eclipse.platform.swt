@@ -111,7 +111,7 @@ public DropTarget(Control control, int style) {
 	this (new NativeDropTarget(control, style));
 }
 
-DropTarget(NativeDropTarget nativeDropTarget) {
+private DropTarget(NativeDropTarget nativeDropTarget) {
 	this.wrappedDropTarget = nativeDropTarget;
 	this.wrappedDropTarget.wrapperDropTarget = this;
 }

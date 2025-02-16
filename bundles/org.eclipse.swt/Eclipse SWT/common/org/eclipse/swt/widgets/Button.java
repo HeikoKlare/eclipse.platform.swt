@@ -92,7 +92,7 @@ public Button (Composite parent, int style) {
 	this (new NativeButton(checkNative(parent), style));
 }
 
-Button(NativeButton nativeButton) {
+private Button(NativeButton nativeButton) {
 	this.wrappedButton = nativeButton;
 	wrappedButton.wrapperButton = this;
 }

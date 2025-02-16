@@ -96,7 +96,7 @@ public Combo (Composite parent, int style) {
 	this (new NativeCombo(checkNative(parent), style));
 }
 
-Combo(NativeCombo nativeCombo) {
+private Combo(NativeCombo nativeCombo) {
 	this.wrappedCombo = nativeCombo;
 	this.wrappedCombo.wrapperCombo = this;
 }

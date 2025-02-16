@@ -82,7 +82,7 @@ public ExpandBar (Composite parent, int style) {
 	this (new NativeExpandBar(checkNative(parent), style));
 }
 
-ExpandBar(NativeExpandBar nativeExpandBar) {
+private ExpandBar(NativeExpandBar nativeExpandBar) {
 	this.wrappedExpandBar = nativeExpandBar;
 	this.wrappedExpandBar.wrapperExpandBar = this;
 }

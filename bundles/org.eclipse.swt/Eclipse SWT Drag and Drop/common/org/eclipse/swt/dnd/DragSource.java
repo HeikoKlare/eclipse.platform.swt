@@ -137,7 +137,7 @@ public DragSource(Control control, int style) {
 	this (new NativeDragSource(control, style));
 }
 
-DragSource(NativeDragSource nativeDragSource) {
+private DragSource(NativeDragSource nativeDragSource) {
 	this.wrappedDragSource = nativeDragSource;
 	this.wrappedDragSource.wrapperDragSource = this;
 }

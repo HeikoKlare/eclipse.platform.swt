@@ -88,7 +88,7 @@ public ToolBar (Composite parent, int style) {
 	this (new NativeToolBar(checkNative(parent), style));
 }
 
-ToolBar(NativeToolBar nativeToolBar) {
+private ToolBar(NativeToolBar nativeToolBar) {
 	this.wrappedToolBar = nativeToolBar;
 	this.wrappedToolBar.wrapperToolBar = this;
 }

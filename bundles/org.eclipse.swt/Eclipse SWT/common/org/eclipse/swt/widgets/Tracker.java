@@ -120,7 +120,7 @@ public Tracker (Display display, int style) {
 	this(new NativeTracker(display, style));
 }
 
-Tracker (NativeTracker nativeTracker) {
+private Tracker (NativeTracker nativeTracker) {
 	this.wrappedTracker = nativeTracker;
 	this.wrappedTracker.wrapperTracker = this;
 }

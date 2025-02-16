@@ -109,7 +109,7 @@ public CoolItem (CoolBar parent, int style, int index) {
 	this (new NativeCoolItem(checkNative(parent), style, index));
 }
 
-CoolItem(NativeCoolItem nativeCoolItem) {
+private CoolItem(NativeCoolItem nativeCoolItem) {
 	this.wrappedCoolItem = nativeCoolItem;
 	this.wrappedCoolItem.wrapperCoolItem = this;
 }

@@ -74,7 +74,7 @@ public Link (Composite parent, int style) {
 	this (new NativeLink(checkNative(parent), style));
 }
 
-Link(NativeLink nativeLink) {
+private Link(NativeLink nativeLink) {
 	this.wrappedLink = nativeLink;
 	this.wrappedLink.wrapperLink = this;
 }

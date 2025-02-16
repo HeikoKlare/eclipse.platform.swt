@@ -112,7 +112,7 @@ TableItem (Table parent, int style, int index, boolean create) {
 	this (new NativeTableItem(checkNative(parent), style, index, create));
 }
 
-TableItem(NativeTableItem nativeTableItem) {
+private TableItem(NativeTableItem nativeTableItem) {
 	this.wrappedTableItem = nativeTableItem;
 	this.wrappedTableItem.wrapperTableItem = this;
 }
