@@ -64,10 +64,6 @@ public abstract class Item extends Widget {
  */
 public Item (Widget parent, int style) {
 	wrappedItem = new NativeItem(checkNative(parent), style) {
-		@Override
-		protected Widget wrap() {
-			return Item.this;
-		}
 	};
 	wrappedItem.wrapperWidget = this;
 }

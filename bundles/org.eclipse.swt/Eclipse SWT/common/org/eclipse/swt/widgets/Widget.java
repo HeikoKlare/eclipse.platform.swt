@@ -250,10 +250,6 @@ static int checkBits (int style, int int0, int int1, int int2, int int3, int int
  */
 public Widget (Widget parent, int style) {
 	this.wrappedWidget = new NativeWidget(checkNative(parent), style) {
-		@Override
-		protected Widget wrap() {
-			return Widget.this;
-		}
 	};
 	wrappedWidget.wrapperWidget = this;
 }

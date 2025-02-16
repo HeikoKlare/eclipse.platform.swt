@@ -82,6 +82,7 @@ public Browser (Composite parent, int style) {
 			return Browser.this;
 		}
 	};
+	this.wrappedBrowser.wrapperBrowser = this;
 }
 
 /**
