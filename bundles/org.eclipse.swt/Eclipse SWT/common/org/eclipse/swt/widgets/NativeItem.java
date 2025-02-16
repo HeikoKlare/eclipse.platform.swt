@@ -73,7 +73,7 @@ public abstract class NativeItem extends NativeWidget {
  * @see SWT
  * @see NativeWidget#getStyle
  */
-public NativeItem (NativeWidget parent, int style) {
+protected NativeItem (NativeWidget parent, int style) {
 	super (parent, style);
 	text = "";
 }
@@ -108,7 +108,7 @@ public NativeItem (NativeWidget parent, int style) {
  * @see SWT
  * @see NativeWidget#getStyle
  */
-public NativeItem (NativeWidget parent, int style, int index) {
+protected NativeItem (NativeWidget parent, int style, int index) {
 	this (parent, style);
 }
 

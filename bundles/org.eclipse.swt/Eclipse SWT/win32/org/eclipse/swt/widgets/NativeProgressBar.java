@@ -105,7 +105,7 @@ public class NativeProgressBar extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeProgressBar (NativeComposite parent, int style) {
+protected NativeProgressBar (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 }
 

@@ -132,7 +132,7 @@ public class NativeDropTarget extends NativeWidget {
  * @see DND#DROP_MOVE
  * @see DND#DROP_LINK
  */
-public NativeDropTarget(Control control, int style) {
+protected NativeDropTarget(Control control, int style) {
 	super (Widget.checkNative(control), checkStyle(style));
 	this.control = control;
 	if (control.getData(DND.DROP_TARGET_KEY) != null) {

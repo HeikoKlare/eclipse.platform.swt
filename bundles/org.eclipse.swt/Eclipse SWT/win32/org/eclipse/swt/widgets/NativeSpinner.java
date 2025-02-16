@@ -108,7 +108,7 @@ public class NativeSpinner extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeSpinner (NativeComposite parent, int style) {
+protected NativeSpinner (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 }
 

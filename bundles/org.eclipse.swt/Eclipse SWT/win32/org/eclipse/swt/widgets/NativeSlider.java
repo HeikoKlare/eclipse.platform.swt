@@ -115,7 +115,7 @@ public class NativeSlider extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeSlider (NativeComposite parent, int style) {
+protected NativeSlider (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 }
 

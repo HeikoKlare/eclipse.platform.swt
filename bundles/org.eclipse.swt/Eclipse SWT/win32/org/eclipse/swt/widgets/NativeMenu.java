@@ -99,7 +99,7 @@ public class NativeMenu extends NativeWidget {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeMenu (NativeControl parent) {
+protected NativeMenu (NativeControl parent) {
 	this (checkNull (parent).menuShell (), SWT.POP_UP);
 }
 
@@ -140,7 +140,7 @@ public NativeMenu (NativeControl parent) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeMenu (NativeDecorations parent, int style) {
+protected NativeMenu (NativeDecorations parent, int style) {
 	this (parent, checkStyle (style), 0);
 }
 
@@ -168,7 +168,7 @@ public NativeMenu (NativeDecorations parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeMenu (NativeMenu parentMenu) {
+protected NativeMenu (NativeMenu parentMenu) {
 	this (checkNull (parentMenu).parent, SWT.DROP_DOWN);
 }
 
@@ -196,7 +196,7 @@ public NativeMenu (NativeMenu parentMenu) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeMenu (NativeMenuItem parentItem) {
+protected NativeMenu (NativeMenuItem parentItem) {
 	this (checkNull (parentItem).parent);
 }
 

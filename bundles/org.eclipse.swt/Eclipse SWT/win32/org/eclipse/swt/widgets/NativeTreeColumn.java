@@ -84,7 +84,7 @@ public class NativeTreeColumn extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTreeColumn (NativeTree parent, int style) {
+protected NativeTreeColumn (NativeTree parent, int style) {
 	super (parent, checkStyle (style));
 	resizable = true;
 	this.parent = parent;
@@ -128,7 +128,7 @@ public NativeTreeColumn (NativeTree parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTreeColumn (NativeTree parent, int style, int index) {
+protected NativeTreeColumn (NativeTree parent, int style, int index) {
 	super (parent, checkStyle (style));
 	resizable = true;
 	this.parent = parent;

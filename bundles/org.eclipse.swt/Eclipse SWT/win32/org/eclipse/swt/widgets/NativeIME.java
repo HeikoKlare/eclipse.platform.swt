@@ -92,7 +92,7 @@ NativeIME () {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeIME (NativeCanvas parent, int style) {
+protected NativeIME (NativeCanvas parent, int style) {
 	super (parent, style);
 	this.parent = parent;
 	createWidget ();

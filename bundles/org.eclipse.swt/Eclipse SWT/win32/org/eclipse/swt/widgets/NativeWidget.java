@@ -178,7 +178,7 @@ NativeWidget () {
  * @see #checkSubclass
  * @see #getStyle
  */
-public NativeWidget (NativeWidget parent, int style) {
+protected NativeWidget (NativeWidget parent, int style) {
 	checkSubclass ();
 	checkParent (parent);
 	this.style = style;

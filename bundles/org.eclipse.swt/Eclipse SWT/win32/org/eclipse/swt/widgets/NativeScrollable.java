@@ -81,7 +81,7 @@ NativeScrollable () {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeScrollable (NativeComposite parent, int style) {
+protected NativeScrollable (NativeComposite parent, int style) {
 	super (parent, style);
 }
 

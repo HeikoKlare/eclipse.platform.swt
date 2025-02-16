@@ -161,7 +161,7 @@ public class NativeShell extends NativeDecorations {
  *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
  * </ul>
  */
-public NativeShell () {
+protected NativeShell () {
 	this ((Display) null);
 }
 
@@ -204,7 +204,7 @@ public NativeShell () {
  * @see SWT#SYSTEM_MODAL
  * @see SWT#SHEET
  */
-public NativeShell (int style) {
+protected NativeShell (int style) {
 	this ((Display) null, style);
 }
 
@@ -227,7 +227,7 @@ public NativeShell (int style) {
  *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
  * </ul>
  */
-public NativeShell (Display display) {
+protected NativeShell (Display display) {
 	this (display, SWT.SHELL_TRIM);
 }
 
@@ -278,7 +278,7 @@ public NativeShell (Display display) {
  * @see SWT#SYSTEM_MODAL
  * @see SWT#SHEET
  */
-public NativeShell (Display display, int style) {
+protected NativeShell (Display display, int style) {
 	this (display, null, style, 0, false);
 }
 
@@ -337,7 +337,7 @@ NativeShell (Display display, NativeShell parent, int style, long handle, boolea
  *    <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed subclass</li>
  * </ul>
  */
-public NativeShell (NativeShell parent) {
+protected NativeShell (NativeShell parent) {
 	this (parent, SWT.DIALOG_TRIM);
 }
 
@@ -390,7 +390,7 @@ public NativeShell (NativeShell parent) {
  * @see SWT#SYSTEM_MODAL
  * @see SWT#SHEET
  */
-public NativeShell (NativeShell parent, int style) {
+protected NativeShell (NativeShell parent, int style) {
 	this (parent != null ? parent.display : null, parent, style, 0, false);
 }
 

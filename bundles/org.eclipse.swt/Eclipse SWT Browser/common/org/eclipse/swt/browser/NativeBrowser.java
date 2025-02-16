@@ -85,7 +85,7 @@ public class NativeBrowser extends NativeComposite {
  *
  * @since 3.0
  */
-public NativeBrowser (Composite parent, int style) {
+protected NativeBrowser (Composite parent, int style) {
 	super (checkParent (Widget.checkNative(parent)), checkStyle (style));
 	userStyle = style;
 

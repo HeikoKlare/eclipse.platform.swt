@@ -170,7 +170,7 @@ public class NativeTree extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTree (NativeComposite parent, int style) {
+protected NativeTree (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 }
 

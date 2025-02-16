@@ -117,7 +117,7 @@ NativeControl () {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeControl (NativeComposite parent, int style) {
+protected NativeControl (NativeComposite parent, int style) {
 	super (parent, style);
 	this.parent = parent;
 	createWidget ();

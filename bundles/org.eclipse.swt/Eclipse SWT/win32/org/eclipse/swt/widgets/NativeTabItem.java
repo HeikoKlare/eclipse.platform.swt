@@ -73,7 +73,7 @@ public class NativeTabItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTabItem (NativeTabFolder parent, int style) {
+protected NativeTabItem (NativeTabFolder parent, int style) {
 	super (parent, style);
 	this.parent = parent;
 	parent.createItem (this, parent.getItemCount ());
@@ -111,7 +111,7 @@ public NativeTabItem (NativeTabFolder parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTabItem (NativeTabFolder parent, int style, int index) {
+protected NativeTabItem (NativeTabFolder parent, int style, int index) {
 	super (parent, style);
 	this.parent = parent;
 	parent.createItem (this, index);
