@@ -108,17 +108,8 @@ public class DropTarget extends Widget {
  * @see DND#DROP_LINK
  */
 public DropTarget(Control control, int style) {
-	this (new NativeDropTarget(control, style));
-}
-
-private DropTarget(NativeDropTarget nativeDropTarget) {
-	this.wrappedDropTarget = nativeDropTarget;
+	this.wrappedDropTarget = new NativeDropTarget(this, control, style);
 	this.wrappedDropTarget.wrapperDropTarget = this;
-}
-
-static int checkStyle (int style) {
-	if (style == SWT.NONE) return DND.DROP_MOVE;
-	return style;
 }
 
 /**

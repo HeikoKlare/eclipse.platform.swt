@@ -132,13 +132,13 @@ public class NativeDropTarget extends NativeWidget {
  * @see DND#DROP_MOVE
  * @see DND#DROP_LINK
  */
-protected NativeDropTarget(Control control, int style) {
+protected NativeDropTarget(DropTarget wrapper, Control control, int style) {
 	super (Widget.checkNative(control), checkStyle(style));
 	this.control = control;
 	if (control.getData(DND.DROP_TARGET_KEY) != null) {
 		DND.error(DND.ERROR_CANNOT_INIT_DROP);
 	}
-	control.setData(DND.DROP_TARGET_KEY, this);
+	control.setData(DND.DROP_TARGET_KEY, wrapper);
 	createCOMInterfaces();
 	this.AddRef();
 
