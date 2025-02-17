@@ -557,8 +557,7 @@ public void setVisible (boolean visible) {
 @Override
 protected ToolTip wrap() {
 	if (wrapperToolTip== null) {
-		wrapperToolTip = new ToolTip(this);
-		//error(SWT.ERROR_NULL_ARGUMENT);
+		error(SWT.ERROR_NULL_ARGUMENT);
 	}
 	return wrapperToolTip;
 }
