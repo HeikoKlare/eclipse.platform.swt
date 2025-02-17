@@ -254,7 +254,8 @@ public int getPageIncrement () {
  * </ul>
  */
 public Scrollable getParent () {
-	return wrappedScrollBar.getParent().wrap();
+	NativeScrollable parent = wrappedScrollBar.getParent();
+	return parent != null ? parent.wrap() : null;
 }
 
 /**
