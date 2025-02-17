@@ -112,7 +112,7 @@ public Menu (Control parent) {
  * @see NativeWidget#getStyle
  */
 public Menu (Decorations parent, int style) {
-	this (parent, style, 0);
+	this (new NativeMenu(checkNative(parent), style));
 }
 
 private Menu(NativeMenu nativeMenu) {
@@ -174,10 +174,6 @@ public Menu (Menu parentMenu) {
  */
 public Menu (MenuItem parentItem) {
 	this (parentItem.getParent());
-}
-
-Menu (Decorations parent, int style, long handle) {
-	this (new NativeMenu(checkNative(parent), style, handle));
 }
 
 /**

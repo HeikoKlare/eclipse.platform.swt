@@ -262,7 +262,7 @@ NativeTreeItem _getItem (long hItem) {
 
 NativeTreeItem _getItem (long hItem, int id) {
 	if ((style & SWT.VIRTUAL) == 0) return items [id];
-	return id != -1 ? items [id] : new TreeItem (this.wrap(), SWT.NONE, -1, -1, hItem).getWrappedWidget();
+	return id != -1 ? items [id] : new TreeItem (new NativeTreeItem(this, SWT.NONE, -1, -1, hItem)).getWrappedWidget();
 }
 
 @Override
@@ -4324,7 +4324,7 @@ void setItemCount (int count, long hParent) {
 			}
 		} else {
 			for (int i = 0; i < numInserted; i++) {
-				new TreeItem (this.wrap(), SWT.NONE, hParent, itemInsertAfter, 0).getWrappedWidget();
+				new TreeItem (new NativeTreeItem(this, SWT.NONE, hParent, itemInsertAfter, 0)).getWrappedWidget();
 			}
 		}
 	}

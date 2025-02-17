@@ -155,11 +155,7 @@ public TreeItem (TreeItem parentItem, int style, int index) {
 	this (new NativeTreeItem(checkNative(parentItem), style, index));
 }
 
-TreeItem (Tree parent, int style, long hParent, long hInsertAfter, long hItem) {
-	this (new NativeTreeItem(checkNative(parent), style, hParent, hInsertAfter, hItem));
-}
-
-private TreeItem(NativeTreeItem nativeTreeItem) {
+protected TreeItem(NativeTreeItem nativeTreeItem) {
 	this.wrappedTreeItem = nativeTreeItem;
 	this.wrappedTreeItem.wrapperTreeItem = this;
 }
