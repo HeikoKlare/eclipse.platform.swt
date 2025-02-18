@@ -1752,7 +1752,7 @@ void flushExposes (long window, boolean all) {
  */
 public Shell getActiveShell () {
 	checkDevice ();
-	return activeShell.wrap();
+	return activeShell != null ? activeShell.wrap() : null;
 }
 
 /**
