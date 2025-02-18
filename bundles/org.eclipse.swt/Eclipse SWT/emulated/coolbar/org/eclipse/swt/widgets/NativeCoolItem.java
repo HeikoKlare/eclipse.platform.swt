@@ -87,7 +87,7 @@ public class NativeCoolItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCoolItem (NativeCoolBar parent, int style) {
+protected NativeCoolItem (NativeCoolBar parent, int style) {
 	super(parent, style);
 	this.parent = parent;
 	parent.createItem (this, parent.getItemCount());
@@ -125,7 +125,7 @@ public NativeCoolItem (NativeCoolBar parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCoolItem (NativeCoolBar parent, int style, int index) {
+protected NativeCoolItem (NativeCoolBar parent, int style, int index) {
 	super(parent, style);
 	this.parent = parent;
 	parent.createItem (this, index);
@@ -172,8 +172,8 @@ public void checkSubclass () {
  * Find the trim size of the Toolbar widget in the current platform.
  */
 void calculateChevronTrim () {
-	NativeToolBar tb = new NativeToolBar (parent, SWT.FLAT);
-	NativeToolItem ti = new NativeToolItem (tb, SWT.PUSH);
+	ToolBar tb = new ToolBar(parent.wrap(), SWT.FLAT);
+	ToolItem ti = new ToolItem(tb, SWT.PUSH);
 	Image image = new Image (display, 1, 1);
 	ti.setImage (image);
 	Point size = tb.computeSize (SWT.DEFAULT, SWT.DEFAULT);
@@ -620,8 +620,8 @@ void updateChevron() {
 		int width = itemBounds.width;
 		if ((style & SWT.DROP_DOWN) != 0 && width < preferredWidth) {
 			if (chevron == null) {
-				chevron = new NativeToolBar (parent, SWT.FLAT | SWT.NO_FOCUS);
-				NativeToolItem toolItem = new NativeToolItem (chevron, SWT.PUSH);
+				chevron = new ToolBar (parent.wrap(), SWT.FLAT | SWT.NO_FOCUS).getWrappedWidget();
+				ToolItem toolItem = new ToolItem (chevron.wrap(), SWT.PUSH);
 				toolItem.addListener (SWT.Selection, event -> NativeCoolItem.this.onSelection (event));
 			}
 			int controlHeight, currentImageHeight = 0;

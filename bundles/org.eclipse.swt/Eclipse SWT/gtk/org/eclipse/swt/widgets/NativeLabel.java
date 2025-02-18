@@ -99,7 +99,7 @@ public class NativeLabel extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeLabel (NativeComposite parent, int style) {
+protected NativeLabel (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 }
 

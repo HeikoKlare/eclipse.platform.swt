@@ -51,7 +51,7 @@ public class NativeGLCanvas extends NativeCanvas {
  *     <li>ERROR_UNSUPPORTED_DEPTH when the requested attributes cannot be provided</li>
  * </ul>
  */
-public NativeGLCanvas (NativeComposite parent, int style, GLData data) {
+protected NativeGLCanvas (NativeComposite parent, int style, GLData data) {
 	super (parent, style);
 	if (data == null) SWT.error (SWT.ERROR_NULL_ARGUMENT);
 	int glxAttrib [] = new int [MAX_ATTRIBUTES];

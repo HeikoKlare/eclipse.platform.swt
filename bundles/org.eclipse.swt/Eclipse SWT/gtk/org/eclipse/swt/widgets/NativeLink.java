@@ -90,7 +90,7 @@ public class NativeLink extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeLink (NativeComposite parent, int style) {
+protected NativeLink (NativeComposite parent, int style) {
 	super (parent, style);
 }
 

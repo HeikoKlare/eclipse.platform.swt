@@ -155,7 +155,7 @@ NativeDecorations () {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeDecorations (NativeComposite parent, int style) {
+protected NativeDecorations (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 }
 

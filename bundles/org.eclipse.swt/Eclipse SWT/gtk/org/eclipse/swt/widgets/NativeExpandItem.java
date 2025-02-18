@@ -74,7 +74,7 @@ public class NativeExpandItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeExpandItem (NativeExpandBar parent, int style) {
+protected NativeExpandItem (NativeExpandBar parent, int style) {
 	super (parent, style);
 	this.parent = parent;
 	createWidget (parent.getItemCount ());
@@ -110,7 +110,7 @@ public NativeExpandItem (NativeExpandBar parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeExpandItem (NativeExpandBar parent, int style, int index) {
+protected NativeExpandItem (NativeExpandBar parent, int style, int index) {
 	super (parent, style);
 	this.parent = parent;
 	createWidget (index);

@@ -157,7 +157,7 @@ public class NativeDateTime extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeDateTime (NativeComposite parent, int style) {
+protected NativeDateTime (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 	if (isDate () || isTime ()) {
 		createText ();
@@ -494,7 +494,7 @@ private void createHandleForDateTime() {
 }
 
 void createDropDownButton () {
-	down = new NativeButton (this, SWT.ARROW  | SWT.DOWN);
+	down = Widget.checkNative(new Button (this.wrap(), SWT.ARROW  | SWT.DOWN));
 	GTK.gtk_widget_set_can_focus (down.handle, false);
 	down.addListener (SWT.Selection, event -> {
 		setFocus ();

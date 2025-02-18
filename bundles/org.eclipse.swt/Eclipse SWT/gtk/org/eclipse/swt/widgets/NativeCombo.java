@@ -123,7 +123,7 @@ public class NativeCombo extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCombo (NativeComposite parent, int style) {
+protected NativeCombo (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 }
 
