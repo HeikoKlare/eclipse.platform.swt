@@ -80,7 +80,7 @@ public class NativeTrayItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTrayItem (NativeTray parent, int style) {
+protected NativeTrayItem (NativeTray parent, int style) {
 	super (parent, style);
 	this.parent = parent;
 	createWidget (parent.getItemCount ());

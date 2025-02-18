@@ -91,7 +91,7 @@ public class NativeCoolBar extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeCoolBar (NativeComposite parent, int style) {
+protected NativeCoolBar (NativeComposite parent, int style) {
 	super (parent, checkStyle(style));
 	if ((style & SWT.VERTICAL) != 0) {
 		this.style |= SWT.VERTICAL;

@@ -172,7 +172,7 @@ public class NativeDragSource extends NativeWidget {
  * @see DND#DROP_MOVE
  * @see DND#DROP_LINK
  */
-public NativeDragSource(Control controlWrapper, int style) {
+protected NativeDragSource(Control controlWrapper, int style) {
 	super (Widget.checkNative(controlWrapper), checkStyle(style));
 	this.control = Widget.checkNative(controlWrapper);
 	this.controlWrapper = controlWrapper;

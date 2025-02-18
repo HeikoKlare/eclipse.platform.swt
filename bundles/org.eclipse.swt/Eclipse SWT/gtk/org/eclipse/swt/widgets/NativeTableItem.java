@@ -80,7 +80,7 @@ public class NativeTableItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTableItem (NativeTable parent, int style, int index) {
+protected NativeTableItem (NativeTable parent, int style, int index) {
 	this (parent, style, index, true);
 }
 
@@ -114,7 +114,7 @@ public NativeTableItem (NativeTable parent, int style, int index) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTableItem (NativeTable parent, int style) {
+protected NativeTableItem (NativeTable parent, int style) {
 	this (parent, style, checkNull (parent).getItemCount (), true);
 }
 
