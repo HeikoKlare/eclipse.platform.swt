@@ -85,7 +85,7 @@ public class NativeSash extends NativeControl {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeSash(NativeComposite parent, int style) {
+protected NativeSash(NativeComposite parent, int style) {
 	super(parent, checkStyle(style));
 }
 

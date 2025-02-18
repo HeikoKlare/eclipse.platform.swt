@@ -114,7 +114,7 @@ public class NativeTabFolder extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTabFolder (NativeComposite parent, int style) {
+protected NativeTabFolder (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 }
 

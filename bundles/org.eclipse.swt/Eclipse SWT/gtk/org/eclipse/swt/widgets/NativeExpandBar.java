@@ -85,7 +85,7 @@ public class NativeExpandBar extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeExpandBar (NativeComposite parent, int style) {
+protected NativeExpandBar (NativeComposite parent, int style) {
 	super (parent, style);
 }
 

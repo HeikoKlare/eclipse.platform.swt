@@ -146,7 +146,7 @@ NativeComposite () {
  * @see SWT#DOUBLE_BUFFERED
  * @see NativeWidget#getStyle
  */
-public NativeComposite (NativeComposite parent, int style) {
+protected NativeComposite (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 	/*
 	 * Cache the NO_BACKGROUND flag for use in the Cairo setRegion()

@@ -100,7 +100,7 @@ public class NativeTracker extends NativeWidget {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeTracker (NativeComposite parent, int style) {
+protected NativeTracker (NativeComposite parent, int style) {
 	super (parent, checkStyle(style));
 	this.parent = parent;
 }
@@ -140,7 +140,7 @@ public NativeTracker (NativeComposite parent, int style) {
  * @see SWT#DOWN
  * @see SWT#RESIZE
  */
-public NativeTracker (Display display, int style) {
+protected NativeTracker (Display display, int style) {
 	if (display == null) display = Display.getCurrent ();
 	if (display == null) display = Display.getDefault ();
 	if (!display.isValidThread ()) {

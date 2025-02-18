@@ -85,7 +85,7 @@ public class NativeGroup extends NativeComposite {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeGroup (NativeComposite parent, int style) {
+protected NativeGroup (NativeComposite parent, int style) {
 	super (parent, checkStyle (style));
 }
 

@@ -107,7 +107,7 @@ public class NativeToolItem extends NativeItem {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeToolItem (NativeToolBar parent, int style) {
+protected NativeToolItem (NativeToolBar parent, int style) {
 	super (parent, checkStyle (style));
 	this.parent = parent;
 	createWidget (parent.getItemCount ());
@@ -149,7 +149,7 @@ public NativeToolItem (NativeToolBar parent, int style) {
  * @see NativeWidget#checkSubclass
  * @see NativeWidget#getStyle
  */
-public NativeToolItem (NativeToolBar parent, int style, int index) {
+protected NativeToolItem (NativeToolBar parent, int style, int index) {
 	super (parent, checkStyle (style));
 	this.parent = parent;
 	int count = parent.getItemCount ();
