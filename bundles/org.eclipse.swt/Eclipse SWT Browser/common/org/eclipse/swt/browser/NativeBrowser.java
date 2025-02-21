@@ -208,7 +208,7 @@ static int checkStyle(int style) {
 }
 
 @Override
-protected void checkWidget () {
+public void checkWidget () {
 	super.checkWidget ();
 }
 
