@@ -119,7 +119,7 @@ public MenuItem (Menu parent, int style, int index) {
 	this(new NativeMenuItem(checkNative(parent), style, index));
 }
 
-private MenuItem(NativeMenuItem nativeMenuItem) {
+MenuItem(NativeMenuItem nativeMenuItem) {
 	this.wrappedMenuItem = nativeMenuItem;
 	this.wrappedMenuItem.wrapperMenuItem = this;
 }
