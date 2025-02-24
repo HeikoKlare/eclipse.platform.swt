@@ -14,6 +14,7 @@
 package org.eclipse.swt.widgets;
 
 
+import java.util.*;
 import java.util.concurrent.atomic.*;
 
 import org.eclipse.swt.*;
@@ -79,7 +80,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeTree extends NativeComposite {
+public abstract class NativeTree extends NativeComposite implements ITree {
 	NativeTreeItem [] items;
 	NativeTreeColumn [] columns;
 	int columnCount;
@@ -365,6 +366,7 @@ void _setBackgroundPixel (int newPixel) {
  * @see #removeSelectionListener
  * @see SelectionEvent
  */
+@Override
 public void addSelectionListener(SelectionListener listener) {
 	addTypedListener(listener, SWT.Selection, SWT.DefaultSelection);
 }
@@ -388,6 +390,7 @@ public void addSelectionListener(SelectionListener listener) {
  * @see TreeListener
  * @see #removeTreeListener
  */
+@Override
 public void addTreeListener(TreeListener listener) {
 	addTypedListener(listener, SWT.Expand, SWT.Collapse);
 }
@@ -456,7 +459,7 @@ LRESULT CDDS_ITEMPOSTPAINT (NMTVCUSTOMDRAW nmcd, long wParam, long lParam) {
 	if (OS.IsAppThemed ()) {
 		if (sortColumn != null && sortDirection != SWT.NONE) {
 			if (findImageControl () == null) {
-				sortIndex = indexOf (sortColumn);
+				sortIndex = indexOf (sortColumn.getWrapper());
 				clrSortBk = getSortColumnPixel ();
 			}
 		}
@@ -1751,6 +1754,7 @@ public void checkSubclass () {
  *
  * @since 3.2
  */
+@Override
 public void clear (int index, boolean all) {
 	checkWidget ();
 	long hItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_ROOT, 0);
@@ -1798,6 +1802,7 @@ void clear (long hItem, TVITEM tvItem) {
  *
  * @since 3.2
  */
+@Override
 public void clearAll (boolean all) {
 	checkWidget ();
 	long hItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_ROOT, 0);
@@ -2436,14 +2441,15 @@ void deselect (long hItem, TVITEM tvItem, long hIgnoreItem) {
  *
  * @since 3.4
  */
-public void deselect (NativeTreeItem item) {
+@Override
+public void deselect (TreeItem item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (item.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
 	TVITEM tvItem = new TVITEM ();
 	tvItem.mask = OS.TVIF_HANDLE | OS.TVIF_STATE;
 	tvItem.stateMask = OS.TVIS_SELECTED;
-	tvItem.hItem = item.handle;
+	tvItem.hItem = Widget.checkNative(item).handle;
 	OS.SendMessage (handle, OS.TVM_SETITEM, 0, tvItem);
 }
 
@@ -2455,6 +2461,7 @@ public void deselect (NativeTreeItem item) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void deselectAll () {
 	checkWidget ();
 	TVITEM tvItem = new TVITEM ();
@@ -2972,6 +2979,7 @@ NativeTreeItem getFocusItem () {
  *
  * @since 3.1
  */
+@Override
 public int getGridLineWidth () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getGridLineWidthInPixels (), getZoom());
@@ -2992,6 +3000,7 @@ int getGridLineWidthInPixels () {
  * </ul>
  * @since 3.106
  */
+@Override
 public Color getHeaderBackground () {
 	checkWidget ();
 	return Color.win32_new (display, getHeaderBackgroundPixel());
@@ -3012,6 +3021,7 @@ private int getHeaderBackgroundPixel() {
  * </ul>
  * @since 3.106
  */
+@Override
 public Color getHeaderForeground () {
 	checkWidget ();
 	return Color.win32_new (display, getHeaderForegroundPixel());
@@ -3033,6 +3043,7 @@ private int getHeaderForegroundPixel() {
  *
  * @since 3.1
  */
+@Override
 public int getHeaderHeight () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getHeaderHeightInPixels (), getZoom());
@@ -3064,6 +3075,7 @@ int getHeaderHeightInPixels () {
  *
  * @since 3.1
  */
+@Override
 public boolean getHeaderVisible () {
 	checkWidget ();
 	if (hwndHeader == 0) return false;
@@ -3118,10 +3130,11 @@ long getBottomItem () {
  *
  * @since 3.1
  */
-public NativeTreeColumn getColumn (int index) {
+@Override
+public TreeColumn getColumn (int index) {
 	checkWidget ();
 	if (!(0 <= index && index < columnCount)) error (SWT.ERROR_INVALID_RANGE);
-	return columns [index];
+	return columns [index].getWrapper();
 }
 
 /**
@@ -3140,6 +3153,7 @@ public NativeTreeColumn getColumn (int index) {
  *
  * @since 3.1
  */
+@Override
 public int getColumnCount () {
 	checkWidget ();
 	return columnCount;
@@ -3173,6 +3187,7 @@ public int getColumnCount () {
  *
  * @since 3.2
  */
+@Override
 public int[] getColumnOrder () {
 	checkWidget ();
 	if (cachedItemOrder != null) {
@@ -3219,11 +3234,12 @@ private int[] getColumnOrderFromOS() {
  *
  * @since 3.1
  */
-public NativeTreeColumn [] getColumns () {
+@Override
+public TreeColumn [] getColumns () {
 	checkWidget ();
 	NativeTreeColumn [] result = new NativeTreeColumn [columnCount];
 	System.arraycopy (columns, 0, result, 0, columnCount);
-	return result;
+	return Arrays.stream(result).map(NativeTreeColumn::getWrapper).toArray(TreeColumn[]::new);
 }
 
 /**
@@ -3243,14 +3259,16 @@ public NativeTreeColumn [] getColumns () {
  *
  * @since 3.1
  */
-public NativeTreeItem getItem (int index) {
+@Override
+public TreeItem getItem (int index) {
 	checkWidget ();
 	if (index < 0) error (SWT.ERROR_INVALID_RANGE);
 	long hFirstItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_ROOT, 0);
 	if (hFirstItem == 0) error (SWT.ERROR_INVALID_RANGE);
 	long hItem = findItem (hFirstItem, index);
 	if (hItem == 0) error (SWT.ERROR_INVALID_RANGE);
-	return _getItem (hItem);
+	TreeItem result = _getItem (hItem);
+	retur result != null ? result.getWrapper() : null;
 }
 
 NativeTreeItem getItem (NMTVCUSTOMDRAW nmcd) {
@@ -3298,10 +3316,12 @@ NativeTreeItem getItem (NMTVCUSTOMDRAW nmcd) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTreeItem getItem (Point point) {
+@Override
+public TreeItem getItem (Point point) {
 	checkWidget ();
 	if (point == null) error (SWT.ERROR_NULL_ARGUMENT);
-	return getItemInPixels(DPIUtil.scaleUp(point, getZoom()));
+	NativeTreeItem result = getItemInPixels(DPIUtil.scaleUp(point, getZoom()));
+	return result != null ? result.getWrapper() : null;
 }
 
 NativeTreeItem getItemInPixels (Point point) {
@@ -3339,6 +3359,7 @@ NativeTreeItem getItemInPixels (Point point) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getItemCount () {
 	checkWidget ();
 	long hItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_ROOT, 0);
@@ -3373,6 +3394,7 @@ int getItemCount (long hItem) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getItemHeight () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getItemHeightInPixels(), getZoom());
@@ -3399,11 +3421,12 @@ int getItemHeightInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTreeItem [] getItems () {
+@Override
+public TreeItem [] getItems () {
 	checkWidget ();
 	long hItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_ROOT, 0);
-	if (hItem == 0) return new NativeTreeItem [0];
-	return getItems (hItem);
+	if (hItem == 0) return new TreeItem [0];
+	return Arrays.stream(getItems (hItem)).map(NativeTreeItem::getWrapper).toArray(TreeItem[]::new);
 }
 
 NativeTreeItem [] getItems (long hTreeItem) {
@@ -3459,6 +3482,7 @@ NativeTreeItem [] getItems (long hTreeItem) {
  *
  * @since 3.1
  */
+@Override
 public boolean getLinesVisible () {
 	checkWidget ();
 	return linesVisible;
@@ -3488,7 +3512,8 @@ long getNextSelection (long hItem) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTreeItem getParentItem () {
+@Override
+public TreeItem getParentItem () {
 	checkWidget ();
 	return null;
 }
@@ -3560,7 +3585,12 @@ int getSelection (long hItem, TVITEM tvItem, NativeTreeItem [] selection, int in
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTreeItem [] getSelection () {
+@Override
+public TreeItem [] getSelection () {
+	return Arrays.stream(getNativeSelection()).map(NativeTreeItem::getWrapper).toArray(TreeItem[]::new);
+}
+
+private NativeTreeItem [] getNativeSelection () {
 	checkWidget ();
 	if ((style & SWT.SINGLE) != 0) {
 		long hItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_CARET, 0);
@@ -3631,6 +3661,7 @@ public NativeTreeItem [] getSelection () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getSelectionCount () {
 	checkWidget ();
 	if ((style & SWT.SINGLE) != 0) {
@@ -3674,9 +3705,10 @@ public int getSelectionCount () {
  *
  * @since 3.2
  */
-public NativeTreeColumn getSortColumn () {
+@Override
+public TreeColumn getSortColumn () {
 	checkWidget ();
-	return sortColumn;
+	return sortColumn != null ? sortColumn.getWrapper() : null;
 }
 
 int getSortColumnPixel () {
@@ -3700,6 +3732,7 @@ int getSortColumnPixel () {
  *
  * @since 3.2
  */
+@Override
 public int getSortDirection () {
 	checkWidget ();
 	return sortDirection;
@@ -3719,10 +3752,12 @@ public int getSortDirection () {
  *
  * @since 2.1
  */
-public NativeTreeItem getTopItem () {
+@Override
+public TreeItem getTopItem () {
 	checkWidget ();
 	long hItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_FIRSTVISIBLE, 0);
-	return hItem != 0 ? _getItem (hItem) : null;
+	NativeTreeItem result = hItem != 0 ? _getItem (hItem) : null;
+	return result != null ? result.getWrapper() : null;
 }
 
 boolean hitTestSelection (long hItem, int x, int y) {
@@ -3813,12 +3848,13 @@ int imageIndexHeader (Image image) {
  *
  * @since 3.1
  */
-public int indexOf (NativeTreeColumn column) {
+@Override
+public int indexOf (TreeColumn column) {
 	checkWidget ();
 	if (column == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (column.isDisposed()) error(SWT.ERROR_INVALID_ARGUMENT);
 	for (int i=0; i<columnCount; i++) {
-		if (columns [i] == column) return i;
+		if (columns [i].getWrapper() == column) return i;
 	}
 	return -1;
 }
@@ -3843,12 +3879,13 @@ public int indexOf (NativeTreeColumn column) {
  *
  * @since 3.1
  */
-public int indexOf (NativeTreeItem item) {
+@Override
+public int indexOf (TreeItem item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (item.isDisposed()) error(SWT.ERROR_INVALID_ARGUMENT);
 	long hItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_ROOT, 0);
-	return hItem == 0 ? -1 : findIndex (hItem, item.handle);
+	return hItem == 0 ? -1 : findIndex (hItem, Widget.checkNative(item).handle);
 }
 
 boolean isCustomToolTip () {
@@ -4067,6 +4104,7 @@ void releaseWidget () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void removeAll () {
 	checkWidget ();
 	cachedFirstItem = cachedIndexItem = 0;
@@ -4123,6 +4161,7 @@ public void removeAll () {
  * @see SelectionListener
  * @see #addSelectionListener
  */
+@Override
 public void removeSelectionListener (SelectionListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -4147,6 +4186,7 @@ public void removeSelectionListener (SelectionListener listener) {
  * @see TreeListener
  * @see #addTreeListener
  */
+@Override
 public void removeTreeListener(TreeListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -4188,12 +4228,13 @@ void reskinChildren (int flags) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public void setInsertMark (NativeTreeItem item, boolean before) {
+@Override
+public void setInsertMark (TreeItem item, boolean before) {
 	checkWidget ();
 	long hItem = 0;
 	if (item != null) {
 		if (item.isDisposed()) error(SWT.ERROR_INVALID_ARGUMENT);
-		hItem = item.handle;
+		hItem = Widget.checkNative(item).handle;
 	}
 	hInsert = hItem;
 	insertAfter = !before;
@@ -4215,6 +4256,7 @@ public void setInsertMark (NativeTreeItem item, boolean before) {
  *
  * @since 3.2
  */
+@Override
 public void setItemCount (int count) {
 	checkWidget ();
 	count = Math.max (0, count);
@@ -4391,6 +4433,7 @@ void setItemCount (int count, long hParent) {
  *
  * @since 3.1
  */
+@Override
 public void setLinesVisible (boolean show) {
 	checkWidget ();
 	if (linesVisible == show) return;
@@ -4424,7 +4467,7 @@ void select (long hItem, TVITEM tvItem) {
  * Selects an item in the receiver.  If the item was already
  * selected, it remains selected.
  *
- * @param item the item to be selected
+ * @param itemWrapper the item to be selected
  *
  * @exception IllegalArgumentException <ul>
  *    <li>ERROR_NULL_ARGUMENT - if the item is null</li>
@@ -4437,7 +4480,9 @@ void select (long hItem, TVITEM tvItem) {
  *
  * @since 3.4
  */
-public void select (NativeTreeItem item) {
+@Override
+public void select (TreeItem itemWrapper) {
+	NativeTreeItem item = Widget.checkNative(itemWrapper);
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (item.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
@@ -4521,6 +4566,7 @@ public void select (NativeTreeItem item) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void selectAll () {
 	checkWidget ();
 	if ((style & SWT.SINGLE) != 0) return;
@@ -4712,6 +4758,7 @@ void setCursor () {
  *
  * @since 3.2
  */
+@Override
 public void setColumnOrder (int [] order) {
 	checkWidget ();
 	if (order == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -4881,6 +4928,7 @@ void setForegroundPixel (int pixel) {
  * </ul>
  * @since 3.106
  */
+@Override
 public void setHeaderBackground (Color color) {
 	checkWidget ();
 	int pixel = -1;
@@ -4914,6 +4962,7 @@ public void setHeaderBackground (Color color) {
  * </ul>
  * @since 3.106
  */
+@Override
 public void setHeaderForeground (Color color) {
 	checkWidget ();
 	int pixel = -1;
@@ -4946,6 +4995,7 @@ public void setHeaderForeground (Color color) {
  *
  * @since 3.1
  */
+@Override
 public void setHeaderVisible (boolean show) {
 	checkWidget ();
 	if (hwndHeader == 0) {
@@ -5128,10 +5178,11 @@ void setSelection (long hItem, TVITEM tvItem, NativeTreeItem [] selection) {
  *
  * @since 3.2
  */
-public void setSelection (NativeTreeItem item) {
+@Override
+public void setSelection (TreeItem item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
-	setSelection (new NativeTreeItem [] {item});
+	setSelection (new TreeItem [] {item});
 }
 
 /**
@@ -5144,7 +5195,7 @@ public void setSelection (NativeTreeItem item) {
  * then all items are ignored.
  * </p>
  *
- * @param items the array of items
+ * @param itemsWrapper the array of items
  *
  * @exception IllegalArgumentException <ul>
  *    <li>ERROR_NULL_ARGUMENT - if the array of items is null</li>
@@ -5157,8 +5208,10 @@ public void setSelection (NativeTreeItem item) {
  *
  * @see NativeTree#deselectAll()
  */
-public void setSelection (NativeTreeItem [] items) {
+@Override
+public void setSelection (TreeItem [] itemsWrapper) {
 	checkWidget ();
+	NativeTreeItem[] items = Arrays.stream(itemsWrapper).map(Widget::checkNative).toArray(NativeTreeItem[]::new);
 	if (items == null) error (SWT.ERROR_NULL_ARGUMENT);
 	int length = items.length;
 	if (length == 0 || ((style & SWT.SINGLE) != 0 && length > 1)) {
@@ -5288,13 +5341,14 @@ void expandToItem(NativeTreeItem item) {
  *
  * @since 3.2
  */
-public void setSortColumn (NativeTreeColumn column) {
+@Override
+public void setSortColumn (TreeColumn column) {
 	checkWidget ();
 	if (column != null && column.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
 	if (sortColumn != null && !sortColumn.isDisposed ()) {
 		sortColumn.setSortDirection (SWT.NONE);
 	}
-	sortColumn = column;
+	sortColumn = Widget.checkNative(column);
 	if (sortColumn != null && sortDirection != SWT.NONE) {
 		sortColumn.setSortDirection (sortDirection);
 	}
@@ -5313,6 +5367,7 @@ public void setSortColumn (NativeTreeColumn column) {
  *
  * @since 3.2
  */
+@Override
 public void setSortDirection (int direction) {
 	checkWidget ();
 	if ((direction & (SWT.UP | SWT.DOWN)) == 0 && direction != SWT.NONE) return;
@@ -5342,11 +5397,12 @@ public void setSortDirection (int direction) {
  *
  * @since 2.1
  */
-public void setTopItem (NativeTreeItem item) {
+@Override
+public void setTopItem (TreeItem item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (item.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
-	long hItem = item.handle;
+	long hItem = Widget.checkNative(item).handle;
 	long hTopItem = OS.SendMessage (handle, OS.TVM_GETNEXTITEM, OS.TVGN_FIRSTVISIBLE, 0);
 	if (hItem == hTopItem) return;
 	boolean fixScroll = checkScroll (hItem), redraw = false;
@@ -5467,6 +5523,7 @@ void showItem (long hItem) {
  *
  * @since 3.1
  */
+@Override
 public void showColumn (NativeTreeColumn column) {
 	checkWidget ();
 	if (column == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -5546,6 +5603,7 @@ public void showColumn (NativeTreeColumn column) {
  *
  * @see NativeTree#showSelection()
  */
+@Override
 public void showItem (NativeTreeItem item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -5565,6 +5623,7 @@ public void showItem (NativeTreeItem item) {
  *
  * @see NativeTree#showItem(NativeTreeItem)
  */
+@Override
 public void showSelection () {
 	checkWidget ();
 	long hItem = 0;

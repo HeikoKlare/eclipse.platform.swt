@@ -44,7 +44,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.1
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeSpinner extends NativeComposite {
+public abstract class NativeSpinner extends NativeComposite implements ISpinner {
 	long hwndText, hwndUpDown;
 	boolean ignoreModify, ignoreCharacter;
 	int pageIncrement, digits;
@@ -201,6 +201,7 @@ void createHandle () {
  * @see ModifyListener
  * @see #removeModifyListener
  */
+@Override
 public void addModifyListener (ModifyListener listener) {
 	addTypedListener(listener, SWT.Modify);
 }
@@ -229,6 +230,7 @@ public void addModifyListener (ModifyListener listener) {
  * @see #removeSelectionListener
  * @see SelectionEvent
  */
+@Override
 public void addSelectionListener(SelectionListener listener) {
 	addTypedListener(listener, SWT.Selection, SWT.DefaultSelection);
 }
@@ -354,6 +356,7 @@ void addVerifyListener (VerifyListener listener) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void copy () {
 	checkWidget ();
 	OS.SendMessage (hwndText, OS.WM_COPY, 0, 0);
@@ -371,6 +374,7 @@ public void copy () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void cut () {
 	checkWidget ();
 	if ((style & SWT.READ_ONLY) != 0) return;
@@ -415,6 +419,7 @@ boolean hasFocus () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getDigits () {
 	checkWidget ();
 	return digits;
@@ -437,6 +442,7 @@ String getDecimalSeparator () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getIncrement () {
 	checkWidget ();
 	UDACCEL udaccel = new UDACCEL ();
@@ -454,6 +460,7 @@ public int getIncrement () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getMaximum () {
 	checkWidget ();
 	int [] max = new int [1];
@@ -471,6 +478,7 @@ public int getMaximum () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getMinimum () {
 	checkWidget ();
 	int [] min = new int [1];
@@ -489,6 +497,7 @@ public int getMinimum () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getPageIncrement () {
 	checkWidget ();
 	return pageIncrement;
@@ -504,6 +513,7 @@ public int getPageIncrement () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getSelection () {
 	checkWidget ();
 	return (int)OS.SendMessage (hwndUpDown, OS.UDM_GETPOS32, 0, 0);
@@ -566,6 +576,7 @@ int getSelectionText (boolean [] parseFail) {
  *
  * @since 3.4
  */
+@Override
 public String getText () {
 	checkWidget ();
 	int length = OS.GetWindowTextLength (hwndText);
@@ -592,6 +603,7 @@ public String getText () {
  *
  * @since 3.4
  */
+@Override
 public int getTextLimit () {
 	checkWidget ();
 	return (int)OS.SendMessage (hwndText, OS.EM_GETLIMITTEXT, 0, 0) & 0x7FFFFFFF;
@@ -614,6 +626,7 @@ boolean isUseWsBorder () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void paste () {
 	checkWidget ();
 	if ((style & SWT.READ_ONLY) != 0) return;
@@ -650,6 +663,7 @@ void releaseHandle () {
  * @see ModifyListener
  * @see #addModifyListener
  */
+@Override
 public void removeModifyListener (ModifyListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -674,6 +688,7 @@ public void removeModifyListener (ModifyListener listener) {
  * @see SelectionListener
  * @see #addSelectionListener
  */
+@Override
 public void removeSelectionListener(SelectionListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -810,6 +825,7 @@ void setBackgroundPixel (int pixel) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setDigits (int value) {
 	checkWidget ();
 	if (value < 0) error (SWT.ERROR_INVALID_ARGUMENT);
@@ -837,6 +853,7 @@ void setForegroundPixel (int pixel) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setIncrement (int value) {
 	checkWidget ();
 	if (value < 1) return;
@@ -870,6 +887,7 @@ public void setIncrement (int value) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setMaximum (int value) {
 	checkWidget ();
 	int [] min = new int [1];
@@ -893,6 +911,7 @@ public void setMaximum (int value) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setMinimum (int value) {
 	checkWidget ();
 	int [] max = new int [1];
@@ -915,6 +934,7 @@ public void setMinimum (int value) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setPageIncrement (int value) {
 	checkWidget ();
 	if (value < 1) return;
@@ -934,6 +954,7 @@ public void setPageIncrement (int value) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setSelection (int value) {
 	checkWidget ();
 	int [] max = new int [1], min = new int [1];
@@ -1003,6 +1024,7 @@ void setSelection (int value, boolean setPos, boolean setText, boolean notify) {
  *
  * @since 3.4
  */
+@Override
 public void setTextLimit (int limit) {
 	checkWidget ();
 	if (limit == 0) error (SWT.ERROR_CANNOT_BE_ZERO);
@@ -1038,6 +1060,7 @@ void setToolTipText (NativeShell shell, String string) {
  *
  * @since 3.2
  */
+@Override
 public void setValues (int selection, int minimum, int maximum, int digits, int increment, int pageIncrement) {
 	checkWidget ();
 	if (maximum < minimum) return;

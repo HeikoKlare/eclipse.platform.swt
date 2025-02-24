@@ -87,7 +87,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeScrollBar extends NativeWidget {
+public abstract class NativeScrollBar extends NativeWidget implements IScrollBar {
 	NativeScrollable parent;
 	int increment, pageIncrement;
 
@@ -158,6 +158,7 @@ NativeScrollBar (NativeScrollable parent, int style) {
  * @see #removeSelectionListener
  * @see SelectionEvent
  */
+@Override
 public void addSelectionListener (SelectionListener listener) {
 	addTypedListener(listener, SWT.Selection, SWT.DefaultSelection);
 }
@@ -223,6 +224,7 @@ Rectangle getBounds () {
  *
  * @see #isEnabled
  */
+@Override
 public boolean getEnabled () {
 	checkWidget();
 	return (state & DISABLED) == 0;
@@ -240,6 +242,7 @@ public boolean getEnabled () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getIncrement () {
 	checkWidget();
 	return increment;
@@ -255,6 +258,7 @@ public int getIncrement () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getMaximum () {
 	checkWidget();
 	SCROLLINFO info = new SCROLLINFO ();
@@ -276,6 +280,7 @@ public int getMaximum () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getMinimum () {
 	checkWidget();
 	SCROLLINFO info = new SCROLLINFO ();
@@ -299,6 +304,7 @@ public int getMinimum () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getPageIncrement () {
 	checkWidget();
 	return pageIncrement;
@@ -314,9 +320,10 @@ public int getPageIncrement () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeScrollable getParent () {
+@Override
+public Scrollable getParent () {
 	checkWidget();
-	return parent;
+	return parent.getWrapper();
 }
 
 /**
@@ -329,6 +336,7 @@ public NativeScrollable getParent () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getSelection () {
 	checkWidget();
 	SCROLLINFO info = new SCROLLINFO ();
@@ -353,6 +361,7 @@ public int getSelection () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Point getSize () {
 	checkWidget();
 	return DPIUtil.scaleDown(getSizeInPixels(), getZoom());
@@ -385,6 +394,7 @@ Point getSizeInPixels () {
  *
  * @see NativeScrollBar
  */
+@Override
 public int getThumb () {
 	checkWidget();
 	SCROLLINFO info = new SCROLLINFO ();
@@ -410,6 +420,7 @@ public int getThumb () {
  *
  * @since 3.6
  */
+@Override
 public Rectangle getThumbBounds () {
 	checkWidget();
 	return DPIUtil.scaleDown(getThumbBoundsInPixels(), getZoom());
@@ -456,6 +467,7 @@ Rectangle getThumbBoundsInPixels () {
  *
  * @since 3.6
  */
+@Override
 public Rectangle getThumbTrackBounds () {
 	checkWidget();
 	return DPIUtil.scaleDown(getThumbTrackBoundsInPixels(), getZoom());
@@ -519,6 +531,7 @@ Rectangle getThumbTrackBoundsInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getVisible () {
 	checkWidget();
 	SCROLLBARINFO psbi = new SCROLLBARINFO ();
@@ -547,6 +560,7 @@ long hwndScrollBar () {
  *
  * @see #getEnabled
  */
+@Override
 public boolean isEnabled () {
 	checkWidget();
 	return getEnabled () && parent.isEnabled ();
@@ -566,6 +580,7 @@ public boolean isEnabled () {
  *
  * @see #getVisible
  */
+@Override
 public boolean isVisible () {
 	checkWidget();
 	return getVisible () && parent.isVisible ();
@@ -601,6 +616,7 @@ void releaseParent () {
  * @see SelectionListener
  * @see #addSelectionListener
  */
+@Override
 public void removeSelectionListener (SelectionListener listener) {
 	checkWidget();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -626,6 +642,7 @@ int scrollBarType () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setEnabled (boolean enabled) {
 	checkWidget();
 	long hwnd = hwndScrollBar ();
@@ -652,6 +669,7 @@ public void setEnabled (boolean enabled) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setIncrement (int value) {
 	checkWidget();
 	if (value < 1) return;
@@ -671,6 +689,7 @@ public void setIncrement (int value) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setMaximum (int value) {
 	checkWidget();
 	if (value < 0) return;
@@ -698,6 +717,7 @@ public void setMaximum (int value) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setMinimum (int value) {
 	checkWidget();
 	if (value < 0) return;
@@ -725,6 +745,7 @@ public void setMinimum (int value) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setPageIncrement (int value) {
 	checkWidget();
 	if (value < 1) return;
@@ -810,6 +831,7 @@ boolean SetScrollInfo (long hwnd, int flags, SCROLLINFO info, boolean fRedraw) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setSelection (int selection) {
 	checkWidget();
 	SCROLLINFO info = new SCROLLINFO ();
@@ -838,6 +860,7 @@ public void setSelection (int selection) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setThumb (int value) {
 	checkWidget();
 	if (value < 1) return;
@@ -873,6 +896,7 @@ public void setThumb (int value) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setValues (int selection, int minimum, int maximum, int thumb, int increment, int pageIncrement) {
 	checkWidget();
 	if (minimum < 0) return;
@@ -911,6 +935,7 @@ public void setValues (int selection, int minimum, int maximum, int thumb, int i
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setVisible (boolean visible) {
 	checkWidget();
 	if (visible == getVisible ()) return;

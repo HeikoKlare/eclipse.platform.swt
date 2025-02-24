@@ -40,7 +40,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.1
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeTreeColumn extends NativeItem {
+public abstract class NativeTreeColumn extends NativeItem implements ITreeColumn {
 	NativeTree parent;
 	boolean resizable, moveable;
 	String toolTipText;
@@ -152,6 +152,7 @@ protected NativeTreeColumn (NativeTree parent, int style, int index) {
  * @see ControlListener
  * @see #removeControlListener
  */
+@Override
 public void addControlListener(ControlListener listener) {
 	addTypedListener(listener, SWT.Resize, SWT.Move);
 }
@@ -180,6 +181,7 @@ public void addControlListener(ControlListener listener) {
  * @see #removeSelectionListener
  * @see SelectionEvent
  */
+@Override
 public void addSelectionListener (SelectionListener listener) {
 	addTypedListener(listener, SWT.Selection, SWT.DefaultSelection);
 }
@@ -211,6 +213,7 @@ void destroyWidget () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getAlignment () {
 	checkWidget ();
 	if ((style & SWT.LEFT) != 0) return SWT.LEFT;
@@ -239,6 +242,7 @@ public int getAlignment () {
  *
  * @since 3.2
  */
+@Override
 public boolean getMoveable () {
 	checkWidget ();
 	return moveable;
@@ -259,6 +263,7 @@ String getNameText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeTree getParent () {
 	checkWidget ();
 	return parent;
@@ -276,6 +281,7 @@ public NativeTree getParent () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getResizable () {
 	checkWidget ();
 	return resizable;
@@ -294,6 +300,7 @@ public boolean getResizable () {
  *
  * @since 3.2
  */
+@Override
 public String getToolTipText () {
 	checkWidget();
 	return toolTipText;
@@ -309,6 +316,7 @@ public String getToolTipText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getWidth () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getWidthInPixels(), getZoom());
@@ -335,6 +343,7 @@ int getWidthInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void pack () {
 	checkWidget ();
 	int index = parent.indexOf (this);
@@ -433,6 +442,7 @@ void releaseParent () {
  * @see ControlListener
  * @see #addControlListener
  */
+@Override
 public void removeControlListener (ControlListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -458,6 +468,7 @@ public void removeControlListener (ControlListener listener) {
  * @see SelectionListener
  * @see #addSelectionListener
  */
+@Override
 public void removeSelectionListener(SelectionListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -481,6 +492,7 @@ public void removeSelectionListener(SelectionListener listener) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setAlignment (int alignment) {
 	checkWidget ();
 	if ((alignment & (SWT.LEFT | SWT.RIGHT | SWT.CENTER)) == 0) return;
@@ -572,6 +584,7 @@ void setImage (Image image, boolean sort, boolean right) {
  *
  * @since 3.2
  */
+@Override
 public void setMoveable (boolean moveable) {
 	checkWidget ();
 	this.moveable = moveable;
@@ -589,6 +602,7 @@ public void setMoveable (boolean moveable) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setResizable (boolean resizable) {
 	checkWidget ();
 	this.resizable = resizable;
@@ -695,6 +709,7 @@ public void setText (String string) {
  *
  * @since 3.2
  */
+@Override
 public void setToolTipText (String string) {
 	checkWidget();
 	toolTipText = string;
@@ -715,6 +730,7 @@ public void setToolTipText (String string) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setWidth (int width) {
 	checkWidget ();
 	setWidthInPixels(DPIUtil.scaleUp(width, getZoom()));

@@ -14,6 +14,8 @@
 package org.eclipse.swt.widgets;
 
 
+import java.util.*;
+
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
@@ -50,7 +52,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeTabFolder extends NativeComposite {
+public abstract class NativeTabFolder extends NativeComposite implements ITabFolder {
 	NativeTabItem [] items;
 	ImageList imageList;
 	static final long TabFolderProc;
@@ -151,6 +153,7 @@ protected NativeTabFolder (NativeComposite parent, int style) {
  * @see #removeSelectionListener
  * @see SelectionEvent
  */
+@Override
 public void addSelectionListener(SelectionListener listener) {
 	addTypedListener(listener, SWT.Selection, SWT.DefaultSelection);
 }
@@ -334,11 +337,12 @@ NativeControl findThemeControl () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTabItem getItem (int index) {
+@Override
+public TabItem getItem (int index) {
 	checkWidget ();
 	int count = (int)OS.SendMessage (handle, OS.TCM_GETITEMCOUNT, 0, 0);
 	if (!(0 <= index && index < count)) error (SWT.ERROR_INVALID_RANGE);
-	return items [index];
+	return items [index].getWrapper();
 }
 
 /**
@@ -359,7 +363,8 @@ public NativeTabItem getItem (int index) {
  *
  * @since 3.4
  */
-public NativeTabItem getItem (Point point) {
+@Override
+public TabItem getItem (Point point) {
 	checkWidget ();
 	if (point == null) error (SWT.ERROR_NULL_ARGUMENT);
 	TCHITTESTINFO pinfo = new TCHITTESTINFO ();
@@ -367,7 +372,7 @@ public NativeTabItem getItem (Point point) {
 	pinfo.y = point.y;
 	int index = (int)OS.SendMessage (handle, OS.TCM_HITTEST, 0, pinfo);
 	if (index == -1) return null;
-	return items [index];
+	return items [index].getWrapper();
 }
 
 /**
@@ -380,6 +385,7 @@ public NativeTabItem getItem (Point point) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getItemCount () {
 	checkWidget ();
 	return (int)OS.SendMessage (handle, OS.TCM_GETITEMCOUNT, 0, 0);
@@ -401,12 +407,13 @@ public int getItemCount () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTabItem [] getItems () {
+@Override
+public TabItem [] getItems () {
 	checkWidget ();
 	int count = (int)OS.SendMessage (handle, OS.TCM_GETITEMCOUNT, 0, 0);
 	NativeTabItem [] result = new NativeTabItem [count];
 	System.arraycopy (items, 0, result, 0, count);
-	return result;
+	return Arrays.stream(result).map(NativeTabItem::getWrapper).toArray(TabItem[]::new);
 }
 
 /**
@@ -425,11 +432,12 @@ public NativeTabItem [] getItems () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTabItem [] getSelection () {
+@Override
+public TabItem [] getSelection () {
 	checkWidget ();
 	int index = (int)OS.SendMessage (handle, OS.TCM_GETCURSEL, 0, 0);
-	if (index == -1) return new NativeTabItem [0];
-	return new NativeTabItem [] {items [index]};
+	if (index == -1) return new TabItem [0];
+	return new TabItem [] {items [index].getWrapper()};
 }
 
 /**
@@ -443,6 +451,7 @@ public NativeTabItem [] getSelection () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getSelectionIndex () {
 	checkWidget ();
 	return (int)OS.SendMessage (handle, OS.TCM_GETCURSEL, 0, 0);
@@ -488,12 +497,13 @@ int imageIndex (Image image) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public int indexOf (NativeTabItem item) {
+@Override
+public int indexOf (TabItem item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
 	int count = (int)OS.SendMessage (handle, OS.TCM_GETITEMCOUNT, 0, 0);
 	for (int i=0; i<count; i++) {
-		if (items [i] == item) return i;
+		if (items [i].getWrapper() == item) return i;
 	}
 	return -1;
 }
@@ -608,6 +618,7 @@ void removeControl (NativeControl control) {
  * @see SelectionListener
  * @see #addSelectionListener
  */
+@Override
 public void removeSelectionListener (SelectionListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -646,10 +657,11 @@ void reskinChildren (int flags) {
  *
  * @since 3.2
  */
-public void setSelection (NativeTabItem item) {
+@Override
+public void setSelection (TabItem item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
-	setSelection (new NativeTabItem [] {item});
+	setSelection (new TabItem [] {item});
 }
 
 /**
@@ -667,7 +679,8 @@ public void setSelection (NativeTabItem item) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public void setSelection (NativeTabItem [] items) {
+@Override
+public void setSelection (TabItem [] items) {
 	checkWidget ();
 	if (items == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (items.length == 0) {
@@ -712,6 +725,7 @@ public void setFont (Font font) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setSelection (int index) {
 	checkWidget ();
 	int count = (int)OS.SendMessage (handle, OS.TCM_GETITEMCOUNT, 0, 0);

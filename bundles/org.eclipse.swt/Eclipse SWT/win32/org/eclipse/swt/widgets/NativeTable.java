@@ -16,6 +16,8 @@
 package org.eclipse.swt.widgets;
 
 
+import java.util.*;
+
 //import java.util.*;
 
 import org.eclipse.swt.*;
@@ -74,7 +76,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeTable extends NativeComposite {
+public abstract class NativeTable extends NativeComposite implements ITable {
 	NativeTableItem [] items;
 	int [] keys;
 	NativeTableColumn [] columns;
@@ -442,6 +444,7 @@ void _setItemCount (int count, int itemCount) {
  * @see #removeSelectionListener
  * @see SelectionEvent
  */
+@Override
 public void addSelectionListener (SelectionListener listener) {
 	addTypedListener(listener, SWT.Selection, SWT.DefaultSelection);
 }
@@ -890,7 +893,7 @@ LRESULT CDDS_PREPAINT (NMLVCUSTOMDRAW nmcd, long wParam, long lParam) {
 					fillBackground (nmcd.hdc, control.getBackgroundPixel (), rect);
 					if (OS.IsAppThemed ()) {
 						if (sortColumn != null && sortDirection != SWT.NONE) {
-							int index = indexOf (sortColumn);
+							int index = indexOf (sortColumn.getWrapper());
 							if (index != -1) {
 								parent.forceResize ();
 								int clrSortBk = getSortColumnPixel ();
@@ -935,7 +938,7 @@ LRESULT CDDS_SUBITEMPOSTPAINT (NMLVCUSTOMDRAW nmcd, long wParam, long lParam) {
 				if (sortColumn != null && !sortColumn.isDisposed ()) {
 					int oldColumn = (int)OS.SendMessage (handle, OS.LVM_GETSELECTEDCOLUMN, 0, 0);
 					if (oldColumn == -1) {
-						int newColumn = indexOf (sortColumn);
+						int newColumn = indexOf (sortColumn.getWrapper());
 						long rgn = OS.CreateRectRgn (0, 0, 0, 0);
 						int result = OS.GetUpdateRgn (handle, rgn, true);
 						OS.SendMessage (handle, OS.LVM_SETSELECTEDCOLUMN, newColumn, 0);
@@ -1140,7 +1143,7 @@ void checkBuffered () {
 
 boolean checkData (NativeTableItem item, boolean redraw) {
 	if ((style & SWT.VIRTUAL) == 0) return true;
-	return checkData (item, indexOf (item), redraw);
+	return checkData (item, indexOf (item.getWrapper()), redraw);
 }
 
 boolean checkData (NativeTableItem item, int index, boolean redraw) {
@@ -1190,6 +1193,7 @@ public void checkSubclass () {
  *
  * @since 3.0
  */
+@Override
 public void clear (int index) {
 	checkWidget ();
 	int count = (int)OS.SendMessage (handle, OS.LVM_GETITEMCOUNT, 0, 0);
@@ -1246,6 +1250,7 @@ public void clear (int index) {
  *
  * @since 3.0
  */
+@Override
 public void clear (int start, int end) {
 	checkWidget ();
 	if (start > end) return;
@@ -1320,6 +1325,7 @@ public void clear (int start, int end) {
  *
  * @since 3.0
  */
+@Override
 public void clear (int [] indices) {
 	checkWidget ();
 	if (indices == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -1385,6 +1391,7 @@ public void clear (int [] indices) {
  *
  * @since 3.0
  */
+@Override
 public void clearAll () {
 	checkWidget ();
 	LVITEM lvItem = null;
@@ -1834,6 +1841,7 @@ void deregister () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void deselect (int [] indices) {
 	checkWidget ();
 	if (indices == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -1865,6 +1873,7 @@ public void deselect (int [] indices) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void deselect (int index) {
 	checkWidget ();
 	/*
@@ -1894,6 +1903,7 @@ public void deselect (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void deselect (int start, int end) {
 	checkWidget ();
 	int count = (int)OS.SendMessage (handle, OS.LVM_GETITEMCOUNT, 0, 0);
@@ -1923,6 +1933,7 @@ public void deselect (int start, int end) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void deselectAll () {
 	checkWidget ();
 	LVITEM lvItem = new LVITEM ();
@@ -2222,10 +2233,11 @@ void fixCheckboxImageListColor (boolean fixScroll) {
  * @see NativeTableColumn#setMoveable(boolean)
  * @see SWT#Move
  */
-public NativeTableColumn getColumn (int index) {
+@Override
+public TableColumn getColumn (int index) {
 	checkWidget ();
 	if (!(0 <= index && index < columnCount)) error (SWT.ERROR_INVALID_RANGE);
-	return columns [index];
+	return columns [index].getWrapper();
 }
 
 /**
@@ -2242,6 +2254,7 @@ public NativeTableColumn getColumn (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getColumnCount () {
 	checkWidget ();
 	return columnCount;
@@ -2275,6 +2288,7 @@ public int getColumnCount () {
  *
  * @since 3.1
  */
+@Override
 public int[] getColumnOrder () {
 	checkWidget ();
 	if (columnCount == 0) return new int [0];
@@ -2310,7 +2324,12 @@ public int[] getColumnOrder () {
  * @see NativeTableColumn#setMoveable(boolean)
  * @see SWT#Move
  */
-public NativeTableColumn [] getColumns () {
+@Override
+public TableColumn [] getColumns () {
+	return Arrays.stream(getNativeColumns()).map(NativeTableColumn::getWrapper).toArray(TableColumn[]::new);
+}
+
+NativeTableColumn [] getNativeColumns () {
 	checkWidget ();
 	NativeTableColumn [] result = new NativeTableColumn [columnCount];
 	System.arraycopy (columns, 0, result, 0, columnCount);
@@ -2332,6 +2351,7 @@ int getFocusIndex () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getGridLineWidth () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getGridLineWidthInPixels(), getZoom());
@@ -2352,6 +2372,7 @@ int getGridLineWidthInPixels () {
  * </ul>
  * @since 3.106
  */
+@Override
 public Color getHeaderBackground () {
 	checkWidget ();
 	return Color.win32_new (display, getHeaderBackgroundPixel());
@@ -2372,6 +2393,7 @@ private int getHeaderBackgroundPixel() {
  * </ul>
  * @since 3.106
  */
+@Override
 public Color getHeaderForeground () {
 	checkWidget ();
 	return Color.win32_new (display, getHeaderForegroundPixel());
@@ -2393,6 +2415,7 @@ private int getHeaderForegroundPixel() {
  *
  * @since 2.0
  */
+@Override
 public int getHeaderHeight () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getHeaderHeightInPixels (), getZoom());
@@ -2422,6 +2445,7 @@ int getHeaderHeightInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getHeaderVisible () {
 	checkWidget ();
 	int bits = OS.GetWindowLong (handle, OS.GWL_STYLE);
@@ -2443,7 +2467,12 @@ public boolean getHeaderVisible () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTableItem getItem (int index) {
+@Override
+public TableItem getItem (int index) {
+	return getNativeItem(index).getWrapper();
+}
+
+private NativeTableItem getNativeItem (int index) {
 	checkWidget ();
 	int count = (int)OS.SendMessage (handle, OS.LVM_GETITEMCOUNT, 0, 0);
 	if (!(0 <= index && index < count)) error (SWT.ERROR_INVALID_RANGE);
@@ -2473,10 +2502,11 @@ public NativeTableItem getItem (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTableItem getItem (Point point) {
+@Override
+public TableItem getItem (Point point) {
 	checkWidget ();
 	if (point == null) error (SWT.ERROR_NULL_ARGUMENT);
-	return getItemInPixels (DPIUtil.scaleUp(point, getZoom()));
+	return getItemInPixels (DPIUtil.scaleUp(point, getZoom())).getWrapper();
 }
 
 NativeTableItem getItemInPixels (Point point) {
@@ -2558,6 +2588,7 @@ NativeTableItem getItemInPixels (Point point) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getItemCount () {
 	checkWidget ();
 	return (int)OS.SendMessage (handle, OS.LVM_GETITEMCOUNT, 0, 0);
@@ -2574,6 +2605,7 @@ public int getItemCount () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getItemHeight () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getItemHeightInPixels(), getZoom());
@@ -2602,7 +2634,8 @@ int getItemHeightInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTableItem [] getItems () {
+@Override
+public TableItem [] getItems () {
 	checkWidget ();
 	int count = (int)OS.SendMessage (handle, OS.LVM_GETITEMCOUNT, 0, 0);
 	NativeTableItem [] result = new NativeTableItem [count];
@@ -2613,7 +2646,7 @@ public NativeTableItem [] getItems () {
 	} else {
 		_getItems (result, count);
 	}
-	return result;
+	return Arrays.stream(result).map(NativeTableItem::getWrapper).toArray(TableItem[]::new);
 }
 
 /**
@@ -2634,6 +2667,7 @@ public NativeTableItem [] getItems () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getLinesVisible () {
 	checkWidget ();
 	return _getLinesVisible();
@@ -2660,14 +2694,15 @@ private boolean _getLinesVisible() {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTableItem [] getSelection () {
+@Override
+public TableItem [] getSelection () {
 	checkWidget ();
 	int i = -1, j = 0, count = (int)OS.SendMessage (handle, OS.LVM_GETSELECTEDCOUNT, 0, 0);
 	NativeTableItem [] result = new NativeTableItem [count];
 	while ((i = (int)OS.SendMessage (handle, OS.LVM_GETNEXTITEM, i, OS.LVNI_SELECTED)) != -1) {
 		result [j++] = _getItem (i);
 	}
-	return result;
+	return Arrays.stream(result).map(NativeTableItem::getWrapper).toArray(TableItem[]::new);
 }
 
 /**
@@ -2680,6 +2715,7 @@ public NativeTableItem [] getSelection () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getSelectionCount () {
 	checkWidget ();
 	return (int)OS.SendMessage (handle, OS.LVM_GETSELECTEDCOUNT, 0, 0);
@@ -2696,6 +2732,7 @@ public int getSelectionCount () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getSelectionIndex () {
 	checkWidget ();
 	int focusIndex = (int)OS.SendMessage (handle, OS.LVM_GETNEXTITEM, -1, OS.LVNI_FOCUSED);
@@ -2724,6 +2761,7 @@ public int getSelectionIndex () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int [] getSelectionIndices () {
 	checkWidget ();
 	int count = (int)OS.SendMessage (handle, OS.LVM_GETSELECTEDCOUNT, 0, 0);
@@ -2752,13 +2790,14 @@ public int [] getSelectionIndices () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  *
- * @see #setSortColumn(NativeTableColumn)
+ * @see #setSortColumn(TableColumn)
  *
  * @since 3.2
  */
-public NativeTableColumn getSortColumn () {
+@Override
+public TableColumn getSortColumn () {
 	checkWidget ();
-	return sortColumn;
+	return sortColumn.getWrapper();
 }
 
 int getSortColumnPixel () {
@@ -2782,6 +2821,7 @@ int getSortColumnPixel () {
  *
  * @since 3.2
  */
+@Override
 public int getSortDirection () {
 	checkWidget ();
 	return sortDirection;
@@ -2799,6 +2839,7 @@ public int getSortDirection () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getTopIndex () {
 	checkWidget ();
 	/*
@@ -2919,11 +2960,12 @@ int imageIndexHeader (Image image) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public int indexOf (NativeTableColumn column) {
+@Override
+public int indexOf (TableColumn column) {
 	checkWidget ();
 	if (column == null) error (SWT.ERROR_NULL_ARGUMENT);
 	for (int i=0; i<columnCount; i++) {
-		if (columns [i] == column) return i;
+		if (columns [i].getWrapper() == column) return i;
 	}
 	return -1;
 }
@@ -2945,29 +2987,30 @@ public int indexOf (NativeTableColumn column) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public int indexOf (NativeTableItem item) {
+@Override
+public int indexOf (TableItem item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
 	//TODO - find other loops that can be optimized
 	if (keys == null) {
 		int count = (int)OS.SendMessage (handle, OS.LVM_GETITEMCOUNT, 0, 0);
 		if (1 <= lastIndexOf && lastIndexOf < count - 1) {
-			if (_getItem (lastIndexOf, false) == item) return lastIndexOf;
-			if (_getItem (lastIndexOf + 1, false) == item) return ++lastIndexOf;
-			if (_getItem (lastIndexOf - 1, false) == item) return --lastIndexOf;
+			if (_getItem (lastIndexOf, false).getWrapper() == item) return lastIndexOf;
+			if (_getItem (lastIndexOf + 1, false).getWrapper() == item) return ++lastIndexOf;
+			if (_getItem (lastIndexOf - 1, false).getWrapper() == item) return --lastIndexOf;
 		}
 		if (lastIndexOf < count / 2) {
 			for (int i=0; i<count; i++) {
-				if (_getItem (i, false) == item) return lastIndexOf = i;
+				if (_getItem (i, false).getWrapper() == item) return lastIndexOf = i;
 			}
 		} else {
 			for (int i=count - 1; i>=0; --i) {
-				if (_getItem (i, false) == item) return lastIndexOf = i;
+				if (_getItem (i, false).getWrapper() == item) return lastIndexOf = i;
 			}
 		}
 	} else {
 		for (int i=0; i<keyCount; i++) {
-			if (items [i] == item) return keys [i];
+			if (items [i].getWrapper() == item) return keys [i];
 		}
 	}
 	return -1;
@@ -2995,6 +3038,7 @@ boolean isOptimizedRedraw () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean isSelected (int index) {
 	checkWidget ();
 	LVITEM lvItem = new LVITEM ();
@@ -3079,6 +3123,7 @@ void releaseWidget () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void remove (int [] indices) {
 	checkWidget ();
 	if (indices == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -3124,6 +3169,7 @@ public void remove (int [] indices) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void remove (int index) {
 	checkWidget ();
 	int count = (int)OS.SendMessage (handle, OS.LVM_GETITEMCOUNT, 0, 0);
@@ -3157,6 +3203,7 @@ public void remove (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void remove (int start, int end) {
 	checkWidget ();
 	if (start > end) return;
@@ -3198,6 +3245,7 @@ public void remove (int start, int end) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void removeAll () {
 	checkWidget ();
 	int itemCount = (int)OS.SendMessage (handle, OS.LVM_GETITEMCOUNT, 0, 0);
@@ -3231,6 +3279,7 @@ public void removeAll () {
  * @see SelectionListener
  * @see #addSelectionListener(SelectionListener)
  */
+@Override
 public void removeSelectionListener(SelectionListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -3262,6 +3311,7 @@ public void removeSelectionListener(SelectionListener listener) {
  *
  * @see NativeTable#setSelection(int[])
  */
+@Override
 public void select (int [] indices) {
 	checkWidget ();
 	if (indices == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -3313,6 +3363,7 @@ void reskinChildren (int flags) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void select (int index) {
 	checkWidget ();
 	/*
@@ -3351,6 +3402,7 @@ public void select (int index) {
  *
  * @see NativeTable#setSelection(int,int)
  */
+@Override
 public void select (int start, int end) {
 	checkWidget ();
 	if (end < 0 || start > end || ((style & SWT.SINGLE) != 0 && start != end)) return;
@@ -3387,6 +3439,7 @@ public void select (int start, int end) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void selectAll () {
 	checkWidget ();
 	if ((style & SWT.SINGLE) != 0) return;
@@ -4064,7 +4117,7 @@ void setBackgroundTransparent (boolean transparent) {
 			/* Set LVM_SETSELECTEDCOLUMN */
 			if ((sortDirection & (SWT.UP | SWT.DOWN)) != 0) {
 				if (sortColumn != null && !sortColumn.isDisposed ()) {
-					int column = indexOf (sortColumn);
+					int column = indexOf (sortColumn.getWrapper());
 					if (column != -1) {
 						OS.SendMessage (handle, OS.LVM_SETSELECTEDCOLUMN, column, 0);
 						/*
@@ -4126,6 +4179,7 @@ void setBoundsInPixels (int x, int y, int width, int height, int flags, boolean 
  *
  * @since 3.1
  */
+@Override
 public void setColumnOrder (int [] order) {
 	checkWidget ();
 	if (order == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -4437,6 +4491,7 @@ void setForegroundPixel (int pixel) {
  * </ul>
  * @since 3.106
  */
+@Override
 public void setHeaderBackground (Color color) {
 	checkWidget ();
 	int pixel = -1;
@@ -4470,6 +4525,7 @@ public void setHeaderBackground (Color color) {
  * </ul>
  * @since 3.106
  */
+@Override
 public void setHeaderForeground (Color color) {
 	checkWidget ();
 	int pixel = -1;
@@ -4500,6 +4556,7 @@ public void setHeaderForeground (Color color) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setHeaderVisible (boolean show) {
 	checkWidget ();
 	int newBits = OS.GetWindowLong (handle, OS.GWL_STYLE);
@@ -4547,6 +4604,7 @@ public void setHeaderVisible (boolean show) {
  *
  * @since 3.0
  */
+@Override
 public void setItemCount (int count) {
 	checkWidget ();
 	count = Math.max (0, count);
@@ -4680,6 +4738,7 @@ void setItemHeight (boolean fixScroll) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setLinesVisible (boolean show) {
 	checkWidget ();
 	int newBits = show  ? OS.LVS_EX_GRIDLINES : 0;
@@ -4913,6 +4972,7 @@ boolean setScrollWidth (NativeTableItem item, boolean force) {
  * @see NativeTable#deselectAll()
  * @see NativeTable#select(int[])
  */
+@Override
 public void setSelection (int [] indices) {
 	checkWidget ();
 	if (indices == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -4946,10 +5006,11 @@ public void setSelection (int [] indices) {
  *
  * @since 3.2
  */
-public void setSelection (NativeTableItem  item) {
+@Override
+public void setSelection (TableItem  item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
-	setSelection (new NativeTableItem [] {item});
+	setSelection (new TableItem [] {item});
 }
 
 /**
@@ -4977,7 +5038,8 @@ public void setSelection (NativeTableItem  item) {
  * @see NativeTable#select(int[])
  * @see NativeTable#setSelection(int[])
  */
-public void setSelection (NativeTableItem [] items) {
+@Override
+public void setSelection (TableItem [] items) {
 	checkWidget ();
 	if (items == null) error (SWT.ERROR_NULL_ARGUMENT);
 	deselectAll ();
@@ -5009,6 +5071,7 @@ public void setSelection (NativeTableItem [] items) {
  * @see NativeTable#deselectAll()
  * @see NativeTable#select(int)
  */
+@Override
 public void setSelection (int index) {
 	checkWidget ();
 	deselectAll ();
@@ -5040,6 +5103,7 @@ public void setSelection (int index) {
  * @see NativeTable#deselectAll()
  * @see NativeTable#select(int,int)
  */
+@Override
 public void setSelection (int start, int end) {
 	checkWidget ();
 	deselectAll ();
@@ -5070,13 +5134,14 @@ public void setSelection (int start, int end) {
  *
  * @since 3.2
  */
-public void setSortColumn (NativeTableColumn column) {
+@Override
+public void setSortColumn (TableColumn column) {
 	checkWidget ();
 	if (column != null && column.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
 	if (sortColumn != null && !sortColumn.isDisposed ()) {
 		sortColumn.setSortDirection (SWT.NONE);
 	}
-	sortColumn = column;
+	sortColumn = Widget.checkNative(column);
 	if (sortColumn != null && sortDirection != SWT.NONE) {
 		sortColumn.setSortDirection (sortDirection);
 	}
@@ -5095,6 +5160,7 @@ public void setSortColumn (NativeTableColumn column) {
  *
  * @since 3.2
  */
+@Override
 public void setSortDirection (int direction) {
 	checkWidget ();
 	if ((direction & (SWT.UP | SWT.DOWN)) == 0 && direction != SWT.NONE) return;
@@ -5162,6 +5228,7 @@ void setTableEmpty () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setTopIndex (int index) {
 	checkWidget ();
 	int topIndex = (int)OS.SendMessage (handle, OS.LVM_GETTOPINDEX, 0, 0);
@@ -5235,11 +5302,12 @@ public void setTopIndex (int index) {
  *
  * @since 3.0
  */
-public void showColumn (NativeTableColumn column) {
+@Override
+public void showColumn (TableColumn column) {
 	checkWidget ();
 	if (column == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (column.isDisposed()) error(SWT.ERROR_INVALID_ARGUMENT);
-	if (column.parent != this) return;
+	if (column.getParent() != this.getWrapper()) return;
 	int index = indexOf (column);
 	if (!(0 <= index && index < columnCount)) return;
 	/*
@@ -5371,7 +5439,8 @@ void showItem (int index) {
  *
  * @see NativeTable#showSelection()
  */
-public void showItem (NativeTableItem item) {
+@Override
+public void showItem (TableItem item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (item.isDisposed()) error(SWT.ERROR_INVALID_ARGUMENT);
@@ -5389,8 +5458,9 @@ public void showItem (NativeTableItem item) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  *
- * @see NativeTable#showItem(NativeTableItem)
+ * @see NativeTable#showItem(TableItem)
  */
+@Override
 public void showSelection () {
 	checkWidget ();
 	int index = (int)OS.SendMessage (handle, OS.LVM_GETNEXTITEM, -1, OS.LVNI_SELECTED);
@@ -5529,7 +5599,7 @@ void updateMenuLocation (Event event) {
 	int x = clientArea.x, y = clientArea.y;
 	int focusIndex = getFocusIndex ();
 	if (focusIndex != -1) {
-		NativeTableItem focusItem = getItem (focusIndex);
+		NativeTableItem focusItem = getNativeItem (focusIndex);
 		Rectangle bounds = focusItem.getBoundsInPixels (0);
 		if (focusItem.text != null && focusItem.text.length () != 0) {
 			bounds = focusItem.getBoundsInPixels ();
@@ -7357,11 +7427,11 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 		table.imageList = null;
 	}
 
-	for (NativeTableItem item : table.getItems()) {
-		DPIZoomChangeRegistry.applyChange(item.getWrapper(), newZoom, scalingFactor);
+	for (TableItem item : table.getItems()) {
+		DPIZoomChangeRegistry.applyChange(item, newZoom, scalingFactor);
 	}
-	for (NativeTableColumn tableColumn : table.getColumns()) {
-		DPIZoomChangeRegistry.applyChange(tableColumn.getWrapper(), newZoom, scalingFactor);
+	for (TableColumn tableColumn : table.getColumns()) {
+		DPIZoomChangeRegistry.applyChange(tableColumn, newZoom, scalingFactor);
 	}
 
 	if (table.getColumns().length == 0 && scrollWidth != 0) {

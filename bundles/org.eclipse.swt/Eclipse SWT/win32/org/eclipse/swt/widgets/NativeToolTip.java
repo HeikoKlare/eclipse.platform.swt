@@ -43,7 +43,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.2
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeToolTip extends NativeWidget {
+public abstract class NativeToolTip extends NativeWidget implements IToolTip {
 	NativeShell parent;
 	NativeTrayItem item;
 	String text = "", message = "";
@@ -119,6 +119,7 @@ static int checkStyle (int style) {
  * @see #removeSelectionListener
  * @see SelectionEvent
  */
+@Override
 public void addSelectionListener (SelectionListener listener) {
 	addTypedListener(listener, SWT.Selection, SWT.DefaultSelection);
 }
@@ -140,6 +141,7 @@ void destroyWidget () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getAutoHide () {
 	checkWidget();
 	return autoHide;
@@ -156,6 +158,7 @@ public boolean getAutoHide () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public String getMessage () {
 	checkWidget();
 	return message;
@@ -171,6 +174,7 @@ public String getMessage () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeShell getParent () {
 	checkWidget ();
 	return parent;
@@ -187,6 +191,7 @@ public NativeShell getParent () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public String getText () {
 	checkWidget();
 	return text;
@@ -209,6 +214,7 @@ public String getText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getVisible () {
 	checkWidget();
 	if (item != null) return visible;
@@ -251,6 +257,7 @@ long hwndToolTip () {
  *
  * @see #getVisible
  */
+@Override
 public boolean isVisible () {
 	checkWidget ();
 	if (item != null) return getVisible () && item.getVisible ();
@@ -310,6 +317,7 @@ void releaseWidget () {
  * @see SelectionListener
  * @see #addSelectionListener
  */
+@Override
 public void removeSelectionListener (SelectionListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -332,6 +340,7 @@ public void removeSelectionListener (SelectionListener listener) {
  * @see #getVisible
  * @see #setVisible
  */
+@Override
 public void setAutoHide (boolean autoHide) {
 	checkWidget ();
 	this.autoHide = autoHide;
@@ -355,6 +364,7 @@ public void setAutoHide (boolean autoHide) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setLocation (int x, int y) {
 	checkWidget ();
 	int zoom = getZoom();
@@ -390,6 +400,7 @@ void setLocationInPixels (int x, int y) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setLocation (Point location) {
 	checkWidget ();
 	if (location == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -410,6 +421,7 @@ public void setLocation (Point location) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setMessage (String string) {
 	checkWidget ();
 	if (string == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -433,6 +445,7 @@ public void setMessage (String string) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setText (String string) {
 	checkWidget ();
 	if (string == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -457,6 +470,7 @@ public void setText (String string) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setVisible (boolean visible) {
 	checkWidget ();
 	if (visible == getVisible ()) return;

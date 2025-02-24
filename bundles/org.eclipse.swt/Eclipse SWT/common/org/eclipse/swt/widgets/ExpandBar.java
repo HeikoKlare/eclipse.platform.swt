@@ -13,8 +13,6 @@
  *******************************************************************************/
 package org.eclipse.swt.widgets;
 
-import java.util.*;
-
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
 
@@ -121,8 +119,7 @@ public void addExpandListener (ExpandListener listener) {
  * </ul>
  */
 public ExpandItem getItem (int index) {
-	NativeExpandItem wrappedExpandItem = wrappedExpandBar.getItem(index);
-	return wrappedExpandItem != null ? wrappedExpandItem.getWrapper() : null;
+	return wrappedExpandBar.getItem(index);
 }
 
 /**
@@ -156,7 +153,7 @@ public int getItemCount () {
  * </ul>
  */
 public ExpandItem [] getItems () {
-	return Arrays.stream(wrappedExpandBar.getItems()).map(NativeExpandItem::getWrapper).toArray(ExpandItem[]::new);
+	return wrappedExpandBar.getItems();
 }
 
 /**
@@ -192,7 +189,7 @@ public int getSpacing () {
  * </ul>
  */
 public int indexOf (ExpandItem item) {
-	return wrappedExpandBar.indexOf(checkNative(item));
+	return wrappedExpandBar.indexOf(item);
 }
 
 /**

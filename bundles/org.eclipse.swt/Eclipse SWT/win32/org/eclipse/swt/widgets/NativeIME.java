@@ -41,7 +41,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.4
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeIME extends NativeWidget {
+public abstract class NativeIME extends NativeWidget implements IIME {
 	NativeCanvas parent;
 	int caretOffset;
 	int startOffset;
@@ -116,6 +116,7 @@ void createWidget () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getCaretOffset () {
 	checkWidget ();
 	return startOffset + caretOffset;
@@ -136,6 +137,7 @@ public int getCaretOffset () {
  *
  * @see NativeIME#getText
  */
+@Override
 public int getCommitCount () {
 	checkWidget ();
 	return commitCount;
@@ -154,6 +156,7 @@ public int getCommitCount () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getCompositionOffset () {
 	checkWidget ();
 	return startOffset;
@@ -226,6 +229,7 @@ TF_DISPLAYATTRIBUTE getDisplayAttribute (short langid, int attInfo) {
  *
  * @see NativeIME#getStyles
  */
+@Override
 public int [] getRanges () {
 	checkWidget ();
 	if (ranges == null) return new int [0];
@@ -254,6 +258,7 @@ public int [] getRanges () {
  *
  * @see NativeIME#getRanges
  */
+@Override
 public TextStyle [] getStyles () {
 	checkWidget ();
 	if (styles == null) return new TextStyle [0];
@@ -278,6 +283,7 @@ public TextStyle [] getStyles () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public String getText () {
 	checkWidget ();
 	return text;
@@ -296,6 +302,7 @@ public String getText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getWideCaret() {
 	checkWidget ();
 	long layout = OS.GetKeyboardLayout (0);
@@ -338,6 +345,7 @@ void releaseWidget () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setCompositionOffset (int offset) {
 	checkWidget ();
 	if (offset < 0) return;

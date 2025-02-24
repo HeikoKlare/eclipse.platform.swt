@@ -38,7 +38,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.0
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeTrayItem extends NativeItem {
+public abstract class NativeTrayItem extends NativeItem implements ITrayItem {
 	NativeTray parent;
 	int id;
 	Image image2, highlightImage;
@@ -107,6 +107,7 @@ protected NativeTrayItem (NativeTray parent, int style) {
  * @see #removeSelectionListener
  * @see SelectionEvent
  */
+@Override
 public void addSelectionListener(SelectionListener listener) {
 	addTypedListener(listener, SWT.Selection, SWT.DefaultSelection);
 }
@@ -132,6 +133,7 @@ public void addSelectionListener(SelectionListener listener) {
  *
  * @since 3.3
  */
+@Override
 public void addMenuDetectListener (MenuDetectListener listener) {
 	addTypedListener(listener, SWT.MenuDetect);
 }
@@ -183,6 +185,7 @@ void destroyWidget () {
  *
  * @since 3.8
  */
+@Override
 public Image getHighlightImage () {
 	checkWidget ();
 	return highlightImage;
@@ -200,9 +203,10 @@ public Image getHighlightImage () {
  *
  * @since 3.2
  */
-public NativeTray getParent () {
+@Override
+public Tray getParent () {
 	checkWidget ();
-	return parent;
+	return parent != null ? parent.getWrapper() : null;
 }
 
 /**
@@ -218,9 +222,10 @@ public NativeTray getParent () {
  *
  * @since 3.2
  */
-public NativeToolTip getToolTip () {
+@Override
+public ToolTip getToolTip () {
 	checkWidget ();
-	return toolTip;
+	return toolTip != null ? toolTip.getWrapper() : null;
 }
 
 /**
@@ -234,6 +239,7 @@ public NativeToolTip getToolTip () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public String getToolTipText () {
 	checkWidget ();
 	return toolTipText;
@@ -250,6 +256,7 @@ public String getToolTipText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getVisible () {
 	checkWidget ();
 	return visible;
@@ -376,6 +383,7 @@ void releaseWidget () {
  * @see SelectionListener
  * @see #addSelectionListener
  */
+@Override
 public void removeSelectionListener(SelectionListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -404,6 +412,7 @@ public void removeSelectionListener(SelectionListener listener) {
  *
  * @since 3.3
  */
+@Override
 public void removeMenuDetectListener (MenuDetectListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -426,6 +435,7 @@ public void removeMenuDetectListener (MenuDetectListener listener) {
  *
  * @since 3.8
  */
+@Override
 public void setHighlightImage (Image image) {
 	checkWidget ();
 	if (image != null && image.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
@@ -487,9 +497,10 @@ public void setImage (Image image) {
  *
  * @since 3.2
  */
-public void setToolTip (NativeToolTip toolTip) {
+@Override
+public void setToolTip (ToolTip toolTip) {
 	checkWidget ();
-	NativeToolTip oldTip = this.toolTip, newTip = toolTip;
+	NativeToolTip oldTip = this.toolTip, newTip = Widget.checkNative(toolTip);
 	if (oldTip != null) oldTip.item = null;
 	this.toolTip = newTip;
 	if (newTip != null) newTip.item = this;
@@ -520,6 +531,7 @@ public void setToolTip (NativeToolTip toolTip) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setToolTipText (String string) {
 	checkWidget ();
 	toolTipText = string;
@@ -547,6 +559,7 @@ public void setToolTipText (String string) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setVisible (boolean visible) {
 	checkWidget ();
 	if (this.visible == visible) return;

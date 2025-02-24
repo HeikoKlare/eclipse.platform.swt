@@ -43,7 +43,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeTracker extends NativeWidget {
+public abstract class NativeTracker extends NativeWidget implements ITracker {
 	NativeControl parent;
 	boolean tracking, cancelled, stippled;
 	Rectangle [] rectangles = new Rectangle [0], proportions = rectangles;
@@ -165,6 +165,7 @@ protected NativeTracker (Display display, int style) {
  * @see ControlListener
  * @see #removeControlListener
  */
+@Override
 public void addControlListener (ControlListener listener) {
 	addTypedListener(listener, SWT.Resize, SWT.Move);
 }
@@ -188,6 +189,7 @@ public void addControlListener (ControlListener listener) {
  * @see KeyListener
  * @see #removeKeyListener
  */
+@Override
 public void addKeyListener (KeyListener listener) {
 	addTypedListener(listener, SWT.KeyUp, SWT.KeyDown);
 }
@@ -299,6 +301,7 @@ static int checkStyle (int style) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void close () {
 	checkWidget ();
 	tracking = false;
@@ -401,6 +404,7 @@ void drawRectangles (Rectangle [] rects, boolean stippled) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Rectangle [] getRectangles () {
 	checkWidget();
 	Rectangle [] result = getRectanglesInPixels();
@@ -429,6 +433,7 @@ Rectangle [] getRectanglesInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getStippled () {
 	checkWidget ();
 	return stippled;
@@ -460,6 +465,7 @@ void moveRectangles (int xChange, int yChange) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean open () {
 	checkWidget ();
 	cancelled = false;
@@ -667,6 +673,7 @@ void releaseWidget () {
  * @see ControlListener
  * @see #addControlListener
  */
+@Override
 public void removeControlListener (ControlListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -692,6 +699,7 @@ public void removeControlListener (ControlListener listener) {
  * @see KeyListener
  * @see #addKeyListener
  */
+@Override
 public void removeKeyListener(KeyListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -819,6 +827,7 @@ void resizeRectangles (int xChange, int yChange) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setCursor(Cursor newCursor) {
 	checkWidget();
 	clientCursor = newCursor;
@@ -841,6 +850,7 @@ public void setCursor(Cursor newCursor) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setRectangles (Rectangle [] rectangles) {
 	checkWidget ();
 	if (rectangles == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -871,6 +881,7 @@ void setRectanglesInPixels (Rectangle [] rectangles) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setStippled (boolean stippled) {
 	checkWidget ();
 	this.stippled = stippled;

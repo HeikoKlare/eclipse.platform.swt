@@ -98,7 +98,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeDecorations extends NativeCanvas {
+public abstract class NativeDecorations extends NativeCanvas implements IDecorations {
 	Image image, smallImage, largeImage;
 	Image [] images;
 	NativeMenu menuBar;
@@ -493,6 +493,7 @@ void fixDecorations (NativeDecorations newDecorations, NativeControl control, Na
  *
  * @see #setDefaultButton(NativeButton)
  */
+@Override
 public NativeButton getDefaultButton () {
 	checkWidget ();
 	if (defaultButton != null && defaultButton.isDisposed ()) return null;
@@ -520,6 +521,7 @@ public NativeButton getDefaultButton () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Image getImage () {
 	checkWidget ();
 	return image;
@@ -552,6 +554,7 @@ public Image getImage () {
  *
  * @since 3.0
  */
+@Override
 public Image [] getImages () {
 	checkWidget ();
 	if (images == null) return new Image [0];
@@ -587,6 +590,7 @@ public Image [] getImages () {
  *
  * @see #setMaximized
  */
+@Override
 public boolean getMaximized () {
 	checkWidget ();
 	if (OS.IsWindowVisible (handle)) return OS.IsZoomed (handle);
@@ -604,6 +608,7 @@ public boolean getMaximized () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeMenu getMenuBar () {
 	checkWidget ();
 	return menuBar;
@@ -622,6 +627,7 @@ public NativeMenu getMenuBar () {
  *
  * @see #setMinimized
  */
+@Override
 public boolean getMinimized () {
 	checkWidget ();
 	if (OS.IsWindowVisible (handle)) return OS.IsIconic (handle);
@@ -664,6 +670,7 @@ String getNameText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public String getText () {
 	checkWidget ();
 	int length = OS.GetWindowTextLength (handle);
@@ -825,6 +832,7 @@ void setBoundsInPixels (int x, int y, int width, int height, int flags, boolean 
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setDefaultButton (NativeButton button) {
 	checkWidget ();
 	if (button != null) {
@@ -875,6 +883,7 @@ void setDefaultButton (NativeButton button, boolean save) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setImage (Image image) {
 	checkWidget ();
 	if (image != null && image.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
@@ -973,6 +982,7 @@ void setImages (Image image, Image [] images) {
  *
  * @since 3.0
  */
+@Override
 public void setImages (Image [] images) {
 	checkWidget ();
 	if (images == null) error (SWT.ERROR_INVALID_ARGUMENT);
@@ -1006,6 +1016,7 @@ public void setImages (Image [] images) {
  *
  * @see #setMinimized
  */
+@Override
 public void setMaximized (boolean maximized) {
 	checkWidget ();
 	Display.lpStartupInfo = null;
@@ -1027,6 +1038,7 @@ public void setMaximized (boolean maximized) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setMenuBar (NativeMenu menu) {
 	checkWidget ();
 	if (menuBar == menu) return;
@@ -1065,6 +1077,7 @@ public void setMenuBar (NativeMenu menu) {
  *
  * @see #setMaximized
  */
+@Override
 public void setMinimized (boolean minimized) {
 	checkWidget ();
 	Display.lpStartupInfo = null;
@@ -1219,6 +1232,7 @@ void setSystemMenu () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setText (String string) {
 	checkWidget ();
 	if (string == null) error (SWT.ERROR_NULL_ARGUMENT);

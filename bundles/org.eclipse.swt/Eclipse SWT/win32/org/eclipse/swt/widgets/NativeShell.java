@@ -120,7 +120,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeShell extends NativeDecorations {
+public abstract class NativeShell extends NativeDecorations implements IShell {
 	NativeMenu activeMenu;
 	NativeToolTip [] toolTips;
 	long hwndMDIClient, lpstrTip, toolTipHandle, balloonTipHandle, menuItemToolTipHandle;
@@ -450,6 +450,7 @@ static int checkStyle (NativeShell parent, int style) {
  * @see ShellListener
  * @see #removeShellListener
  */
+@Override
 public void addShellListener (ShellListener listener) {
 	addTypedListener(listener, SWT.Close, SWT.Iconify, SWT.Deiconify, SWT.Activate, SWT.Deactivate);
 }
@@ -524,6 +525,7 @@ void center () {
  * @see SWT#Close
  * @see #dispose
  */
+@Override
 public void close () {
 	checkWidget ();
 	closeWidget ();
@@ -870,6 +872,7 @@ void fixToolTip () {
  * @see NativeShell#open
  * @see NativeShell#setActive
  */
+@Override
 public void forceActive () {
 	checkWidget ();
 	if(!isVisible()) return;
@@ -894,6 +897,7 @@ void forceResize () {
  *
  * @since 3.4
  */
+@Override
 public int getAlpha () {
 	checkWidget ();
 	byte [] pbAlpha = new byte [1];
@@ -959,6 +963,7 @@ public boolean getEnabled () {
  *
  * @since 3.4
  */
+@Override
 public boolean getFullScreen () {
 	checkWidget();
 	return fullScreen;
@@ -981,6 +986,7 @@ public boolean getFullScreen () {
  *
  * @see SWT
  */
+@Override
 public int getImeInputMode () {
 	checkWidget ();
 	if (!OS.IsDBLocale) return 0;
@@ -1026,6 +1032,7 @@ public boolean getMaximized () {
  *
  * @since 3.116
  */
+@Override
 public Point getMaximumSize () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getMaximumSizeInPixels(), getZoom());
@@ -1067,6 +1074,7 @@ Point getMaximumSizeInPixels () {
  *
  * @since 3.1
  */
+@Override
 public Point getMinimumSize () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getMinimumSizeInPixels(), getZoom());
@@ -1105,6 +1113,7 @@ Point getMinimumSizeInPixels () {
  *
  * @since 3.5
  */
+@Override
 public boolean getModified () {
 	checkWidget ();
 	return modified;
@@ -1156,6 +1165,7 @@ public NativeShell getShell () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeShell [] getShells () {
 	checkWidget ();
 	int count = 0;
@@ -1196,6 +1206,7 @@ public NativeShell [] getShells () {
  *
  * @since 3.7
  */
+@Override
 public NativeToolBar getToolBar() {
 	checkWidget ();
 	return null;
@@ -1262,6 +1273,7 @@ long menuItemToolTipHandle () {
  * @see NativeShell#setActive
  * @see NativeShell#forceActive
  */
+@Override
 public void open () {
 	checkWidget ();
 	STARTUPINFO lpStartUpInfo = Display.lpStartupInfo;
@@ -1406,6 +1418,7 @@ void removeMenu (NativeMenu menu) {
  * @see ShellListener
  * @see #addShellListener
  */
+@Override
 public void removeShellListener (ShellListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -1462,6 +1475,7 @@ boolean sendKeyEvent (int type, int msg, long wParam, long lParam, Event event) 
  * @see NativeShell#open
  * @see NativeShell#setActive
  */
+@Override
 public void setActive () {
 	checkWidget ();
 	if (!isVisible ()) return;
@@ -1529,6 +1543,7 @@ void setActiveControl (NativeControl control, int type) {
  *
  * @since 3.4
  */
+@Override
 public void setAlpha (int alpha) {
 	checkWidget ();
 	alpha &= 0xFF;
@@ -1645,6 +1660,7 @@ public void setEnabled (boolean enabled) {
  *
  * @since 3.4
  */
+@Override
 public void setFullScreen (boolean fullScreen) {
 	checkWidget();
 	if (this.fullScreen == fullScreen) return;
@@ -1692,6 +1708,7 @@ public void setFullScreen (boolean fullScreen) {
  *
  * @see SWT
  */
+@Override
 public void setImeInputMode (int mode) {
 	checkWidget ();
 	if (!OS.IsDBLocale) return;
@@ -1758,6 +1775,7 @@ public void setImeInputMode (int mode) {
  *
  * @since 3.116
  */
+@Override
 public void setMaximumSize (int width, int height) {
 	checkWidget ();
 	int zoom = getZoom();
@@ -1786,6 +1804,7 @@ public void setMaximumSize (int width, int height) {
  *
  * @since 3.116
  */
+@Override
 public void setMaximumSize (Point size) {
 	checkWidget ();
 	if (size == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -1833,6 +1852,7 @@ void setMaximumSizeInPixels (int width, int height) {
  *
  * @since 3.1
  */
+@Override
 public void setMinimumSize (int width, int height) {
 	checkWidget ();
 	int zoom = getZoom();
@@ -1881,6 +1901,7 @@ void setMinimumSizeInPixels (int width, int height) {
  *
  * @since 3.1
  */
+@Override
 public void setMinimumSize (Point size) {
 	checkWidget ();
 	if (size == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -1900,6 +1921,7 @@ public void setMinimumSize (Point size) {
  *
  * @since 3.5
  */
+@Override
 public void setModified (boolean modified) {
 	checkWidget ();
 	this.modified = modified;

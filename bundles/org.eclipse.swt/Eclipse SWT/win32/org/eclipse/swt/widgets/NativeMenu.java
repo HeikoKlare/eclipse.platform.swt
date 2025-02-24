@@ -42,7 +42,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeMenu extends NativeWidget {
+public abstract class NativeMenu extends NativeWidget implements IMenu {
 	/**
 	 * the handle to the OS resource
 	 * (Warning: This field is platform dependent)
@@ -277,6 +277,7 @@ void _setVisible (boolean visible) {
  * @see HelpListener
  * @see #removeHelpListener
  */
+@Override
 public void addHelpListener (HelpListener listener) {
 	addTypedListener(listener, SWT.Help);
 }
@@ -300,6 +301,7 @@ public void addHelpListener (HelpListener listener) {
  * @see MenuListener
  * @see #removeMenuListener
  */
+@Override
 public void addMenuListener (MenuListener listener) {
 	addTypedListener(listener, SWT.Hide, SWT.Show);
 }
@@ -530,6 +532,7 @@ void fixMenus (NativeDecorations newParent) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeMenuItem getDefaultItem () {
 	checkWidget ();
 	int id = OS.GetMenuDefaultItem (handle, OS.MF_BYCOMMAND, OS.GMDI_USEDISABLED);
@@ -558,6 +561,7 @@ public NativeMenuItem getDefaultItem () {
  *
  * @see #isEnabled
  */
+@Override
 public boolean getEnabled () {
 	checkWidget ();
 	return (state & DISABLED) == 0;
@@ -593,6 +597,7 @@ public boolean getEnabled () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeMenuItem getItem (int index) {
 	checkWidget ();
 	int id = 0;
@@ -616,6 +621,7 @@ public NativeMenuItem getItem (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getItemCount () {
 	checkWidget ();
 	return OS.GetMenuItemCount (handle);
@@ -637,6 +643,7 @@ public int getItemCount () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeMenuItem [] getItems () {
 	checkWidget ();
 	int index = 0, count = 0;
@@ -692,6 +699,7 @@ String getNameText () {
  *
  * @since 3.7
  */
+@Override
 public int getOrientation () {
 	checkWidget ();
 	return style & (SWT.LEFT_TO_RIGHT | SWT.RIGHT_TO_LEFT);
@@ -707,6 +715,7 @@ public int getOrientation () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeDecorations getParent () {
 	checkWidget ();
 	return parent;
@@ -724,6 +733,7 @@ public NativeDecorations getParent () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeMenuItem getParentItem () {
 	checkWidget ();
 	return cascade;
@@ -741,6 +751,7 @@ public NativeMenuItem getParentItem () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeMenu getParentMenu () {
 	checkWidget ();
 	if (cascade != null) return cascade.parent;
@@ -763,6 +774,7 @@ public NativeMenu getParentMenu () {
  *
  * @see #getParent
  */
+@Override
 public NativeShell getShell () {
 	checkWidget ();
 	return parent.getShell ();
@@ -785,6 +797,7 @@ public NativeShell getShell () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getVisible () {
 	checkWidget ();
 	if ((style & SWT.BAR) != 0) {
@@ -828,6 +841,7 @@ void hideCurrentToolTip () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int indexOf (NativeMenuItem item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -866,6 +880,7 @@ void initThemeColors () {
  *
  * @see #getEnabled
  */
+@Override
 public boolean isEnabled () {
 	checkWidget ();
 	NativeMenu parentMenu = getParentMenu ();
@@ -889,6 +904,7 @@ public boolean isEnabled () {
  *
  * @see #getVisible
  */
+@Override
 public boolean isVisible () {
 	checkWidget ();
 	return getVisible ();
@@ -990,6 +1006,7 @@ void releaseWidget () {
  * @see HelpListener
  * @see #addHelpListener
  */
+@Override
 public void removeHelpListener (HelpListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -1014,6 +1031,7 @@ public void removeHelpListener (HelpListener listener) {
  * @see MenuListener
  * @see #addMenuListener
  */
+@Override
 public void removeMenuListener (MenuListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -1132,6 +1150,7 @@ void reskinChildren (int flags) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setDefaultItem (NativeMenuItem item) {
 	checkWidget ();
 	int newID = -1;
@@ -1159,6 +1178,7 @@ public void setDefaultItem (NativeMenuItem item) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setEnabled (boolean enabled) {
 	checkWidget ();
 	state &= ~DISABLED;
@@ -1187,6 +1207,7 @@ public void setEnabled (boolean enabled) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setLocation (int x, int y) {
 	setLocation(new Point(x, y));
 }
@@ -1222,6 +1243,7 @@ void setLocationInPixels (int x, int y) {
  *
  * @since 2.1
  */
+@Override
 public void setLocation (Point location) {
 	checkWidget ();
 	if (location == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -1242,6 +1264,7 @@ public void setLocation (Point location) {
  *
  * @since 3.7
  */
+@Override
 public void setOrientation (int orientation) {
 	checkWidget ();
 	if ((style & (SWT.BAR | SWT.DROP_DOWN)) != 0) return;
@@ -1275,6 +1298,7 @@ void _setOrientation (int orientation) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setVisible (boolean visible) {
 	checkWidget ();
 	if ((style & (SWT.BAR | SWT.DROP_DOWN)) != 0) return;

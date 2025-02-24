@@ -16,6 +16,7 @@ package org.eclipse.swt.widgets;
 
 
 import java.io.*;
+import java.util.*;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.*;
@@ -40,7 +41,7 @@ import org.eclipse.swt.internal.win32.*;
  *
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeTaskBar extends NativeWidget {
+public abstract class NativeTaskBar extends NativeWidget implements ITaskBar {
 	int itemCount;
 	NativeTaskItem [] items = new NativeTaskItem [4];
 	ITaskbarList3 mTaskbarList3;
@@ -90,7 +91,7 @@ void createItem (NativeTaskItem item, int index) {
 }
 
 void createItems () {
-	for (NativeShell shell : display.getNativeShells ()) {
+	for (Shell shell : display.getShells ()) {
 		getItem (shell);
 	}
 	getItem (null);
@@ -262,11 +263,12 @@ String getIconsDir() {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTaskItem getItem (int index) {
+@Override
+public TaskItem getItem (int index) {
 	checkWidget ();
 	createItems ();
 	if (!(0 <= index && index < itemCount)) error (SWT.ERROR_INVALID_RANGE);
-	return items [index];
+	return items [index].getWrapper();
 }
 
 /**
@@ -282,16 +284,17 @@ public NativeTaskItem getItem (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTaskItem getItem (NativeShell shell) {
+@Override
+public TaskItem getItem (Shell shell) {
 	checkWidget ();
 	for (NativeTaskItem item : items) {
-		if (item != null && item.shell == shell) {
-			return item;
+		if (item != null && item.shell.getWrapper() == shell) {
+			return item.getWrapper();
 		}
 	}
 	NativeTaskItem item = new TaskItem (this.getWrapper(), SWT.NONE).getWrappedWidget();
-	if (shell != null) item.setShell (shell);
-	return item;
+	if (shell != null) item.setShell (Widget.checkNative(shell));
+	return item.getWrapper();
 }
 
 /**
@@ -304,6 +307,7 @@ public NativeTaskItem getItem (NativeShell shell) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getItemCount () {
 	checkWidget ();
 	createItems ();
@@ -326,12 +330,13 @@ public int getItemCount () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTaskItem [] getItems () {
+@Override
+public TaskItem [] getItems () {
 	checkWidget ();
 	createItems ();
 	NativeTaskItem [] result = new NativeTaskItem [itemCount];
 	System.arraycopy (items, 0, result, 0, result.length);
-	return result;
+	return Arrays.stream(result).map(NativeTaskItem::getWrapper).toArray(TaskItem[]::new);
 }
 
 @Override

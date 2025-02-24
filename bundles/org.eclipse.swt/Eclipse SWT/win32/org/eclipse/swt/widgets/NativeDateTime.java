@@ -47,7 +47,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.3
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeDateTime extends NativeComposite {
+public abstract class NativeDateTime extends NativeComposite implements IDateTime {
 	static final int MIN_YEAR = 1752; // Gregorian switchover in North America: September 19, 1752
 	static final int MAX_YEAR = 9999;
 	boolean doubleClick, ignoreSelection;
@@ -187,6 +187,7 @@ protected NativeDateTime (NativeComposite parent, int style) {
  * @see #removeSelectionListener
  * @see SelectionEvent
  */
+@Override
 public void addSelectionListener (SelectionListener listener) {
 	addTypedListener(listener, SWT.Selection, SWT.DefaultSelection);
 }
@@ -316,6 +317,7 @@ String getTimeFormat () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getDay () {
 	checkWidget ();
 	SYSTEMTIME systime = new SYSTEMTIME ();
@@ -337,6 +339,7 @@ public int getDay () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getHours () {
 	checkWidget ();
 	if ((style & SWT.CALENDAR) != 0) return time.wHour;
@@ -359,6 +362,7 @@ public int getHours () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getMinutes () {
 	checkWidget ();
 	if ((style & SWT.CALENDAR) != 0) return time.wMinute;
@@ -381,6 +385,7 @@ public int getMinutes () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getMonth () {
 	checkWidget ();
 	SYSTEMTIME systime = new SYSTEMTIME ();
@@ -408,6 +413,7 @@ String getNameText() {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getSeconds () {
 	checkWidget ();
 	if ((style & SWT.CALENDAR) != 0) return time.wSecond;
@@ -430,6 +436,7 @@ public int getSeconds () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getYear () {
 	checkWidget ();
 	SYSTEMTIME systime = new SYSTEMTIME ();
@@ -461,6 +468,7 @@ void releaseWidget () {
  * @see SelectionListener
  * @see #addSelectionListener
  */
+@Override
 public void removeSelectionListener (SelectionListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -487,6 +495,7 @@ public void removeSelectionListener (SelectionListener listener) {
  *
  * @since 3.4
  */
+@Override
 public void setDate (int year, int month, int day) {
 	checkWidget ();
 	if (year < MIN_YEAR || year > MAX_YEAR) return;
@@ -517,6 +526,7 @@ public void setDate (int year, int month, int day) {
  *
  * @see #setDate
  */
+@Override
 public void setDay (int day) {
 	checkWidget ();
 	SYSTEMTIME systime = new SYSTEMTIME ();
@@ -541,6 +551,7 @@ public void setDay (int day) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setHours (int hours) {
 	checkWidget ();
 	if (hours < 0 || hours > 23) return;
@@ -566,6 +577,7 @@ public void setHours (int hours) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setMinutes (int minutes) {
 	checkWidget ();
 	if (minutes < 0 || minutes > 59) return;
@@ -594,6 +606,7 @@ public void setMinutes (int minutes) {
  *
  * @see #setDate
  */
+@Override
 public void setMonth (int month) {
 	checkWidget ();
 	SYSTEMTIME systime = new SYSTEMTIME ();
@@ -623,6 +636,7 @@ public void setOrientation (int orientation) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setSeconds (int seconds) {
 	checkWidget ();
 	if (seconds < 0 || seconds > 59) return;
@@ -649,6 +663,7 @@ public void setSeconds (int seconds) {
  *
  * @since 3.4
  */
+@Override
 public void setTime (int hours, int minutes, int seconds) {
 	checkWidget ();
 	if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59 || seconds < 0 || seconds > 59) return;
@@ -686,6 +701,7 @@ public void setTime (int hours, int minutes, int seconds) {
  *
  * @see #setDate
  */
+@Override
 public void setYear (int year) {
 	checkWidget ();
 	if (year < MIN_YEAR || year > MAX_YEAR) return;

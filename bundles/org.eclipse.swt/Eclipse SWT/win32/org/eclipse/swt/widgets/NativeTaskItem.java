@@ -35,7 +35,7 @@ import org.eclipse.swt.internal.win32.*;
  *
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeTaskItem extends NativeItem {
+public abstract class NativeTaskItem extends NativeItem implements ITaskItem {
 	NativeTaskBar parent;
 	NativeShell shell;
 	boolean hasTaskbarButton = false;
@@ -144,6 +144,7 @@ public Menu getMenu () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Image getOverlayImage () {
 	checkWidget ();
 	return overlayImage;
@@ -160,6 +161,7 @@ public Image getOverlayImage () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public String getOverlayText () {
 	checkWidget ();
 	return overlayText;
@@ -175,9 +177,10 @@ public String getOverlayText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTaskBar getParent () {
+@Override
+public TaskBar getParent () {
 	checkWidget ();
-	return parent;
+	return parent != null ? parent.getWrapper() : null;
 }
 
 /**
@@ -190,6 +193,7 @@ public NativeTaskBar getParent () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getProgress () {
 	checkWidget ();
 	return progress;
@@ -205,6 +209,7 @@ public int getProgress () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getProgressState () {
 	checkWidget ();
 	return progressState;
@@ -264,7 +269,7 @@ void releaseWidget () {
  * Dynamic changes to the menu after the method is called will not be reflected
  * in the native menu.</p>
  *
- * @param menu the new pop up menu
+ * @param menuWrapper the new pop up menu
  *
  * @exception IllegalArgumentException <ul>
  *    <li>ERROR_MENU_NOT_POP_UP - the menu is not a pop up menu</li>
@@ -275,8 +280,10 @@ void releaseWidget () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public void setMenu (NativeMenu menu) {
+@Override
+public void setMenu (Menu menuWrapper) {
 	checkWidget ();
+	NativeMenu menu = Widget.checkNative(menuWrapper);
 	if (menu != null) {
 		if (menu.isDisposed()) error(SWT.ERROR_INVALID_ARGUMENT);
 		if ((menu.style & SWT.POP_UP) == 0) {
@@ -315,6 +322,7 @@ public void setMenu (NativeMenu menu) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setOverlayImage (Image overlayImage) {
 	checkWidget ();
 	if (overlayImage != null && overlayImage.isDisposed ()) error (SWT.ERROR_INVALID_ARGUMENT);
@@ -356,6 +364,7 @@ public void setOverlayImage (Image overlayImage) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setOverlayText (String overlayText) {
 	checkWidget ();
 	if (overlayText == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -396,6 +405,7 @@ public void setOverlayText (String overlayText) {
  *
  * #see {@link #setProgressState(int)}
  */
+@Override
 public void setProgress (int progress) {
 	checkWidget ();
 	if (shell == null) return;
@@ -446,6 +456,7 @@ public void setProgress (int progress) {
  *
  * #see {@link #setProgress(int)}
  */
+@Override
 public void setProgressState (int progressState) {
 	checkWidget ();
 	if (shell == null) return;

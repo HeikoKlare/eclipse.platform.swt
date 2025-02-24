@@ -240,7 +240,7 @@ public void clearAll (boolean all) {
  * @since 3.4
  */
 public void deselect (TreeItem item) {
-	wrappedTree.deselect(checkNative(item));
+	wrappedTree.deselect(item);
 }
 
 /**

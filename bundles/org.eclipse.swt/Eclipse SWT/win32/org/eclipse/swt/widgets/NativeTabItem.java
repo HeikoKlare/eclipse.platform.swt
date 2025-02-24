@@ -36,7 +36,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeTabItem extends NativeItem {
+public abstract class NativeTabItem extends NativeItem implements ITabItem {
 	NativeTabFolder parent;
 	NativeControl control;
 	String toolTipText;
@@ -171,9 +171,10 @@ void destroyWidget () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeControl getControl () {
+@Override
+public Control getControl () {
 	checkWidget();
-	return control;
+	return control.getWrapper();
 }
 
 /**
@@ -189,13 +190,14 @@ public NativeControl getControl () {
  *
  * @since 3.4
  */
+@Override
 public Rectangle getBounds () {
 	checkWidget();
 	return DPIUtil.scaleDown(getBoundsInPixels(), getZoom());
 }
 
 Rectangle getBoundsInPixels() {
-	int index = parent.indexOf(this);
+	int index = parent.indexOf(this.getWrapper());
 	if (index == -1) return new Rectangle (0, 0, 0, 0);
 	RECT itemRect = new RECT ();
 	OS.SendMessage (parent.handle, OS.TCM_GETITEMRECT, index, itemRect);
@@ -212,9 +214,10 @@ Rectangle getBoundsInPixels() {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTabFolder getParent () {
+@Override
+public TabFolder getParent () {
 	checkWidget();
-	return parent;
+	return parent.getWrapper();
 }
 
 /**
@@ -228,6 +231,7 @@ public NativeTabFolder getParent () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public String getToolTipText () {
 	checkWidget();
 	return toolTipText;
@@ -242,7 +246,7 @@ void releaseHandle () {
 @Override
 void releaseParent () {
 	super.releaseParent ();
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == parent.getSelectionIndex ()) {
 		if (control != null) control.setVisible (false);
 	}
@@ -269,22 +273,23 @@ void releaseWidget () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public void setControl (NativeControl control) {
+@Override
+public void setControl (Control control) {
 	checkWidget();
 	if (control != null) {
 		if (control.isDisposed()) error (SWT.ERROR_INVALID_ARGUMENT);
-		if (control.parent != parent) error (SWT.ERROR_INVALID_PARENT);
+		if (control.getParent() != parent.getWrapper()) error (SWT.ERROR_INVALID_PARENT);
 	}
 	if (this.control != null && this.control.isDisposed ()) {
 		this.control = null;
 	}
-	NativeControl oldControl = this.control, newControl = control;
-	this.control = control;
-	int index = parent.indexOf (this), selectionIndex = parent.getSelectionIndex();
+	Control oldControl = this.control.getWrapper(), newControl = control;
+	this.control = Widget.checkNative(control);
+	int index = parent.indexOf (this.getWrapper()), selectionIndex = parent.getSelectionIndex();
 	if (index != selectionIndex) {
 		if (newControl != null) {
 			if (selectionIndex != -1) {
-				NativeControl selectedControl = parent.getItem(selectionIndex).getControl();
+				Control selectedControl = parent.getItem(selectionIndex).getControl();
 				if (selectedControl == newControl) return;
 			}
 			newControl.setVisible(false);
@@ -302,7 +307,7 @@ public void setControl (NativeControl control) {
 @Override
 public void setImage (Image image) {
 	checkWidget();
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	super.setImage (image);
 	/*
@@ -349,7 +354,7 @@ public void setText (String string) {
 	checkWidget();
 	if (string == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (string.equals (text)) return;
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	super.setText (string);
 	/*
@@ -366,7 +371,7 @@ public void setText (String string) {
 boolean updateTextDirection(int textDirection) {
 	/* AUTO is handled by super */
 	if (super.updateTextDirection(textDirection)) {
-		int index = parent.indexOf (this);
+		int index = parent.indexOf (this.getWrapper());
 		if (index != -1) {
 			if ((textDirection & SWT.RIGHT_TO_LEFT) != 0) {
 				_setText(index, RLE + text);
@@ -405,6 +410,7 @@ boolean updateTextDirection(int textDirection) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setToolTipText (String string) {
 	checkWidget();
 	toolTipText = string;

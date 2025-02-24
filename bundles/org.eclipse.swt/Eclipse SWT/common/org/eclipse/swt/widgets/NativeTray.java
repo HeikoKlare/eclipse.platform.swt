@@ -37,7 +37,7 @@ import org.eclipse.swt.*;
  * @since 3.0
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeTray extends NativeWidget {
+public abstract class NativeTray extends NativeWidget implements ITray {
 	int itemCount;
 	NativeTrayItem [] items = new NativeTrayItem [4];
 
@@ -83,6 +83,7 @@ void destroyItem (NativeTrayItem item) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeTrayItem getItem (int index) {
 	checkWidget ();
 	if (!(0 <= index && index < itemCount)) error (SWT.ERROR_INVALID_RANGE);
@@ -99,6 +100,7 @@ public NativeTrayItem getItem (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getItemCount () {
 	checkWidget ();
 	return itemCount;
@@ -120,6 +122,7 @@ public int getItemCount () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeTrayItem [] getItems () {
 	checkWidget ();
 	NativeTrayItem [] result = new NativeTrayItem [itemCount];

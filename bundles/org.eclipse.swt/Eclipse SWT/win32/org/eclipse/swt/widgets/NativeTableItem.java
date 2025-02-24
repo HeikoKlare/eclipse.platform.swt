@@ -36,7 +36,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeTableItem extends NativeItem {
+public abstract class NativeTableItem extends NativeItem implements ITableItem {
 	NativeTable parent;
 	String [] strings;
 	Image [] images;
@@ -174,6 +174,7 @@ long fontHandle (int index) {
  *
  * @since 2.0
  */
+@Override
 public Color getBackground () {
 	checkWidget ();
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
@@ -194,6 +195,7 @@ public Color getBackground () {
  *
  * @since 3.0
  */
+@Override
 public Color getBackground (int index) {
 	checkWidget ();
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
@@ -216,6 +218,7 @@ public Color getBackground (int index) {
  *
  * @since 3.2
  */
+@Override
 public Rectangle getBounds () {
 	checkWidget();
 	return DPIUtil.scaleDown(getBoundsInPixels(), getZoom());
@@ -223,7 +226,7 @@ public Rectangle getBounds () {
 
 Rectangle getBoundsInPixels () {
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
-	int itemIndex = parent.indexOf (this);
+	int itemIndex = parent.indexOf (this.getWrapper());
 	if (itemIndex == -1) return new Rectangle (0, 0, 0, 0);
 	RECT rect = getBounds (itemIndex, 0, true, false, false);
 	int width = rect.right - rect.left, height = rect.bottom - rect.top;
@@ -242,6 +245,7 @@ Rectangle getBoundsInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Rectangle getBounds (int index) {
 	checkWidget();
 	return DPIUtil.scaleDown(getBoundsInPixels(index), getZoom());
@@ -249,7 +253,7 @@ public Rectangle getBounds (int index) {
 
 Rectangle getBoundsInPixels (int index) {
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
-	int itemIndex = parent.indexOf (this);
+	int itemIndex = parent.indexOf (this.getWrapper());
 	if (itemIndex == -1) return new Rectangle (0, 0, 0, 0);
 	RECT rect = getBounds (itemIndex, index, true, true, true);
 	int width = rect.right - rect.left, height = rect.bottom - rect.top;
@@ -436,6 +440,7 @@ RECT getBounds (int row, int column, boolean getText, boolean getImage, boolean 
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getChecked () {
 	checkWidget();
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
@@ -455,6 +460,7 @@ public boolean getChecked () {
  *
  * @since 3.0
  */
+@Override
 public Font getFont () {
 	checkWidget ();
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
@@ -475,6 +481,7 @@ public Font getFont () {
  *
  * @since 3.0
  */
+@Override
 public Font getFont (int index) {
 	checkWidget ();
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
@@ -496,6 +503,7 @@ public Font getFont (int index) {
  *
  * @since 2.0
  */
+@Override
 public Color getForeground () {
 	checkWidget ();
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
@@ -517,6 +525,7 @@ public Color getForeground () {
  *
  * @since 3.0
  */
+@Override
 public Color getForeground (int index) {
 	checkWidget ();
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
@@ -538,6 +547,7 @@ public Color getForeground (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getGrayed () {
 	checkWidget();
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
@@ -564,6 +574,7 @@ public Image getImage () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Image getImage (int index) {
 	checkWidget();
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
@@ -588,6 +599,7 @@ public Image getImage (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Rectangle getImageBounds (int index) {
 	checkWidget();
 	return DPIUtil.scaleDown(getImageBoundsInPixels(index), getZoom());
@@ -595,7 +607,7 @@ public Rectangle getImageBounds (int index) {
 
 Rectangle getImageBoundsInPixels (int index) {
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
-	int itemIndex = parent.indexOf (this);
+	int itemIndex = parent.indexOf (this.getWrapper());
 	if (itemIndex == -1) return new Rectangle (0, 0, 0, 0);
 	RECT rect = getBounds (itemIndex, index, false, true, false);
 	int width = rect.right - rect.left, height = rect.bottom - rect.top;
@@ -612,6 +624,7 @@ Rectangle getImageBoundsInPixels (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getImageIndent () {
 	checkWidget();
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
@@ -636,9 +649,10 @@ String getNameText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTable getParent () {
+@Override
+public Table getParent () {
 	checkWidget();
-	return parent;
+	return parent.getWrapper();
 }
 
 @Override
@@ -660,6 +674,7 @@ public String getText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public String getText (int index) {
 	checkWidget();
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
@@ -689,6 +704,7 @@ public String getText (int index) {
  *
  * @since 3.3
  */
+@Override
 public Rectangle getTextBounds (int index) {
 	checkWidget();
 	return DPIUtil.scaleDown(getTextBoundsInPixels(index), getZoom());
@@ -696,7 +712,7 @@ public Rectangle getTextBounds (int index) {
 
 Rectangle getTextBoundsInPixels (int index) {
 	if (!parent.checkData (this, true)) error (SWT.ERROR_WIDGET_DISPOSED);
-	int itemIndex = parent.indexOf (this);
+	int itemIndex = parent.indexOf (this.getWrapper());
 	if (itemIndex == -1) return new Rectangle (0, 0, 0, 0);
 	RECT rect = getBounds (itemIndex, index, true, false, true);
 	rect.left += 2;
@@ -712,7 +728,7 @@ void redraw () {
 	if (parent.currentItem == this || !parent.getDrawing ()) return;
 	long hwnd = parent.handle;
 	if (!OS.IsWindowVisible (hwnd)) return;
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	OS.SendMessage (hwnd, OS.LVM_REDRAWITEMS, index, index);
 }
@@ -721,7 +737,7 @@ void redraw (int column, boolean drawText, boolean drawImage) {
 	if (parent.currentItem == this || !parent.getDrawing ()) return;
 	long hwnd = parent.handle;
 	if (!OS.IsWindowVisible (hwnd)) return;
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	RECT rect = getBounds (index, column, drawText, drawImage, true);
 	OS.InvalidateRect (hwnd, rect, true);
@@ -759,6 +775,7 @@ void releaseWidget () {
  *
  * @since 2.0
  */
+@Override
 public void setBackground (Color color) {
 	checkWidget ();
 	if (color != null && color.isDisposed ()) {
@@ -793,6 +810,7 @@ public void setBackground (Color color) {
  *
  * @since 3.0
  */
+@Override
 public void setBackground (int index, Color color) {
 	checkWidget ();
 	if (color != null && color.isDisposed ()) {
@@ -828,6 +846,7 @@ public void setBackground (int index, Color color) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setChecked (boolean checked) {
 	checkWidget();
 	if ((parent.style & SWT.CHECK) == 0) return;
@@ -864,6 +883,7 @@ void setChecked (boolean checked, boolean notify) {
  *
  * @since 3.0
  */
+@Override
 public void setFont (Font font){
 	checkWidget ();
 	if (font != null && font.isDisposed ()) {
@@ -889,7 +909,7 @@ public void setFont (Font font){
 	* cached bounds.
 	*/
 	if ((parent.style & SWT.VIRTUAL) == 0 && cached) {
-		int itemIndex = parent.indexOf (this);
+		int itemIndex = parent.indexOf (this.getWrapper());
 		if (itemIndex != -1) {
 			long hwnd = parent.handle;
 			LVITEM lvItem = new LVITEM ();
@@ -923,6 +943,7 @@ public void setFont (Font font){
  *
  * @since 3.0
  */
+@Override
 public void setFont (int index, Font font) {
 	checkWidget ();
 	if (font != null && font.isDisposed ()) {
@@ -953,7 +974,7 @@ public void setFont (int index, Font font) {
 		* cached bounds.
 		*/
 		if ((parent.style & SWT.VIRTUAL) == 0 && cached) {
-			int itemIndex = parent.indexOf (this);
+			int itemIndex = parent.indexOf (this.getWrapper());
 			if (itemIndex != -1) {
 				long hwnd = parent.handle;
 				LVITEM lvItem = new LVITEM ();
@@ -986,6 +1007,7 @@ public void setFont (int index, Font font) {
  *
  * @since 2.0
  */
+@Override
 public void setForeground (Color color){
 	checkWidget ();
 	if (color != null && color.isDisposed ()) {
@@ -1020,6 +1042,7 @@ public void setForeground (Color color){
  *
  * @since 3.0
  */
+@Override
 public void setForeground (int index, Color color){
 	checkWidget ();
 	if (color != null && color.isDisposed ()) {
@@ -1055,6 +1078,7 @@ public void setForeground (int index, Color color){
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setGrayed (boolean grayed) {
 	checkWidget();
 	if ((parent.style & SWT.CHECK) == 0) return;
@@ -1078,6 +1102,7 @@ public void setGrayed (boolean grayed) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setImage (Image [] images) {
 	checkWidget();
 	if (images == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -1100,6 +1125,7 @@ public void setImage (Image [] images) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setImage (int index, Image image) {
 	checkWidget();
 	if (image != null && image.isDisposed ()) {
@@ -1154,6 +1180,7 @@ public void setImage (Image image) {
  *
  * @deprecated this functionality is not supported on most platforms
  */
+@Override
 @Deprecated
 public void setImageIndent (int indent) {
 	checkWidget();
@@ -1163,7 +1190,7 @@ public void setImageIndent (int indent) {
 	if ((parent.style & SWT.VIRTUAL) != 0) {
 		cached = true;
 	} else {
-		int index = parent.indexOf (this);
+		int index = parent.indexOf (this.getWrapper());
 		if (index != -1) {
 			long hwnd = parent.handle;
 			LVITEM lvItem = new LVITEM ();
@@ -1193,6 +1220,7 @@ public void setImageIndent (int indent) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setText (String [] strings) {
 	checkWidget();
 	if (strings == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -1219,6 +1247,7 @@ public void setText (String [] strings) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setText (int index, String string) {
 	checkWidget();
 	if (string == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -1250,7 +1279,7 @@ public void setText (int index, String string) {
 		* cached bounds.
 		*/
 		if ((parent.style & SWT.VIRTUAL) == 0 && cached) {
-			int itemIndex = parent.indexOf (this);
+			int itemIndex = parent.indexOf (this.getWrapper());
 			if (itemIndex != -1) {
 				long hwnd = parent.handle;
 				LVITEM lvItem = new LVITEM ();

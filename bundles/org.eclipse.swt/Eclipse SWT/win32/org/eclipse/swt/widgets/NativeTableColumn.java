@@ -38,7 +38,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeTableColumn extends NativeItem {
+public abstract class NativeTableColumn extends NativeItem implements ITableColumn {
 	NativeTable parent;
 	boolean resizable, moveable;
 	String toolTipText;
@@ -150,6 +150,7 @@ protected NativeTableColumn (NativeTable parent, int style, int index) {
  * @see ControlListener
  * @see #removeControlListener
  */
+@Override
 public void addControlListener(ControlListener listener) {
 	addTypedListener(listener, SWT.Resize, SWT.Move);
 }
@@ -178,6 +179,7 @@ public void addControlListener(ControlListener listener) {
  * @see #removeSelectionListener
  * @see SelectionEvent
  */
+@Override
 public void addSelectionListener (SelectionListener listener) {
 	addTypedListener(listener, SWT.Selection, SWT.DefaultSelection);
 }
@@ -209,6 +211,7 @@ void destroyWidget () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getAlignment () {
 	checkWidget ();
 	if ((style & SWT.LEFT) != 0) return SWT.LEFT;
@@ -232,9 +235,10 @@ String getNameText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeTable getParent () {
+@Override
+public Table getParent () {
 	checkWidget ();
-	return parent;
+	return parent.getWrapper();
 }
 
 /**
@@ -257,6 +261,7 @@ public NativeTable getParent () {
  *
  * @since 3.1
  */
+@Override
 public boolean getMoveable () {
 	checkWidget ();
 	return moveable;
@@ -274,6 +279,7 @@ public boolean getMoveable () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getResizable () {
 	checkWidget ();
 	return resizable;
@@ -292,6 +298,7 @@ public boolean getResizable () {
  *
  * @since 3.2
  */
+@Override
 public String getToolTipText () {
 	checkWidget();
 	return toolTipText;
@@ -307,13 +314,14 @@ public String getToolTipText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getWidth () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getWidthInPixels(), getZoom());
 }
 
 int getWidthInPixels () {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return 0;
 	long hwnd = parent.handle;
 	return (int)OS.SendMessage (hwnd, OS.LVM_GETCOLUMNWIDTH, index, 0);
@@ -398,9 +406,10 @@ private int calcAutoWidth(int index, boolean withHeader) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void pack () {
 	checkWidget ();
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	long hwnd = parent.handle;
 	int oldWidth = (int)OS.SendMessage (hwnd, OS.LVM_GETCOLUMNWIDTH, index, 0);
@@ -491,7 +500,7 @@ public void pack () {
 		sendEvent (SWT.Resize);
 		if (isDisposed ()) return;
 		boolean moved = false;
-		NativeTableColumn [] columns = parent.getColumns ();
+		NativeTableColumn [] columns = parent.getNativeColumns ();
 		for (int columnindex : parent.getColumnOrder ()) {
 			NativeTableColumn column = columns [columnindex];
 			if (moved && !column.isDisposed ()) {
@@ -534,6 +543,7 @@ void releaseParent () {
  * @see ControlListener
  * @see #addControlListener
  */
+@Override
 public void removeControlListener (ControlListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -559,6 +569,7 @@ public void removeControlListener (ControlListener listener) {
  * @see SelectionListener
  * @see #addSelectionListener
  */
+@Override
 public void removeSelectionListener(SelectionListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -582,10 +593,11 @@ public void removeSelectionListener(SelectionListener listener) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setAlignment (int alignment) {
 	checkWidget ();
 	if ((alignment & (SWT.LEFT | SWT.RIGHT | SWT.CENTER)) == 0) return;
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1 || index == 0) return;
 	style &= ~(SWT.LEFT | SWT.RIGHT | SWT.CENTER);
 	style |= alignment & (SWT.LEFT | SWT.RIGHT | SWT.CENTER);
@@ -632,7 +644,7 @@ public void setImage (Image image) {
 }
 
 void setImage (Image image, boolean sort, boolean right) {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	long hwnd = parent.handle;
 	LVCOLUMN lvColumn = new LVCOLUMN ();
@@ -670,6 +682,7 @@ void setImage (Image image, boolean sort, boolean right) {
  *
  * @since 3.1
  */
+@Override
 public void setMoveable (boolean moveable) {
 	checkWidget ();
 	this.moveable = moveable;
@@ -690,13 +703,14 @@ public void setMoveable (boolean moveable) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setResizable (boolean resizable) {
 	checkWidget ();
 	this.resizable = resizable;
 }
 
 void setSortDirection (int direction) {
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	long hwnd = parent.handle;
 	long hwndHeader = OS.SendMessage (hwnd, OS.LVM_GETHEADER, 0, 0);
@@ -770,7 +784,7 @@ public void setText (String string) {
 	checkWidget ();
 	if (string == null) error (SWT.ERROR_NULL_ARGUMENT);
 	if (string.equals (text)) return;
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	super.setText (string);
 
@@ -832,6 +846,7 @@ public void setText (String string) {
  *
  * @since 3.2
  */
+@Override
 public void setToolTipText (String string) {
 	checkWidget();
 	toolTipText = string;
@@ -852,6 +867,7 @@ public void setToolTipText (String string) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setWidth (int width) {
 	checkWidget ();
 	setWidthInPixels(DPIUtil.scaleUp(width, getZoom()));
@@ -859,7 +875,7 @@ public void setWidth (int width) {
 
 void setWidthInPixels (int width) {
 	if (width < 0) return;
-	int index = parent.indexOf (this);
+	int index = parent.indexOf (this.getWrapper());
 	if (index == -1) return;
 	long hwnd = parent.handle;
 	if (width != (int)OS.SendMessage (hwnd, OS.LVM_GETCOLUMNWIDTH, index, 0)) {
@@ -891,7 +907,7 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	if (!(Widget.checkNative(widget) instanceof NativeTableColumn tableColumn)) {
 		return;
 	}
-	NativeTable table = tableColumn.getParent();
+	NativeTable table = tableColumn.parent;
 	boolean ignoreColumnResize = table.ignoreColumnResize;
 	table.ignoreColumnResize = true;
 	final int newColumnWidth = Math.round(tableColumn.getWidthInPixels() * scalingFactor);

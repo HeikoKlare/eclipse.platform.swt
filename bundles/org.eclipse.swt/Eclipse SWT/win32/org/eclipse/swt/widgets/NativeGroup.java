@@ -43,7 +43,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeGroup extends NativeComposite {
+public abstract class NativeGroup extends NativeComposite implements IGroup {
 	String text = "";
 	static final int CLIENT_INSET = 3;
 	static final long GroupProc;
@@ -276,6 +276,7 @@ String getNameText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public String getText () {
 	checkWidget ();
 	return text;
@@ -404,6 +405,7 @@ public void setFont (Font font) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setText (String string) {
 	checkWidget ();
 	if (string == null) error (SWT.ERROR_NULL_ARGUMENT);

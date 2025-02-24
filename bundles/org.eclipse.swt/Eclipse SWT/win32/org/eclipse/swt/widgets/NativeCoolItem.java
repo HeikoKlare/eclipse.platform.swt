@@ -37,7 +37,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeCoolItem extends NativeItem {
+public abstract class NativeCoolItem extends NativeItem implements ICoolItem {
 	NativeCoolBar parent;
 	NativeControl control;
 	int id;
@@ -147,6 +147,7 @@ protected NativeCoolItem (NativeCoolBar parent, int style, int index) {
  *
  * @since 2.0
  */
+@Override
 public void addSelectionListener(SelectionListener listener) {
 	addTypedListener(listener, SWT.Selection, SWT.DefaultSelection);
 }
@@ -183,6 +184,7 @@ public void checkSubclass () {
  * @see NativeScrollable#computeTrim
  * @see NativeScrollable#getClientArea
  */
+@Override
 public Point computeSize (int wHint, int hHint) {
 	checkWidget ();
 	int zoom = getZoom();
@@ -221,6 +223,7 @@ void destroyWidget () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Rectangle getBounds () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getBoundsInPixels(), getZoom());
@@ -285,6 +288,7 @@ Rectangle getClientArea () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeControl getControl () {
 	checkWidget ();
 	return control;
@@ -300,6 +304,7 @@ public NativeControl getControl () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeCoolBar getParent () {
 	checkWidget ();
 	return parent;
@@ -328,6 +333,7 @@ void releaseHandle () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setControl (NativeControl control) {
 	checkWidget ();
 	if (control != null) {
@@ -381,6 +387,7 @@ public void setControl (NativeControl control) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Point getPreferredSize () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getPreferredSizeInPixels(), getZoom());
@@ -412,6 +419,7 @@ Point getPreferredSizeInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setPreferredSize (int width, int height) {
 	checkWidget ();
 	int zoom = getZoom();
@@ -461,6 +469,7 @@ void setPreferredSizeInPixels (int width, int height) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setPreferredSize (Point size) {
 	checkWidget ();
 	if (size == null) error(SWT.ERROR_NULL_ARGUMENT);
@@ -481,6 +490,7 @@ public void setPreferredSize (Point size) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Point getSize () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getSizeInPixels(), getZoom());
@@ -523,6 +533,7 @@ Point getSizeInPixels() {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setSize (int width, int height) {
 	checkWidget ();
 	int zoom = getZoom();
@@ -589,6 +600,7 @@ void setSizeInPixels (int width, int height) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setSize (Point size) {
 	checkWidget ();
 	if (size == null) error(SWT.ERROR_NULL_ARGUMENT);
@@ -609,6 +621,7 @@ public void setSize (Point size) {
  *
  * @since 2.0
  */
+@Override
 public Point getMinimumSize () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getMinimumSizeInPixels(), getZoom());
@@ -642,6 +655,7 @@ Point getMinimumSizeInPixels () {
  *
  * @since 2.0
  */
+@Override
 public void setMinimumSize (int width, int height) {
 	checkWidget ();
 	int zoom = getZoom();
@@ -692,6 +706,7 @@ void setMinimumSizeInPixels (int width, int height) {
  *
  * @since 2.0
  */
+@Override
 public void setMinimumSize (Point size) {
 	checkWidget ();
 	if (size == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -743,6 +758,7 @@ void setWrap(boolean wrap) {
  *
  * @since 2.0
  */
+@Override
 public void removeSelectionListener(SelectionListener listener) {
 	checkWidget();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);

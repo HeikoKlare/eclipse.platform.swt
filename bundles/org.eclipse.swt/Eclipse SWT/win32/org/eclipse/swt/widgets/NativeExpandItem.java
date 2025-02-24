@@ -37,7 +37,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.2
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeExpandItem extends NativeItem {
+public abstract class NativeExpandItem extends NativeItem implements IExpandItem {
 	NativeExpandBar parent;
 	NativeControl control;
 	boolean expanded, hover;
@@ -273,6 +273,7 @@ void destroyWidget () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeControl getControl () {
 	checkWidget ();
 	return control;
@@ -289,6 +290,7 @@ public NativeControl getControl () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getExpanded () {
 	checkWidget ();
 	return expanded;
@@ -304,6 +306,7 @@ public boolean getExpanded () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getHeaderHeight () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getHeaderHeightInPixels(), getZoom());
@@ -329,6 +332,7 @@ int getHeaderHeightInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getHeight () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getHeightInPixels(), getZoom());
@@ -348,6 +352,7 @@ int getHeightInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeExpandBar getParent () {
 	checkWidget ();
 	return parent;
@@ -447,6 +452,7 @@ void setBoundsInPixels (int x, int y, int width, int height, boolean move, boole
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setControl (NativeControl control) {
 	checkWidget ();
 	if (control != null) {
@@ -477,6 +483,7 @@ public void setControl (NativeControl control) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setExpanded (boolean expanded) {
 	checkWidget ();
 	this.expanded = expanded;
@@ -494,6 +501,7 @@ public void setExpanded (boolean expanded) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setHeight (int height) {
 	checkWidget ();
 	setHeightInPixels(DPIUtil.scaleUp(height, getZoom()));
@@ -502,7 +510,7 @@ public void setHeight (int height) {
 void setHeightInPixels (int height) {
 	if (height < 0) return;
 	setBoundsInPixels (0, 0, width, height, false, true);
-	if (expanded) parent.layoutItems (parent.indexOf (this) + 1, true);
+	if (expanded) parent.layoutItems (parent.indexOf (this.getWrapper()) + 1, true);
 }
 
 @Override
@@ -517,7 +525,7 @@ public void setImage (Image image) {
 		imageHeight = imageWidth = 0;
 	}
 	if (oldImageHeight != imageHeight) {
-		parent.layoutItems (parent.indexOf (this), true);
+		parent.layoutItems (parent.indexOf (this.getWrapper()), true);
 	} else {
 		redraw (true);
 	}

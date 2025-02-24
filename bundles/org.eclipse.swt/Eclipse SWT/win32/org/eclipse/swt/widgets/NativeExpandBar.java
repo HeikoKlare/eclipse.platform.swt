@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.swt.widgets;
 
+import java.util.*;
+
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
@@ -47,7 +49,7 @@ import org.eclipse.swt.internal.win32.*;
  * @since 3.2
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeExpandBar extends NativeComposite {
+public abstract class NativeExpandBar extends NativeComposite implements IExpandBar {
 	NativeExpandItem[] items;
 	int itemCount;
 	NativeExpandItem focusItem;
@@ -110,6 +112,7 @@ protected NativeExpandBar (NativeComposite parent, int style) {
  * @see ExpandListener
  * @see #removeExpandListener
  */
+@Override
 public void addExpandListener (ExpandListener listener) {
 	addTypedListener(listener, SWT.Expand, SWT.Collapse);
 }
@@ -335,10 +338,11 @@ int getBandHeight () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeExpandItem getItem (int index) {
+@Override
+public ExpandItem getItem (int index) {
 	checkWidget ();
 	if (!(0 <= index && index < itemCount)) error (SWT.ERROR_INVALID_RANGE);
-	return items [index];
+	return items [index].getWrapper();
 }
 
 /**
@@ -351,6 +355,7 @@ public NativeExpandItem getItem (int index) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getItemCount () {
 	checkWidget ();
 	return itemCount;
@@ -372,11 +377,12 @@ public int getItemCount () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public NativeExpandItem [] getItems () {
+@Override
+public ExpandItem [] getItems () {
 	checkWidget ();
 	NativeExpandItem [] result = new NativeExpandItem [itemCount];
 	System.arraycopy (items, 0, result, 0, itemCount);
-	return result;
+	return Arrays.stream(result).map(NativeExpandItem::getWrapper).toArray(ExpandItem[]::new);
 }
 
 /**
@@ -389,6 +395,7 @@ public NativeExpandItem [] getItems () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getSpacing () {
 	checkWidget ();
 	return DPIUtil.scaleDown(getSpacingInPixels (), getZoom());
@@ -416,11 +423,12 @@ int getSpacingInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
-public int indexOf (NativeExpandItem item) {
+@Override
+public int indexOf (ExpandItem item) {
 	checkWidget ();
 	if (item == null) error (SWT.ERROR_NULL_ARGUMENT);
 	for (int i = 0; i < itemCount; i++) {
-		if (items [i] == item) return i;
+		if (items [i].getWrapper() == item) return i;
 	}
 	return -1;
 }
@@ -481,6 +489,7 @@ void releaseChildren (boolean destroy) {
  * @see ExpandListener
  * @see #addExpandListener
  */
+@Override
 public void removeExpandListener (ExpandListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -559,6 +568,7 @@ void setScrollbar () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setSpacing (int spacing) {
 	checkWidget ();
 	setSpacingInPixels(DPIUtil.scaleUp(spacing, getZoom()));
@@ -598,7 +608,7 @@ void showItem (NativeExpandItem item) {
 		control.setVisible (item.expanded);
 	}
 	item.redraw (true);
-	int index = indexOf (item);
+	int index = indexOf (item.getWrapper());
 	layoutItems (index + 1, true);
 }
 
@@ -663,7 +673,7 @@ LRESULT WM_KEYDOWN (long wParam, long lParam) {
 			showItem (focusItem);
 			return LRESULT.ZERO;
 		case OS.VK_UP: {
-			int focusIndex = indexOf (focusItem);
+			int focusIndex = indexOf (focusItem.getWrapper());
 			if (focusIndex > 0) {
 				focusItem.redraw (true);
 				focusItem = items [focusIndex - 1];
@@ -674,7 +684,7 @@ LRESULT WM_KEYDOWN (long wParam, long lParam) {
 			break;
 		}
 		case OS.VK_DOWN: {
-			int focusIndex = indexOf (focusItem);
+			int focusIndex = indexOf (focusItem.getWrapper());
 			if (focusIndex < itemCount - 1) {
 				focusItem.redraw (true);
 				focusItem = items [focusIndex + 1];
@@ -875,8 +885,8 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 	if (!(Widget.checkNative(widget) instanceof NativeExpandBar expandBar)) {
 		return;
 	}
-	for (NativeExpandItem item : expandBar.getItems()) {
-		DPIZoomChangeRegistry.applyChange(item.getWrapper(), newZoom, scalingFactor);
+	for (ExpandItem item : expandBar.getItems()) {
+		DPIZoomChangeRegistry.applyChange(item, newZoom, scalingFactor);
 	}
 	expandBar.layoutItems(0, true);
 	expandBar.redraw();

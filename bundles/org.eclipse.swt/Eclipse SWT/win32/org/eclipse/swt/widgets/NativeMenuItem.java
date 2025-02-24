@@ -41,7 +41,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeMenuItem extends NativeItem {
+public abstract class NativeMenuItem extends NativeItem implements IMenuItem {
 	NativeMenu parent, menu;
 	long hBitmap;
 	int id, accelerator, userId;
@@ -160,6 +160,7 @@ protected NativeMenuItem (NativeMenu parent, int style, int index) {
  * @see ArmListener
  * @see #removeArmListener
  */
+@Override
 public void addArmListener (ArmListener listener) {
 	addTypedListener(listener, SWT.Arm);
 }
@@ -183,6 +184,7 @@ public void addArmListener (ArmListener listener) {
  * @see HelpListener
  * @see #removeHelpListener
  */
+@Override
 public void addHelpListener (HelpListener listener) {
 	addTypedListener(listener, SWT.Help);
 }
@@ -217,6 +219,7 @@ public void addHelpListener (HelpListener listener) {
  * @see #removeSelectionListener
  * @see SelectionEvent
  */
+@Override
 public void addSelectionListener (SelectionListener listener) {
 	addTypedListener(listener, SWT.Selection, SWT.DefaultSelection);
 }
@@ -296,6 +299,7 @@ void fixMenus (NativeDecorations newParent) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public int getAccelerator () {
 	checkWidget ();
 	return accelerator;
@@ -372,6 +376,7 @@ public int getAccelerator () {
  *
  * @see #isEnabled
  */
+@Override
 public boolean getEnabled () {
 	checkWidget ();
 	/*
@@ -404,6 +409,7 @@ public boolean getEnabled () {
  *
  * @since 3.7
  */
+@Override
 public int getID () {
 	checkWidget();
 	return userId;
@@ -445,6 +451,7 @@ String getNameText () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeMenu getParent () {
 	checkWidget ();
 	return parent;
@@ -464,6 +471,7 @@ public NativeMenu getParent () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getSelection () {
 	checkWidget ();
 	if ((style & (SWT.CHECK | SWT.RADIO)) == 0) return false;
@@ -488,6 +496,7 @@ public boolean getSelection () {
  *
  * @since 3.104
  */
+@Override
 public String getToolTipText () {
 	checkWidget();
 	return (itemToolTip == null || itemToolTip.isDisposed()) ? null : itemToolTip.getMessage();
@@ -513,6 +522,7 @@ void hideToolTip () {
  *
  * @see #getEnabled
  */
+@Override
 public boolean isEnabled () {
 	return getEnabled () && parent.isEnabled ();
 }
@@ -574,6 +584,7 @@ void releaseWidget () {
  * @see ArmListener
  * @see #addArmListener
  */
+@Override
 public void removeArmListener (ArmListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -597,6 +608,7 @@ public void removeArmListener (ArmListener listener) {
  * @see HelpListener
  * @see #addHelpListener
  */
+@Override
 public void removeHelpListener (HelpListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -620,6 +632,7 @@ public void removeHelpListener (HelpListener listener) {
  * @see SelectionListener
  * @see #addSelectionListener
  */
+@Override
 public void removeSelectionListener (SelectionListener listener) {
 	checkWidget ();
 	if (listener == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -663,6 +676,7 @@ void selectRadio () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setAccelerator (int accelerator) {
 	checkWidget ();
 	if (this.accelerator == accelerator) return;
@@ -683,6 +697,7 @@ public void setAccelerator (int accelerator) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setEnabled (boolean enabled) {
 	checkWidget ();
 	/*
@@ -748,6 +763,7 @@ public void setEnabled (boolean enabled) {
  *
  * @since 3.7
  */
+@Override
 public void setID (int id) {
 	checkWidget();
 	if (id < 0) error(SWT.ERROR_INVALID_ARGUMENT);
@@ -819,6 +835,7 @@ public void setImage (Image image) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setMenu (NativeMenu menu) {
 	checkWidget ();
 
@@ -931,6 +948,7 @@ void setOrientation (int orientation) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setSelection (boolean selected) {
 	checkWidget ();
 	if ((style & (SWT.CHECK | SWT.RADIO)) == 0) return;
@@ -1060,6 +1078,7 @@ public void setText (String string) {
  *
  * @since 3.104
  */
+@Override
 public void setToolTipText (String toolTip) {
 	checkWidget ();
 

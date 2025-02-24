@@ -37,7 +37,7 @@ import org.eclipse.swt.internal.win32.*;
  * @see <a href="http://www.eclipse.org/swt/">Sample code and further information</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class NativeCaret extends NativeWidget {
+public abstract class NativeCaret extends NativeWidget implements ICaret {
 	/** The Caret last updated on the OS-level */
 	private static NativeCaret currentCaret;
 
@@ -119,6 +119,7 @@ long defaultFont () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Rectangle getBounds () {
 	checkWidget();
 	return DPIUtil.scaleDown(getBoundsInPixels(), getZoom());
@@ -148,6 +149,7 @@ Rectangle getBoundsInPixels () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Font getFont () {
 	checkWidget();
 	if (font == null) {
@@ -167,6 +169,7 @@ public Font getFont () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Image getImage () {
 	checkWidget();
 	return image;
@@ -183,6 +186,7 @@ public Image getImage () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Point getLocation () {
 	checkWidget();
 	return new Point (x, y);
@@ -198,6 +202,7 @@ public Point getLocation () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public NativeCanvas getParent () {
 	checkWidget();
 	return parent;
@@ -213,6 +218,7 @@ public NativeCanvas getParent () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public Point getSize () {
 	checkWidget();
 	return DPIUtil.scaleDown(getSizeInPixels(), getZoom());
@@ -265,6 +271,7 @@ private int getYInPixels() {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public boolean getVisible () {
 	checkWidget();
 	return isVisible;
@@ -292,6 +299,7 @@ boolean isFocusCaret () {
  *
  * @see #getVisible
  */
+@Override
 public boolean isVisible () {
 	checkWidget();
 	return isVisible && parent.isVisible () && hasFocus ();
@@ -405,6 +413,7 @@ void restoreIMEFont () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setBounds (int x, int y, int width, int height) {
 	checkWidget();
 	boolean samePosition = this.x == x && this.y == y;
@@ -436,6 +445,7 @@ public void setBounds (int x, int y, int width, int height) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setBounds (Rectangle rect) {
 	if (rect == null) error (SWT.ERROR_NULL_ARGUMENT);
 	setBounds(rect.x, rect.y, rect.width, rect.height);
@@ -473,6 +483,7 @@ void setFocus () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setFont (Font font) {
 	checkWidget();
 	if (font != null && font.isDisposed ()) {
@@ -498,6 +509,7 @@ public void setFont (Font font) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setImage (Image image) {
 	checkWidget();
 	if (image != null && image.isDisposed ()) {
@@ -540,6 +552,7 @@ void setIMEFont () {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setLocation (int x, int y) {
 	checkWidget();
 	if (this.x == x && this.y == y && isCurrentCaret())  return;
@@ -568,6 +581,7 @@ private void setCurrentCaret(NativeCaret caret) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setLocation (Point location) {
 	checkWidget();
 	if (location == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -585,6 +599,7 @@ public void setLocation (Point location) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setSize (int width, int height) {
 	checkWidget();
 	if (this.width == width && this.height == height && isCurrentCaret()) return;
@@ -607,6 +622,7 @@ public void setSize (int width, int height) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setSize (Point size) {
 	checkWidget();
 	if (size == null) error (SWT.ERROR_NULL_ARGUMENT);
@@ -629,6 +645,7 @@ public void setSize (Point size) {
  *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
  * </ul>
  */
+@Override
 public void setVisible (boolean visible) {
 	checkWidget();
 	if (visible == isVisible) return;
