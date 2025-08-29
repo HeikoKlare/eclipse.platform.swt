@@ -868,43 +868,46 @@ private void setImages (Image image, Image [] images) {
 	smallImage = largeImage = null;
 	long hSmallIcon = 0, hLargeIcon = 0;
 	Image smallIcon = null, largeIcon = null;
+	int smallIconWidthAt100 = getSystemMetrics(OS.SM_CXSMICON);
+	int largeIconWidthAt100 = getSystemMetrics(OS.SM_CXICON);
+
 	if (image != null) {
 		smallIcon = largeIcon = image;
 	} else {
 		if (images != null && images.length > 0) {
 			int depth = display.getIconDepth();
-
 			ImageData[] imageData = getImageDataAt100(images);
 
-			int smallIconWidthAt100 = getSystemMetrics(OS.SM_CXSMICON);
 			int smallIconIndex = findIndexOfClosest(imageData, smallIconWidthAt100, depth);
 			smallIcon = images[smallIconIndex];
 
-			int largeIconWidthAt100 = getSystemMetrics(OS.SM_CXICON);
 			int largeIconIndex = findIndexOfClosest(imageData, largeIconWidthAt100, depth);
 			largeIcon = images[largeIconIndex];
 		}
 	}
 	if (smallIcon != null) {
+		int smallIconZoom = smallIconWidthAt100 * 100 / smallIcon.getBounds().width;
+		System.out.println(smallIconZoom);
 		switch (smallIcon.type) {
 			case SWT.BITMAP:
-				smallImage = Display.createIcon (smallIcon, getZoom());
-				hSmallIcon = Image.win32_getHandle(smallImage, getZoom());
+				smallImage = Display.createIcon (smallIcon, smallIconZoom);
+				hSmallIcon = Image.win32_getHandle(smallImage, smallIconZoom);
 				break;
 			case SWT.ICON:
-				hSmallIcon = Image.win32_getHandle(smallIcon, getZoom());
+				hSmallIcon = Image.win32_getHandle(smallIcon, smallIconZoom);
 				break;
 		}
 	}
 	OS.SendMessage (handle, OS.WM_SETICON, OS.ICON_SMALL, hSmallIcon);
 	if (largeIcon != null) {
+		int largeIconZoom = largeIconWidthAt100 * 100 / largeIcon.getBounds().width;
 		switch (largeIcon.type) {
 			case SWT.BITMAP:
-				largeImage = Display.createIcon (largeIcon, getZoom());
-				hLargeIcon = Image.win32_getHandle(largeImage, getZoom());
+				largeImage = Display.createIcon (largeIcon, largeIconZoom);
+				hLargeIcon = Image.win32_getHandle(largeImage, largeIconZoom);
 				break;
 			case SWT.ICON:
-				hLargeIcon = Image.win32_getHandle(largeIcon, getZoom());
+				hLargeIcon = Image.win32_getHandle(largeIcon, largeIconZoom);
 				break;
 		}
 	}
@@ -1705,6 +1708,14 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 		return;
 	}
 
+	DPIZoomChangeRegistry.applyChange(decorations.getMenuBar(), newZoom, scalingFactor);
+
+	if (decorations.menus != null) {
+		for (Menu menu : decorations.menus) {
+			DPIZoomChangeRegistry.applyChange(menu, newZoom, scalingFactor);
+		}
+	}
+
 	Image image = decorations.getImage();
 	if (image != null) {
 		decorations.setImage(image);
@@ -1715,12 +1726,5 @@ private static void handleDPIChange(Widget widget, int newZoom, float scalingFac
 		decorations.setImages(images);
 	}
 
-	DPIZoomChangeRegistry.applyChange(decorations.getMenuBar(), newZoom, scalingFactor);
-
-	if (decorations.menus != null) {
-		for (Menu menu : decorations.menus) {
-			DPIZoomChangeRegistry.applyChange(menu, newZoom, scalingFactor);
-		}
-	}
 }
 }
