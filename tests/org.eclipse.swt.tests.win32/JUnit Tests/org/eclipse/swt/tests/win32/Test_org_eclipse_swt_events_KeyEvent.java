@@ -14,6 +14,8 @@
 package org.eclipse.swt.tests.win32;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.internal.win32.INPUT;
+import org.eclipse.swt.internal.win32.MOUSEINPUT;
 import org.eclipse.swt.internal.win32.OS;
 import org.eclipse.swt.widgets.Event;
 import org.junit.jupiter.api.Disabled;
@@ -79,6 +81,11 @@ public class Test_org_eclipse_swt_events_KeyEvent extends KeyboardLayoutTest {
 						return true;
 				}
 				break;
+			case PrtScr:
+				switch (state) {
+					case ____: // Opens Snipping Tool
+					return true;
+				}
 			case _0:
 				if (state == __CS) {
 					// Windows bug. Ctrl+Shift+0 is assigned to switch to Japanese layout,
@@ -235,6 +242,8 @@ public class Test_org_eclipse_swt_events_KeyEvent extends KeyboardLayoutTest {
 			new KeyDescription(UsScan.F9,     SWT.F9,          '\0',    '\0'   ),
 			new KeyDescription(UsScan.F10,    SWT.F10,         '\0',    '\0'   ),
 			new KeyDescription(UsScan.PrtScr, SWT.PRINT_SCREEN,'\0',    '\0'   ),
+			// The repeated Esc here is necessary to ensure that the snipping tool started with PtrScr is closed again
+//			new KeyDescription(UsScan.Esc,    SWT.ESC,         SWT.ESC, SWT.ESC),
 			new KeyDescription(UsScan.Oem102, '\\',            '\\',    '|'    ),
 			new KeyDescription(UsScan.F11,    SWT.F11,         '\0',    '\0'   ),
 			new KeyDescription(UsScan.F12,    SWT.F12,         '\0',    '\0'   ),
@@ -296,6 +305,21 @@ public class Test_org_eclipse_swt_events_KeyEvent extends KeyboardLayoutTest {
 							() -> emulateScanCode(state, testKey.scanCode),
 							expectKeyUp(state, expectedChar, 0, testKey.keyCode)
 						);
+
+//						for (int i = 0; i < 20; i++) {
+//							processEvents();
+//							try {
+//								Thread.sleep(50);
+//							} catch (InterruptedException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//						}
+
+						// Snipping tool may open now, so click somewhere to close it and reactive the test shell
+//						emulateMouseClick();
+//						shell.forceActive();
+//						shell.forceFocus();
 						continue;
 					}
 
@@ -311,6 +335,16 @@ public class Test_org_eclipse_swt_events_KeyEvent extends KeyboardLayoutTest {
 				}
 			}
 		});
+	}
+
+	private void emulateMouseClick() {
+		MOUSEINPUT mouseinput = new MOUSEINPUT();
+		mouseinput.dwFlags = OS.MOUSEEVENTF_LEFTUP;
+		INPUT pInputs = new INPUT ();
+		pInputs.type = OS.INPUT_MOUSE;
+		pInputs.mi = mouseinput;
+		OS.SendInput (1, pInputs, INPUT.sizeof);
+		processEvents();
 	}
 
 	/**
