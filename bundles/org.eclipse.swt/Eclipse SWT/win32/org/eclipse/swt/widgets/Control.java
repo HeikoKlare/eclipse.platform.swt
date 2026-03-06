@@ -601,7 +601,18 @@ void checkMirrored () {
  */
 public Point computeSize (int wHint, int hHint) {
 	return computeSize(wHint, hHint, true);
-}
+} //
+
+/**
+ * @since 3.134
+ */
+public Point computeSize (Point hint, boolean changed) {
+	checkWidget ();
+	int zoom = computeBoundsZoom();
+	//We should never return a size that is to small, RoundingMode.UP ensures we at worst case report
+	//a size that is a bit too large by half a point
+	return Win32DPIUtils.pixelToPointAsSufficientlyLargeSize(computeSizeInPixels(hint, zoom, changed), zoom);
+} //
 
 /**
  * Returns the preferred size (in points) of the receiver.
@@ -638,23 +649,19 @@ public Point computeSize (int wHint, int hHint) {
  * @see "computeTrim, getClientArea for controls that implement them"
  */
 public Point computeSize (int wHint, int hHint, boolean changed){
-	checkWidget ();
-	int zoom = computeBoundsZoom();
-	//We should never return a size that is to small, RoundingMode.UP ensures we at worst case report
-	//a size that is a bit too large by half a point
-	return Win32DPIUtils.pixelToPointAsSufficientlyLargeSize(computeSizeInPixels(new Point(wHint, hHint), zoom, changed), zoom);
+	return computeSize(new Point(wHint, hHint), changed);
 }
 
 Point computeSizeInPixels (Point hintInPoints, int zoom, boolean changed) {
-	int width = DEFAULT_WIDTH;
-	int height = DEFAULT_HEIGHT;
-	Point hintInPixels = Win32DPIUtils.pointToPixelAsSufficientlyLargeSize(hintInPoints, zoom);
-	if (hintInPoints.x != SWT.DEFAULT) width = hintInPixels.x;
-	if (hintInPoints.y != SWT.DEFAULT) height = hintInPixels.y;
+	float width = DEFAULT_WIDTH;
+	float height = DEFAULT_HEIGHT;
+	Point.OfFloat hintInPixels = Point.OfFloat.from(Win32DPIUtils.pointToPixelAsSufficientlyLargeSize(hintInPoints, zoom));
+	if (hintInPoints.x != SWT.DEFAULT) width = hintInPixels.getX();
+	if (hintInPoints.y != SWT.DEFAULT) height = hintInPixels.getY();
 	int border = getBorderWidthInPixels ();
 	width += border * 2;
 	height += border * 2;
-	return new Point (width, height);
+	return new Point.OfFloat (width, height);
 }
 
 Widget computeTabGroup () {

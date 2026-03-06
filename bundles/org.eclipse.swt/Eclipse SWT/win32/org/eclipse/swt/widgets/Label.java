@@ -133,8 +133,9 @@ static int checkStyle (int style) {
 @Override
 Point computeSizeInPixels (Point hintInPoints, int zoom, boolean changed) {
 	checkWidget ();
-	Point hintInPixels = Win32DPIUtils.pointToPixelAsSufficientlyLargeSize(hintInPoints, zoom);
-	int width = 0, height = 0, border = getBorderWidthInPixels ();
+	Point.OfFloat hintInPixels = Point.OfFloat.from(Win32DPIUtils.pointToPixelAsSufficientlyLargeSize(hintInPoints, zoom));
+	float width = 0, height = 0;
+	int border = getBorderWidthInPixels ();
 	if ((style & SWT.SEPARATOR) != 0) {
 		int lineWidth = getSystemMetrics (OS.SM_CXBORDER);
 		if ((style & SWT.HORIZONTAL) != 0) {
@@ -142,10 +143,10 @@ Point computeSizeInPixels (Point hintInPoints, int zoom, boolean changed) {
 		} else {
 			width = lineWidth * 2; height = DEFAULT_HEIGHT;
 		}
-		if (hintInPoints.x != SWT.DEFAULT) width = hintInPixels.x;
-		if (hintInPoints.y != SWT.DEFAULT) height = hintInPixels.y;
+		if (hintInPoints.x != SWT.DEFAULT) width = hintInPixels.getX();
+		if (hintInPoints.y != SWT.DEFAULT) height = hintInPixels.getY();
 		width += border * 2; height += border * 2;
-		return new Point (width, height);
+		return new Point.OfFloat (width, height);
 	}
 	if (isImageMode) {
 		Rectangle rect = Win32DPIUtils.scaleBounds(image.getBounds(), this.getAutoscalingZoom(), 100);
@@ -165,7 +166,7 @@ Point computeSizeInPixels (Point hintInPoints, int zoom, boolean changed) {
 			int flags = OS.DT_CALCRECT | OS.DT_EDITCONTROL | OS.DT_EXPANDTABS;
 			if ((style & SWT.WRAP) != 0 && hintInPoints.x != SWT.DEFAULT) {
 				flags |= OS.DT_WORDBREAK;
-				rect.right = Math.max (0, hintInPixels.x - width);
+				rect.right = Math.round(Math.max (0, hintInPixels.getX() - width));
 			}
 			char [] buffer = new char [length + 1];
 			OS.GetWindowText (handle, buffer, length + 1);
@@ -180,7 +181,7 @@ Point computeSizeInPixels (Point hintInPoints, int zoom, boolean changed) {
 	if (hintInPoints.y != SWT.DEFAULT) height = hintInPixels.y;
 	width += border * 2;
 	height += border * 2;
-	return new Point (width, height);
+	return new Point.OfFloat (width, height);
 }
 
 @Override
