@@ -2860,7 +2860,7 @@ void drawText(long gdipGraphics, String string, int x, int y, int flags, Point s
 	if (hFont != 0) oldFont = OS.SelectObject(hdc, hFont);
 	TEXTMETRIC lptm = new TEXTMETRIC();
 	OS.GetTextMetrics(hdc, lptm);
-	boolean gdip = useGDIP(hdc, chars);
+	boolean gdip = useGDIP(hdc, chars) || lptm.tmUnderlined != 0 || lptm.tmStruckOut != 0;
 	if (hFont != 0) OS.SelectObject(hdc, oldFont);
 	Gdip.Graphics_ReleaseHDC(gdipGraphics, hdc);
 	if (gdip) {
@@ -3037,6 +3037,9 @@ private RectF drawText(long gdipGraphics, char[] buffer, int start, int length, 
 private void drawTextGDIP(long gdipGraphics, String string, int x, int y, int flags, boolean draw, Point size) {
 	boolean needsBounds = !draw || (flags & SWT.DRAW_TRANSPARENT) == 0;
 	char[] buffer;
+	if ((flags & SWT.DRAW_DELIMITER) == 0) {
+		string = string.replace("\r\n", "").replace("\r", "").replace("\n", "");
+	}
 	int length = string.length();
 	if (length != 0) {
 		buffer = string.toCharArray();
