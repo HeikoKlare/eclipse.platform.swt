@@ -770,7 +770,7 @@ public void draw (GC gc, int x, int y, int selectionStart, int selectionEnd, Col
 
 private int getNativeZoom(GC gc) {
 	if (gc != null) {
-		return gc.data.nativeZoom;
+		return gc.data.zoomContext.nativeZoom();
 	}
 	return nativeZoom;
 }

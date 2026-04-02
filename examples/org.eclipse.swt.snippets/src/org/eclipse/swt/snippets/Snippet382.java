@@ -176,7 +176,7 @@ public class Snippet382 {
 				if (e.type == SWT.Paint) {
 					GC mainGC = e.gc;
 					GCData gcData = mainGC.getGCData();
-					gcData.nativeZoom = 100;
+					gcData.setNativeZoom(100);
 
 					try {
 						mainGC.drawText("--ImageFileNameProvider--", 20, 20);
@@ -230,25 +230,25 @@ public class Snippet382 {
 			}
 
 			private void drawImages(GC mainGC, GCData gcData, String text, int y, final Image image) {
-				gcData.nativeZoom = 100;
+				gcData.setNativeZoom(100);
 				mainGC.drawText(text, 0, y);
 				mainGC.drawImage(image, 50, y);
-				gcData.nativeZoom = 150;
+				gcData.setNativeZoom(150);
 				mainGC.drawImage(image, 100, (int) (y/1.5));
-				gcData.nativeZoom = 200;
+				gcData.setNativeZoom(200);
 				mainGC.drawImage(image, 150, y/2);
-				gcData.nativeZoom = 100;
+				gcData.setNativeZoom(100);
 			}
 
 			private void drawImagesAtSize(GC mainGC, GCData gcData, String text, int y, final Image image) {
-				gcData.nativeZoom = 100;
+				gcData.setNativeZoom(100);
 				mainGC.drawText(text, 0, y);
 				mainGC.drawImage(image, 50, y, 16, 16);
-				gcData.nativeZoom = 150;
+				gcData.setNativeZoom(150);
 				mainGC.drawImage(image, 100, (int) (y/1.5), 16, 16);
-				gcData.nativeZoom = 200;
+				gcData.setNativeZoom(200);
 				mainGC.drawImage(image, 150, y/2, 16, 16);
-				gcData.nativeZoom = 100;
+				gcData.setNativeZoom(100);
 			}
 		};
 		shell.addListener(SWT.Paint, l);

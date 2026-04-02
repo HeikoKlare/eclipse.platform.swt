@@ -2695,7 +2695,7 @@ void notifyDisposalTracker() {
 }
 
 GC createNewGC(long hDC, GCData data) {
-	data.nativeZoom = nativeZoom;
+	data.setNativeZoom(nativeZoom);
 	return GC.win32_new(hDC, data);
 }
 

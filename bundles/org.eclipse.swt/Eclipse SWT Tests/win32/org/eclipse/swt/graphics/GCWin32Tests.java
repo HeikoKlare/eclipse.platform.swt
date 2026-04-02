@@ -42,7 +42,7 @@ class GCWin32Tests {
 		canvas.setSize(20, 20);
 		shell.open ();
 		canvas.addPaintListener(event -> {
-			gcNativeZoom.complete(event.gc.getGCData().nativeZoom);
+			gcNativeZoom.complete(event.gc.getGCData().getNativeZoom());
 		});
 
 		DPITestUtil.changeDPIZoom(shell, expectedZoom);
@@ -58,7 +58,7 @@ class GCWin32Tests {
 		int zoom = shell.nativeZoom;
 		int scalingFactor = 2;
 		GC gc = GC.win32_new(shell, new GCData());
-		gc.getGCData().nativeZoom = zoom * scalingFactor;
+		gc.getGCData().setNativeZoom(zoom * scalingFactor);
 		gc.getGCData().lineWidth = 10;
 		assertEquals("Drawn elements should scale to the right value", gc.getGCData().lineWidth, gc.getLineWidth() * scalingFactor, 0);
 	}

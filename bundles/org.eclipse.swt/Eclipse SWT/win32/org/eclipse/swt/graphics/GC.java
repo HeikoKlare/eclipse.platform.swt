@@ -198,7 +198,7 @@ private void validateGCState() {
 		GCData newData = new GCData();
 		long newHdc = drawable.internal_new_GC(newData);
 
-		if (data.nativeZoom != newData.nativeZoom) {
+		if (data.zoomContext.nativeZoom() != newData.getNativeZoom()) {
 			System.err.println("***WARNING: Zoom of the underlying Drawable of the GC has changed. This indicates a "
 					+ "long running GC that should be recreated.");
 		}
@@ -341,7 +341,7 @@ void checkGC(int mask) {
 			}
 		}
 		if ((state & FONT) != 0) {
-			long fontHandle = SWTFontProvider.getFontHandle(data.font, data.nativeZoom);
+			long fontHandle = SWTFontProvider.getFontHandle(data.font, data.zoomContext.nativeZoom());
 			OS.SelectObject(handle, fontHandle);
 			long[] hFont = new long[1];
 			long gdipFont = createGdipFont(handle, fontHandle, gdipGraphics, device.fontCollection, null, hFont);
@@ -462,7 +462,7 @@ void checkGC(int mask) {
 		OS.SetTextColor(handle, data.foreground);
 	}
 	if ((state & FONT) != 0) {
-		long fontHandle = SWTFontProvider.getFontHandle(data.font, data.nativeZoom);
+		long fontHandle = SWTFontProvider.getFontHandle(data.font, data.zoomContext.nativeZoom());
 		OS.SelectObject(handle, fontHandle);
 	}
 }
@@ -1085,7 +1085,7 @@ private class DrawImageOperation extends ImageOperation {
 
 	private void drawImageInPixels(Image image, Point location) {
 		if (image.isDisposed()) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
-		ImageHandle handle = image.getHandle(getZoom(), data.nativeZoom);
+		ImageHandle handle = image.getHandle(getZoom(), data.zoomContext.nativeZoom());
 		drawImage(image, 0, 0, -1, -1, location.x, location.y, -1, -1, true, handle);
 	}
 }
@@ -1217,7 +1217,7 @@ private class DrawScalingImageToImageOperation extends ImageOperation {
 
 		// In case there is a memGC for the image, a handle at proper zoom can be created by reapplying the GC operation
 		if (image.memGC != null) {
-			image.getHandle(getZoom(), data.nativeZoom);
+			image.getHandle(getZoom(), data.zoomContext.nativeZoom());
 		}
 		image.executeOnImageHandleAtBestFittingSize((tempHandle) -> {
 			Rectangle srcPixels = computeSourceRectangle(tempHandle, fullImageBounds, src);
@@ -1297,7 +1297,7 @@ private class DrawScaledImageOperation extends ImageOperation {
 
 		// In case there is a memGC for the image, a handle at proper zoom can be created by reapplying the GC operation
 		if (image.memGC != null) {
-			image.getHandle(getZoom(), data.nativeZoom);
+			image.getHandle(getZoom(), data.zoomContext.nativeZoom());
 		}
 		image.executeOnImageHandleAtBestFittingSize(tempHandle -> {
 			drawImage(image, 0, 0, tempHandle.width(), tempHandle.height(), destPixels.x, destPixels.y,
@@ -1320,7 +1320,7 @@ private class DrawImageToImageOperation extends ImageOperation {
 
 	@Override
 	void apply() {
-		ImageHandle handle = getImage().getHandle(getZoom(), data.nativeZoom);
+		ImageHandle handle = getImage().getHandle(getZoom(), data.zoomContext.nativeZoom());
 		drawImage(getImage(), source.x, source.y, source.width, source.height, destination.x, destination.y, destination.width, destination.height, simple, handle);
 	}
 }
@@ -2855,7 +2855,7 @@ void drawText(long gdipGraphics, String string, int x, int y, int flags, Point s
 	char[] chars = string.toCharArray();
 	long hdc = Gdip.Graphics_GetHDC(gdipGraphics);
 	long hFont = data.hGDIFont;
-	if (hFont == 0 && data.font != null) hFont = SWTFontProvider.getFontHandle(data.font, data.nativeZoom);
+	if (hFont == 0 && data.font != null) hFont = SWTFontProvider.getFontHandle(data.font, data.zoomContext.nativeZoom());
 	long oldFont = 0;
 	if (hFont != 0) oldFont = OS.SelectObject(hdc, hFont);
 	TEXTMETRIC lptm = new TEXTMETRIC();
@@ -2945,7 +2945,7 @@ private RectF drawText(long gdipGraphics, char[] buffer, int start, int length, 
 	}
 	long hdc = Gdip.Graphics_GetHDC(gdipGraphics);
 	long hFont = data.hGDIFont;
-	if (hFont == 0 && data.font != null) hFont = SWTFontProvider.getFontHandle(data.font, data.nativeZoom);
+	if (hFont == 0 && data.font != null) hFont = SWTFontProvider.getFontHandle(data.font, data.zoomContext.nativeZoom());
 	long oldFont = 0;
 	if (hFont != 0) oldFont = OS.SelectObject(hdc, hFont);
 	if (start != 0) {
@@ -4091,7 +4091,7 @@ public FontMetrics getFontMetrics() {
 	checkGC(FONT);
 	TEXTMETRIC lptm = new TEXTMETRIC();
 	OS.GetTextMetrics(handle, lptm);
-	return FontMetrics.win32_new(lptm, data.nativeZoom);
+	return FontMetrics.win32_new(lptm, data.zoomContext.nativeZoom());
 }
 
 /**
@@ -4510,7 +4510,7 @@ private void init(Drawable drawable, GCData data, long hDC) {
 	ImageHandle imageHandle = null;
 	Image image = data.image;
 	if (image != null) {
-		imageHandle = image.getHandle(data.imageZoom, data.nativeZoom);
+		imageHandle = image.getHandle(data.zoomContext);
 	}
 	init(drawable, data, hDC, imageHandle);
 }
@@ -4529,14 +4529,14 @@ private void init(Drawable drawable, GCData data, long hDC, ImageHandle imageHan
 		data.background = OS.GetBkColor(hDC);
 	}
 	data.state &= ~(NULL_BRUSH | NULL_PEN);
-	if (data.nativeZoom == 0) {
-		data.nativeZoom = extractZoom(hDC);
+	if (data.zoomContext == null) {
+		data.zoomContext = new ZoomContext(extractZoom(hDC));
 	}
 	if (data.font != null) {
 		data.state &= ~FONT;
-		data.font = Font.win32_new(data.font, data.nativeZoom);
+		data.font = Font.win32_new(data.font, data.zoomContext.nativeZoom());
 	} else {
-		data.font = SWTFontProvider.getFont(device, OS.GetCurrentObject(hDC, OS.OBJ_FONT), data.nativeZoom);
+		data.font = SWTFontProvider.getFont(device, OS.GetCurrentObject(hDC, OS.OBJ_FONT), data.zoomContext.nativeZoom());
 	}
 	Image image = data.image;
 	if (imageHandle != null) {
@@ -5171,12 +5171,12 @@ private class SetFontOperation extends ReplaceableOperation  {
 	private final Font font;
 
 	SetFontOperation(Font font) {
-		this.font = font != null ? SWTFontProvider.getFont(font.getDevice(), font.getFontData()[0], data.nativeZoom) : null;
+		this.font = font != null ? SWTFontProvider.getFont(font.getDevice(), font.getFontData()[0], data.zoomContext.nativeZoom()) : null;
 	}
 
 	@Override
 	void apply() {
-		data.font = font != null ? SWTFontProvider.getFont(font.getDevice(), font.getFontData()[0], data.nativeZoom) : SWTFontProvider.getSystemFont(device, data.nativeZoom);
+		data.font = font != null ? SWTFontProvider.getFont(font.getDevice(), font.getFontData()[0], data.zoomContext.nativeZoom()) : SWTFontProvider.getSystemFont(device, data.zoomContext.nativeZoom());
 		data.state &= ~FONT;
 	}
 }
@@ -6093,7 +6093,7 @@ private static int sin(int angle, int length) {
 }
 
 int getZoom() {
-	return DPIUtil.getZoomForAutoscaleProperty(data.nativeZoom);
+	return DPIUtil.getZoomForAutoscaleProperty(data.zoomContext.nativeZoom());
 }
 
 private void storeAndApplyOperationForExistingHandle(Operation operation) {

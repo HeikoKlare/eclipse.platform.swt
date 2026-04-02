@@ -47,8 +47,7 @@ public final class GCData {
 	public float[] lineDashes;
 	public float lineMiterLimit = 10;
 	public int alpha = 0xFF;
-	public int nativeZoom;
-	int imageZoom;
+	ZoomContext zoomContext;
 
 	public Image image;
 	public PAINTSTRUCT ps;
@@ -60,15 +59,23 @@ public final class GCData {
 	public int uiState = 0;
 	public boolean focusDrawn;
 
+	public int getNativeZoom() {
+		return zoomContext != null ? zoomContext.nativeZoom() : 0;
+	}
+
+	public void setNativeZoom(int nativeZoom) {
+		int targetZoom = zoomContext != null ? zoomContext.targetZoom() : nativeZoom;
+		this.zoomContext = new ZoomContext(targetZoom, nativeZoom);
+	}
+
 	void copyTo(GCData originalData) {
 		originalData.device = device;
 		originalData.style = style;
 		originalData.foreground = foreground;
 		originalData.background = background;
 		originalData.font = font;
-		originalData.nativeZoom = nativeZoom;
 		originalData.image = image;
-		originalData.imageZoom = imageZoom;
+		originalData.zoomContext = zoomContext;
 		originalData.ps = ps;
 		originalData.layout = layout;
 		originalData.hwnd = hwnd;

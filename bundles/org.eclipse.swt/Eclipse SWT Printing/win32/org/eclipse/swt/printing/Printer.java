@@ -303,7 +303,7 @@ public long internal_new_GC(GCData data) {
 		data.device = this;
 		data.font = Font.win32_new(this, OS.GetCurrentObject(handle, OS.OBJ_FONT), getDeviceZoom());
 		isGCCreated = true;
-		data.nativeZoom = getDeviceZoom();
+		data.setNativeZoom(getDeviceZoom());
 	}
 	return handle;
 }

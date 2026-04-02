@@ -1277,7 +1277,7 @@ GC createNewGC(long hDC, GCData data) {
 	if (getDisplay().isRescalingAtRuntime()) {
 		return super.createNewGC(hDC, data);
 	} else {
-		data.nativeZoom = getMonitorZoom();
+		data.setNativeZoom(getMonitorZoom());
 		return GC.win32_new(hDC, data);
 	}
 }

@@ -933,6 +933,10 @@ public static long win32_getHandle (Image image, int zoom) {
 	return image.getHandle(zoom, zoom).handle();
 }
 
+ImageHandle getHandle(ZoomContext zoomContext) {
+	return getHandle(zoomContext.targetZoom(), zoomContext.nativeZoom());
+}
+
 ImageHandle getHandle (int targetZoom, int nativeZoom) {
 	if (isDisposed()) {
 		return null;
@@ -1883,8 +1887,7 @@ private long configureGC(GCData data, ZoomContext zoomContext) {
 			data.style |= SWT.LEFT_TO_RIGHT;
 		}
 		data.device = device;
-		data.nativeZoom = zoomContext.nativeZoom();
-		data.imageZoom = zoomContext.targetZoom();
+		data.zoomContext = zoomContext;
 		data.image = this;
 		data.font = SWTFontProvider.getSystemFont(device, zoomContext.nativeZoom());
 	}
@@ -2023,21 +2026,6 @@ public String toString () {
  */
 public static Image win32_new(Device device, int type, long handle, int nativeZoom) {
 	return new Image(device, type, handle, nativeZoom);
-}
-
-/**
- * ZoomContext holds information about zoom details used to create and cache the image
- *
- * @param targetZoom zoom value the OS handle will be created, cached and served for,
- * it is usually an auto-scaled zoom
- * @param nativeZoom native zoom that can be used as context for the creation
- * of the handle, e.g. as font zoom for drawing on the image with a GC
- */
-private record ZoomContext(int targetZoom, int nativeZoom) {
-
-	private ZoomContext(int targetZoom) {
-		this(targetZoom, targetZoom);
-	}
 }
 
 private abstract class AbstractImageProviderWrapper {
@@ -2845,7 +2833,7 @@ private class ImageGcDrawerWrapper extends DynamicImageProviderWrapper {
 
 	@Override
 	protected DestroyableImageHandle newImageHandle(ZoomContext zoomContext) {
-		return init(loadImageData(zoomContext), zoomContext.targetZoom);
+		return init(loadImageData(zoomContext), zoomContext.targetZoom());
 	}
 
 	@Override

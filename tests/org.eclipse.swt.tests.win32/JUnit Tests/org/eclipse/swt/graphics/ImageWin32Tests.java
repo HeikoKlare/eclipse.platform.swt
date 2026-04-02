@@ -129,9 +129,9 @@ public class ImageWin32Tests {
 		Image targetCanvas = new Image(display, 5, 5);
 		GC targetCanvasGc = new GC(targetCanvas);
 		try {
-			targetCanvasGc.getGCData().nativeZoom = 200;
+			targetCanvasGc.getGCData().setNativeZoom(200);
 			targetCanvasGc.drawImage(image, 0, 0);
-			targetCanvasGc.getGCData().nativeZoom = 100;
+			targetCanvasGc.getGCData().setNativeZoom(100);
 			targetCanvasGc.drawImage(image, 3, 0);
 			ImageData resultImageData = targetCanvas.getImageData(100);
 

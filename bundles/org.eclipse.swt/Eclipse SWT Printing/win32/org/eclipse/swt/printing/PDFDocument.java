@@ -543,7 +543,7 @@ public final class PDFDocument extends Device {
 				data.style |= SWT.LEFT_TO_RIGHT;
 			}
 			data.device = this;
-			data.nativeZoom = 100;
+			data.setNativeZoom(100);
 			data.font = getSystemFont();
 
 			// Set up coordinate system scaling to work in points

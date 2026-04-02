@@ -1818,7 +1818,7 @@ public long internal_new_GC (GCData data) {
 			}
 		}
 		data.device = display;
-		data.nativeZoom = nativeZoom;
+		data.setNativeZoom(nativeZoom);
 		int foreground = getForegroundPixel ();
 		if (foreground != OS.GetTextColor (hDC)) data.foreground = foreground;
 		Control control = findBackgroundControl ();
@@ -1828,7 +1828,7 @@ public long internal_new_GC (GCData data) {
 		if (font != null) {
 			data.font = font;
 		} else {
-			data.font = SWTFontProvider.getFont(display, OS.SendMessage (hwnd, OS.WM_GETFONT, 0, 0), data.nativeZoom);
+			data.font = SWTFontProvider.getFont(display, OS.SendMessage (hwnd, OS.WM_GETFONT, 0, 0), nativeZoom);
 		}
 		data.uiState = (int)OS.SendMessage (hwnd, OS.WM_QUERYUISTATE, 0, 0);
 	}
@@ -2260,7 +2260,7 @@ public boolean print (GC gc) {
 	long hdc = gc.handle;
 	int state = 0;
 	long gdipGraphics = gc.getGCData().gdipGraphics;
-	float scaleFactor = 1f * gc.getGCData().nativeZoom/nativeZoom;
+	float scaleFactor = 1f * gc.getGCData().getNativeZoom()/nativeZoom;
 	if (gdipGraphics != 0) {
 		long clipRgn = 0;
 		Gdip.Graphics_SetPixelOffsetMode(gdipGraphics, Gdip.PixelOffsetModeNone);
@@ -4924,7 +4924,7 @@ public boolean setParent (Composite parent) {
 
 @Override
 GC createNewGC(long hDC, GCData data) {
-	data.nativeZoom = nativeZoom;
+	data.setNativeZoom(nativeZoom);
 	if (isAutoscalingDisabled() && data.font != null) {
 		data.font = SWTFontProvider.getFont(display, data.font.getFontData()[0], 100);
 	}

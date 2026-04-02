@@ -32,7 +32,7 @@ class TextLayoutWin32Tests {
 
 		final TextLayout layout = new TextLayout(display);
 		GCData unscaledData = new GCData();
-		unscaledData.nativeZoom = DPIUtil.getNativeDeviceZoom();
+		unscaledData.setNativeZoom(DPIUtil.getNativeDeviceZoom());
 		GC gc = GC.win32_new(display, unscaledData);
 		layout.draw(gc, 10, 10);
 		Rectangle unscaledBounds = layout.getBounds();
@@ -40,7 +40,7 @@ class TextLayoutWin32Tests {
 		int scalingFactor = 2;
 		int newZoom = DPIUtil.getNativeDeviceZoom() * scalingFactor;
 		GCData scaledData = new GCData();
-		scaledData.nativeZoom = newZoom;
+		scaledData.setNativeZoom(newZoom);
 		GC scaledGc = GC.win32_new(display, scaledData);
 		layout.draw(scaledGc, 10, 10);
 		Rectangle scaledBounds = layout.getBounds();
