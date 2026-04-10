@@ -2165,7 +2165,7 @@ public static final int NSBackspaceCharacter = 8;
 public static final int NSBevelLineJoinStyle = 2;
 public static final int NSBezelBorder = 2;
 public static final int NSBoldFontMask = 2;
-public static final int NSBorderlessWindowMask = 0;
+
 public static final int NSBottomTabsBezelBorder = 2;
 public static final int NSBoxCustom = 4;
 public static final int NSBoxSeparator = 2;
@@ -2173,7 +2173,7 @@ public static final int NSButtLineCapStyle = 0;
 public static final int NSCancelButton = 0;
 public static final int NSCarriageReturnCharacter = 13;
 public static final int NSClockAndCalendarDatePickerStyle = 1;
-public static final int NSClosableWindowMask = 2;
+
 public static final int NSClosePathBezierPathElement = 3;
 public static final int NSCommandKeyMask = 1048576;
 public static final int NSCompositeClear = 0;
@@ -2186,7 +2186,7 @@ public static final int NSCriticalAlertStyle = 2;
 public static final int NSCurveToBezierPathElement = 2;
 public static final int NSDeleteCharacter = 127;
 public static final long NSDeviceIndependentModifierFlagsMask = 4294901760L;
-public static final int NSDocModalWindowMask = 64;
+
 public static final int NSDragOperationCopy = 1;
 public static final int NSDragOperationDelete = 32;
 public static final long NSDragOperationEvery = -1L;
@@ -2210,7 +2210,7 @@ public static final int NSFlagsChanged = 12;
 public static final int NSFocusRingTypeNone = 1;
 public static final int NSFontPanelAllEffectsModeMask = 1048320;
 public static final int NSFontPanelAllModesMask = -1;
-public static final int NSFullScreenWindowMask = 16384;
+
 public static final int NSHelpFunctionKey = 63302;
 public static final int NSHelpKeyMask = 4194304;
 public static final int NSHourMinuteDatePickerElementFlag = 12;
@@ -2244,7 +2244,7 @@ public static final int NSLineBreakByTruncatingTail = 4;
 public static final int NSLineBreakByWordWrapping = 0;
 public static final int NSLineToBezierPathElement = 1;
 public static final int NSMiniControlSize = 2;
-public static final int NSMiniaturizableWindowMask = 4;
+
 public static final int NSMiterLineJoinStyle = 0;
 public static final int NSMixedState = -1;
 public static final int NSMomentaryLightButton = 0;
@@ -2257,7 +2257,7 @@ public static final int NSNoBorder = 0;
 public static final int NSNoImage = 0;
 public static final int NSNoTitle = 0;
 public static final int NSNonZeroWindingRule = 0;
-public static final int NSNonactivatingPanelMask = 128;
+
 public static final int NSOffState = 0;
 public static final int NSOnState = 1;
 public static final int NSOpenGLCPSurfaceOrder = 235;
@@ -2284,7 +2284,7 @@ public static final int NSRGBColorSpaceModel = 1;
 public static final int NSRadioButton = 4;
 public static final int NSRegularControlSize = 0;
 public static final int NSRegularSquareBezelStyle = 2;
-public static final int NSResizableWindowMask = 8;
+
 public static final int NSRightMouseDown = 3;
 public static final int NSRightMouseDragged = 7;
 public static final int NSRightMouseUp = 4;
@@ -2328,7 +2328,7 @@ public static final int NSTextAlignmentLeft = 0;
 public static final int NSTextAlignmentRight = IS_X86_64 ? 1 : 2;
 public static final int NSTextFieldAndStepperDatePickerStyle = 0;
 public static final int NSTextFieldDatePickerStyle = 2;
-public static final int NSTitledWindowMask = 1;
+
 public static final int NSToolbarDisplayModeIconOnly = 2;
 public static final long NSTouchPhaseAny = -1L;
 public static final int NSTouchPhaseBegan = 1;
@@ -2340,7 +2340,7 @@ public static final int NSUnderlineStyleDouble = 9;
 public static final int NSUnderlineStyleNone = 0;
 public static final int NSUnderlineStyleSingle = 1;
 public static final int NSUnderlineStyleThick = 2;
-public static final int NSUtilityWindowMask = 16;
+
 public static final int NSViewHeightSizable = 16;
 public static final int NSViewMaxXMargin = 4;
 public static final int NSViewMaxYMargin = 32;
@@ -2353,6 +2353,15 @@ public static final int NSWindowBelow = -1;
 public static final int NSWindowCollectionBehaviorFullScreenAuxiliary = 256;
 public static final int NSWindowCollectionBehaviorFullScreenPrimary = 128;
 public static final int NSWindowCollectionBehaviorMoveToActiveSpace = 2;
+public static final int NSWindowStyleMaskBorderless = 0;
+public static final int NSWindowStyleMaskClosable = 2;
+public static final int NSWindowStyleMaskDocModalWindow = 64;
+public static final int NSWindowStyleMaskFullScreen = 16384;
+public static final int NSWindowStyleMaskMiniaturizable = 4;
+public static final int NSWindowStyleMaskNonactivatingPanel = 128;
+public static final int NSWindowStyleMaskResizable = 8;
+public static final int NSWindowStyleMaskTitled = 1;
+public static final int NSWindowStyleMaskUtilityWindow = 16;
 public static final int NSWritingDirectionLeftToRight = 0;
 public static final int NSWritingDirectionRightToLeft = 1;
 public static final int NSYearMonthDatePickerElementFlag = 192;
