@@ -1067,8 +1067,8 @@ long[] createGdipImageFromHandle(ImageHandle imageHandle) {
 				}
 				OS.SelectObject(srcHdc, oldSrcBitmap);
 				OS.SelectObject(memHdc, oldMemBitmap);
-				OS.DeleteObject(srcHdc);
-				OS.DeleteObject(memHdc);
+				OS.DeleteDC(srcHdc);
+				OS.DeleteDC(memHdc);
 				OS.DeleteObject(memDib);
 				int pixelFormat = hasAlpha ? Gdip.PixelFormat32bppPARGB : Gdip.PixelFormat32bppARGB;
 				return new long []{Gdip.Bitmap_new(imgWidth, imgHeight, dibBM.bmWidthBytes, pixelFormat, pixels), pixels};
@@ -1109,7 +1109,7 @@ long[] createGdipImageFromHandle(ImageHandle imageHandle) {
 				OS.GetObject(memDib, BITMAP.sizeof, dibBM);
 				OS.BitBlt(memHdc, 0, 0, imgWidth, imgHeight, srcHdc, 0, hBitmap == iconInfo.hbmMask ? imgHeight : 0, OS.SRCCOPY);
 				OS.SelectObject(memHdc, oldMemBitmap);
-				OS.DeleteObject(memHdc);
+				OS.DeleteDC(memHdc);
 				byte[] srcData = new byte[dibBM.bmWidthBytes * dibBM.bmHeight];
 				OS.MoveMemory(srcData, dibBM.bmBits, srcData.length);
 				OS.DeleteObject(memDib);
@@ -1127,7 +1127,7 @@ long[] createGdipImageFromHandle(ImageHandle imageHandle) {
 					}
 				}
 				OS.SelectObject(srcHdc, oldSrcBitmap);
-				OS.DeleteObject(srcHdc);
+				OS.DeleteDC(srcHdc);
 				device.internal_dispose_GC(hDC, null);
 				long hHeap = OS.GetProcessHeap();
 				pixels = OS.HeapAlloc(hHeap, OS.HEAP_ZERO_MEMORY, srcData.length);
