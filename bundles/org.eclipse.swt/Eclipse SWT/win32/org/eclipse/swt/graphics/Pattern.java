@@ -39,11 +39,8 @@ import org.eclipse.swt.internal.gdip.*;
  * @since 3.1
  */
 public class Pattern extends Resource {
-	// These are the possible fields with which a pattern can be initialized from the appropriate constructors.
-	private final Image image;
-	private float baseX1, baseY1, baseX2, baseY2;
-	private Color color1, color2;
-	private int alpha1, alpha2;
+
+	private final PatternData data;
 
 	private final Map<Integer, PatternHandle> zoomToHandle = new HashMap<>();
 
@@ -82,7 +79,7 @@ public Pattern(Device device, Image image) {
 	if (image == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
 	if (image.isDisposed()) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 	this.device.checkGDIP();
-	this.image = image;
+	this.data = new ImagePatternData(device, image);
 	init();
 	this.device.registerResourceWithZoomSupport(this);
 }
@@ -171,25 +168,24 @@ public Pattern(Device device, float x1, float y1, float x2, float y2, Color colo
 	if (color1.isDisposed()) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 	if (color2 == null) SWT.error(SWT.ERROR_NULL_ARGUMENT);
 	if (color2.isDisposed()) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
-	this.baseX1 = x1;
-	this.baseX2 = x2;
-	this.baseY1 = y1;
-	this.baseY2 = y2;
-	this.color1 = color1;
-	this.color2 = color2;
-	this.alpha1 = alpha1;
-	this.alpha2 = alpha2;
-	this.image = null;
+	this.data = new BasePatternData(device, x1, y1, x2, y2, color1, alpha1, color2, alpha2);
+	init();
+	this.device.registerResourceWithZoomSupport(this);
+}
+
+Pattern(PatternData data) {
+	super(data.device());
+	this.data = data;
 	init();
 	this.device.registerResourceWithZoomSupport(this);
 }
 
 private PatternHandle getPatternHandle(int zoom) {
-	return zoomToHandle.computeIfAbsent(zoom, z -> image != null ? new ImagePatternHandle(z) : new BasePatternHandle(z));
+	return zoomToHandle.computeIfAbsent(zoom, z -> createHandle(data, z));
 }
 
 long getHandle(int zoom) {
-	return this.getPatternHandle(zoom).handle;
+	return this.getPatternHandle(zoom).getHandle();
 }
 
 @Override
@@ -212,11 +208,8 @@ void destroyHandlesExcept(Set<Integer> zoomLevels) {
 	});
 }
 
-Pattern copy() {
-	if (image != null) {
-		return new Pattern(device, image);
-	}
-	return new Pattern(device, baseX1, baseY1, baseX2, baseY2, color1, alpha1, color2, alpha2);
+PatternData getPatternData() {
+	return data;
 }
 
 /**
@@ -254,29 +247,42 @@ private static int colorRefToArgb(int colorRef, int alpha) {
 	return ((alpha & 0xFF) << 24) | ((colorRef >> 16) & 0xFF) | (colorRef & 0xFF00) | ((colorRef & 0xFF) << 16);
 }
 
-private class BasePatternHandle extends PatternHandle {
-	BasePatternHandle(int zoom) {
-		super(zoom);
-	}
 
-	@Override
-	long createHandle(int zoom) {
+sealed interface PatternData permits BasePatternData, ImagePatternData {
+	Device device();
+}
+record BasePatternData(Device device, float x1, float y1, float x2, float y2, Color color1, int alpha1, Color color2, int alpha2) implements PatternData { };
+record ImagePatternData (Device device, Image image) implements PatternData { };
+
+private PatternHandle createHandle(PatternData data, int zoom) {
+	switch (data) {
+	case BasePatternData basePattern:
+		return new BasePatternHandle(basePattern, zoom);
+	case ImagePatternData imagePattern:
+		return new ImagePatternHandle(imagePattern, zoom);
+	}
+}
+
+private class BasePatternHandle extends PatternHandle {
+	private final long handle;
+
+	BasePatternHandle(BasePatternData data, int zoom) {
 		long handle;
-		float x1 = Win32DPIUtils.pointToPixel(baseX1, zoom);
-		float y1 = Win32DPIUtils.pointToPixel(baseY1, zoom);
-		float x2 = Win32DPIUtils.pointToPixel(baseX2, zoom);
-		float y2 = Win32DPIUtils.pointToPixel(baseY2, zoom);
-		if (color1.isDisposed()) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
-		if (color2.isDisposed()) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
-		device.checkGDIP();
-		int colorRef1 = color1.handle;
-		int foreColor = colorRefToArgb(colorRef1, alpha1);
+		float x1 = Win32DPIUtils.pointToPixel(data.x1, zoom);
+		float y1 = Win32DPIUtils.pointToPixel(data.y1, zoom);
+		float x2 = Win32DPIUtils.pointToPixel(data.x2, zoom);
+		float y2 = Win32DPIUtils.pointToPixel(data.y2, zoom);
+		if (data.color1.isDisposed()) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+		if (data.color2.isDisposed()) SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+		data.device.checkGDIP();
+		int colorRef1 = data.color1.handle;
+		int foreColor = colorRefToArgb(colorRef1, data.alpha1);
 		if (x1 == x2 && y1 == y2) {
 			handle = Gdip.SolidBrush_new(foreColor);
 			if (handle == 0) SWT.error(SWT.ERROR_NO_HANDLES);
 		} else {
-			int colorRef2 = color2.handle;
-			int backColor = colorRefToArgb(colorRef2, alpha2);
+			int colorRef2 = data.color2.handle;
+			int backColor = colorRefToArgb(colorRef2, data.alpha2);
 			PointF p1 = new PointF();
 			p1.X = x1;
 			p1.Y = y1;
@@ -285,8 +291,8 @@ private class BasePatternHandle extends PatternHandle {
 			p2.Y = y2;
 			handle = Gdip.LinearGradientBrush_new(p1, p2, foreColor, backColor);
 			if (handle == 0) SWT.error(SWT.ERROR_NO_HANDLES);
-			if (alpha1 != 0xFF || alpha2 != 0xFF) {
-				int a = (int)((alpha1 & 0xFF) * 0.5f + (alpha2 & 0xFF) * 0.5f);
+			if (data.alpha1 != 0xFF || data.alpha2 != 0xFF) {
+				int a = (int)((data.alpha1 & 0xFF) * 0.5f + (data.alpha2 & 0xFF) * 0.5f);
 				int r = (int)((colorRef1 & 0xFF) * 0.5f + (colorRef2 & 0xFF) * 0.5f);
 				int g = (int)(((colorRef1 & 0xFF00) >> 8) * 0.5f + ((colorRef2 & 0xFF00) >> 8) * 0.5f);
 				int b = (int)(((colorRef1 & 0xFF0000) >> 16) * 0.5f + ((colorRef2 & 0xFF0000) >> 16) * 0.5f);
@@ -294,28 +300,33 @@ private class BasePatternHandle extends PatternHandle {
 				Gdip.LinearGradientBrush_SetInterpolationColors(handle, new int [] {foreColor, midColor, backColor}, new float[]{0, 0.5f, 1}, 3);
 			}
 		}
+		this.handle = handle;
+	}
+
+	@Override
+	long getHandle() {
 		return handle;
 	}
 }
 
 private class ImagePatternHandle extends PatternHandle {
+	private final long handle;
 	private Image.GdipImage gdipImage;
 
-	ImagePatternHandle(int zoom) {
-		super(zoom);
-	}
-
-	@Override
-	long createHandle(int zoom) {
-		gdipImage = image.createGdipImage(zoom);
+	ImagePatternHandle(ImagePatternData data, int zoom) {
+		gdipImage = data.image.createGdipImage(zoom);
 		long img = gdipImage.bitmap();
 		int width = Gdip.Image_GetWidth(img);
 		int height = Gdip.Image_GetHeight(img);
-		long handle = Gdip.TextureBrush_new(img, Gdip.WrapModeTile, 0, 0, width, height);
+		handle = Gdip.TextureBrush_new(img, Gdip.WrapModeTile, 0, 0, width, height);
 		if (handle == 0) {
 			cleanupBitmap();
 			SWT.error(SWT.ERROR_NO_HANDLES);
 		}
+	}
+
+	@Override
+	public long getHandle() {
 		return handle;
 	}
 
@@ -333,16 +344,11 @@ private class ImagePatternHandle extends PatternHandle {
 	}
 }
 
-private abstract class PatternHandle {
-	private final long handle;
-
-	PatternHandle(int zoom) {
-		this.handle = createHandle(zoom);
-	}
-
-	abstract long createHandle(int zoom);
+private static abstract class PatternHandle {
+	abstract long getHandle();
 
 	protected void destroy() {
+		long handle = getHandle();
 		switch (Gdip.Brush_GetType(handle)) {
 			case Gdip.BrushTypeSolidColor -> Gdip.SolidBrush_delete(handle);
 			case Gdip.BrushTypeHatchFill -> Gdip.HatchBrush_delete(handle);
