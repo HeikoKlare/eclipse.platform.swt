@@ -55,7 +55,8 @@ public class ToolBar extends Composite {
 	ToolItem [] items;
 	ToolItem [] tabItemList;
 	boolean ignoreResize, ignoreMouse;
-	ImageList imageList, disabledImageList, hotImageList;
+	private ToolBarImageLists imageLists;
+
 	static final long ToolBarProc;
 	static final TCHAR ToolBarClass = new TCHAR (OS.TOOLBARCLASSNAME, true);
 	static {
@@ -440,9 +441,7 @@ void destroyItem (ToolItem item) {
 	* an image and one is never assigned, this is not a problem.
 	*/
 	if ((info.fsStyle & OS.BTNS_SEP) == 0 && info.iImage != OS.I_IMAGENONE) {
-		if (imageList != null) imageList.put (info.iImage, null);
-		if (hotImageList != null) hotImageList.put (info.iImage, null);
-		if (disabledImageList != null) disabledImageList.put (info.iImage, null);
+		if (imageLists != null) imageLists.clear(info.iImage);
 	}
 	OS.SendMessage (handle, OS.TB_DELETEBUTTON, index, 0);
 	if (item.id == lastFocusId) lastFocusId = -1;
@@ -452,19 +451,8 @@ void destroyItem (ToolItem item) {
 	item.id = -1;
 	int count = (int)OS.SendMessage (handle, OS.TB_BUTTONCOUNT, 0, 0);
 	if (count == 0) {
-		if (imageList != null) {
-			OS.SendMessage (handle, OS.TB_SETIMAGELIST, 0, 0);
-			display.releaseToolImageList (imageList);
-		}
-		if (hotImageList != null) {
-			OS.SendMessage (handle, OS.TB_SETHOTIMAGELIST, 0, 0);
-			display.releaseToolHotImageList (hotImageList);
-		}
-		if (disabledImageList != null) {
-			OS.SendMessage (handle, OS.TB_SETDISABLEDIMAGELIST, 0, 0);
-			display.releaseToolDisabledImageList (disabledImageList);
-		}
-		imageList = hotImageList = disabledImageList = null;
+		if (imageLists != null) imageLists.clearAndRelease();
+		imageLists = null;
 		items = new ToolItem [4];
 	}
 	if ((style & SWT.VERTICAL) != 0) setRowCount (count - 1);
@@ -493,18 +481,6 @@ void enableWidget (boolean enabled) {
 			}
 		}
 	}
-}
-
-ImageList getDisabledImageList () {
-	return disabledImageList;
-}
-
-ImageList getHotImageList () {
-	return hotImageList;
-}
-
-ImageList getImageList () {
-	return imageList;
 }
 
 /**
@@ -885,19 +861,8 @@ void releaseChildren (boolean destroy) {
 @Override
 void releaseWidget () {
 	super.releaseWidget ();
-	if (imageList != null) {
-		OS.SendMessage (handle, OS.TB_SETIMAGELIST, 0, 0);
-		display.releaseToolImageList (imageList);
-	}
-	if (hotImageList != null) {
-		OS.SendMessage (handle, OS.TB_SETHOTIMAGELIST, 0, 0);
-		display.releaseToolHotImageList (hotImageList);
-	}
-	if (disabledImageList != null) {
-		OS.SendMessage (handle, OS.TB_SETDISABLEDIMAGELIST, 0, 0);
-		display.releaseToolDisabledImageList (disabledImageList);
-	}
-	imageList = hotImageList = disabledImageList = null;
+	if (imageLists != null) imageLists.clearAndRelease();
+	imageLists = null;
 }
 
 @Override
@@ -963,6 +928,9 @@ void setDefaultFont () {
 }
 
 void setDropDownItems (boolean set) {
+	if (items == null) {
+		return;
+	}
 	/*
 	* Feature in Windows.  When the first button in a tool bar
 	* is a drop down item, Window leaves too much padding around
@@ -1000,19 +968,6 @@ void setDropDownItems (boolean set) {
 	}
 }
 
-void setDisabledImageList (ImageList imageList) {
-	long hImageList = 0;
-	if ((disabledImageList = imageList) != null) {
-		hImageList = OS.SendMessage(handle, OS.TB_GETDISABLEDIMAGELIST, 0, 0);
-		long newImageList = disabledImageList.getHandle(getAutoscalingZoom());
-		if (hImageList == newImageList) return;
-		hImageList = newImageList;
-	}
-	setDropDownItems (false);
-	OS.SendMessage (handle, OS.TB_SETDISABLEDIMAGELIST, 0, hImageList);
-	setDropDownItems (true);
-}
-
 @Override
 public void setFont (Font font) {
 	checkWidget ();
@@ -1037,32 +992,6 @@ public void setFont (Font font) {
 		OS.SendMessage (handle, OS.TB_SETBUTTONSIZE, 0, 0);
 	}
 	layoutItems ();
-}
-
-void setHotImageList (ImageList imageList) {
-	long hImageList = 0;
-	if ((hotImageList = imageList) != null) {
-		hImageList = OS.SendMessage(handle, OS.TB_GETHOTIMAGELIST, 0, 0);
-		long newImageList = hotImageList.getHandle(getAutoscalingZoom());
-		if (hImageList == newImageList) return;
-		hImageList = newImageList;
-	}
-	setDropDownItems (false);
-	OS.SendMessage (handle, OS.TB_SETHOTIMAGELIST, 0, hImageList);
-	setDropDownItems (true);
-}
-
-void setImageList (ImageList imageList) {
-	long hImageList = 0;
-	if ((this.imageList = imageList) != null) {
-		hImageList = OS.SendMessage(handle, OS.TB_GETIMAGELIST, 0, 0);
-		long newImageList = imageList.getHandle(getAutoscalingZoom());
-		if (hImageList == newImageList) return;
-		hImageList = newImageList;
-	}
-	setDropDownItems (false);
-	OS.SendMessage (handle, OS.TB_SETIMAGELIST, 0, hImageList);
-	setDropDownItems (true);
 }
 
 @Override
@@ -1224,11 +1153,9 @@ String toolTipText (NMTTDISPINFO hdr) {
 @Override
 void updateOrientation () {
 	super.updateOrientation ();
-	if (imageList != null) {
-		Point sizeInPoints = imageList.getImageSize();
-		ImageList newImageList = display.getImageListToolBar (style & SWT.RIGHT_TO_LEFT, sizeInPoints.x, sizeInPoints.y, getAutoscalingZoom());
-		ImageList newHotImageList = display.getImageListToolBarHot (style & SWT.RIGHT_TO_LEFT, sizeInPoints.x, sizeInPoints.y, getAutoscalingZoom());
-		ImageList newDisabledImageList = display.getImageListToolBarDisabled (style & SWT.RIGHT_TO_LEFT, sizeInPoints.x, sizeInPoints.y, getAutoscalingZoom());
+	if (imageLists != null) {
+		Point size = imageLists.getImageSize();
+		ToolBarImageLists newImageLists = createImageListsFromDisplay(size.x, size.y);
 		TBBUTTONINFO info = new TBBUTTONINFO ();
 		info.cbSize = TBBUTTONINFO.sizeof;
 		info.dwMask = OS.TBIF_IMAGE;
@@ -1239,27 +1166,11 @@ void updateOrientation () {
 			if (item.image == null) continue;
 			OS.SendMessage (handle, OS.TB_GETBUTTONINFO, item.id, info);
 			if (info.iImage != OS.I_IMAGENONE) {
-				Image image = imageList.get(info.iImage);
-				Image hot = hotImageList.get(info.iImage);
-				Image disabled = disabledImageList.get(info.iImage);
-				imageList.put(info.iImage, null);
-				hotImageList.put(info.iImage, null);
-				disabledImageList.put(info.iImage, null);
-				info.iImage = newImageList.add(image);
-				newHotImageList.add(hot);
-				newDisabledImageList.add(disabled);
+				info.iImage = newImageLists.addFrom(imageLists, info.iImage);
 				OS.SendMessage (handle, OS.TB_SETBUTTONINFO, item.id, info);
 			}
 		}
-		display.releaseToolImageList (imageList);
-		display.releaseToolHotImageList (hotImageList);
-		display.releaseToolDisabledImageList (disabledImageList);
-		OS.SendMessage (handle, OS.TB_SETIMAGELIST, 0, newImageList.getHandle(getAutoscalingZoom()));
-		OS.SendMessage (handle, OS.TB_SETHOTIMAGELIST, 0, newHotImageList.getHandle(getAutoscalingZoom()));
-		OS.SendMessage (handle, OS.TB_SETDISABLEDIMAGELIST, 0, newDisabledImageList.getHandle(getAutoscalingZoom()));
-		imageList = newImageList;
-		hotImageList = newHotImageList;
-		disabledImageList = newDisabledImageList;
+		imageLists = imageLists.replace(newImageLists);
 		OS.InvalidateRect (handle, null, true);
 	}
 }
@@ -1744,9 +1655,9 @@ void handleDPIChange(Event event, float scalingFactor) {
 		}
 	}
 	// Refresh the image lists so the image list for the correct zoom is used
-	setImageList(getImageList());
-	setDisabledImageList(getDisabledImageList());
-	setHotImageList(getHotImageList());
+	if (imageLists != null) {
+		imageLists.refreshImageLists();
+	}
 	boolean toolBarEnabled = getEnabled();
 	for (int i = 0; i < itemCount; i++) {
 		ToolItem item = toolItems[i];
@@ -1761,4 +1672,53 @@ void handleDPIChange(Event event, float scalingFactor) {
 	OS.SendMessage(handle, OS.TB_AUTOSIZE, 0, 0);
 	clearSizeCache(true);
 }
+
+private void updateImageLists(ImageList imageList, ImageList hotImageList, ImageList disabledImageList) {
+	updateImageList(imageList, OS.TB_GETIMAGELIST, OS.TB_SETIMAGELIST);
+	updateImageList(hotImageList, OS.TB_GETHOTIMAGELIST, OS.TB_SETHOTIMAGELIST);
+	updateImageList(disabledImageList, OS.TB_GETDISABLEDIMAGELIST, OS.TB_SETDISABLEDIMAGELIST);
+}
+
+private void updateImageList(ImageList imageList, int getMessageCode, int setMessageCode) {
+	long hImageList = 0;
+	if (imageList != null) {
+		hImageList = OS.SendMessage(handle, getMessageCode, 0, 0);
+		long newImageList = imageList.getHandle(getAutoscalingZoom());
+		if (hImageList == newImageList) return;
+		hImageList = newImageList;
+	}
+	setDropDownItems (false);
+	OS.SendMessage (handle, setMessageCode, 0, hImageList);
+	setDropDownItems (true);
+}
+
+void clearImageIndex(int index) {
+	if (imageLists != null) {
+		imageLists.clear(index);
+	}
+}
+
+void putImage(int index, Image image, Image hotImage, Image disabledImage) {
+	ensureImageListsExist(image);
+	imageLists.put(index, image, hotImage, disabledImage);
+}
+
+int addImage(Image image, Image hotImage, Image disabledImage) {
+	ensureImageListsExist(image);
+	return imageLists.add(image, hotImage, disabledImage);
+}
+
+private void ensureImageListsExist(Image image) {
+	if (imageLists != null) {
+		return;
+	}
+	Rectangle bounds = image != null ? image.getBounds() : new Rectangle(0, 0, 16, 16);
+	imageLists = createImageListsFromDisplay(bounds.width, bounds.height);
+	imageLists.refreshImageLists();
+}
+
+private ToolBarImageLists createImageListsFromDisplay(int width, int height) {
+	return ToolBarImageLists.create(getDisplay(), style & SWT.RIGHT_TO_LEFT, width, height, getAutoscalingZoom(), this::updateImageLists);
+}
+
 }
