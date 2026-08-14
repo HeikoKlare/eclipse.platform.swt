@@ -614,16 +614,6 @@ static ICoreWebView2CookieManager getCookieManager() {
 	return new ICoreWebView2CookieManager(ppv[0]);
 }
 
-void checkDeadlock() {
-	// Feature in WebView2. All event handlers, completion handlers
-	// and JavaScript callbacks are serialized. An event handler waiting
-	// for a completion of another handler will deadlock. Detect this
-	// situation and throw an exception instead.
-	if (inCallback > 0 || inNewWindow) {
-		SWT.error(SWT.ERROR_FAILED_EVALUATE, null, " [WebView2: deadlock detected]");
-	}
-}
-
 WebViewEnvironment createEnvironment() {
 	Display display = Display.getCurrent();
 	WebViewEnvironment existingEnvironment = webViewEnvironments.get(display);
