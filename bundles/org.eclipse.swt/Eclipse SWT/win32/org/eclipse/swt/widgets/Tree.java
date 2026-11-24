@@ -8278,8 +8278,15 @@ void handleDPIChange(Event event, float scalingFactor) {
 	for (TreeColumn treeColumn : getColumns()) {
 		notifyZoomChanged(treeColumn, event);
 	}
-	for (TreeItem item : getItems()) {
-		notifyZoomChanged(item, event);
+	// Flat instead of descending via getItems(), which would materialize all virtual items
+	for (TreeItem item : items) {
+		if (item == null || item.isDisposed()) continue;
+		if ((style & SWT.VIRTUAL) == 0 || item.cached) {
+			notifyZoomChanged(item, event);
+		} else {
+			// Notifying would request the data, which then has to be created at the new zoom
+			item.handleDPIChange(event, scalingFactor);
+		}
 	}
 
 	calculateAndApplyIndentSize();

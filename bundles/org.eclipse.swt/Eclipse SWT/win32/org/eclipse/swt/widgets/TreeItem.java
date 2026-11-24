@@ -1809,29 +1809,20 @@ String getNameText () {
 @Override
 void handleDPIChange(Event event, float scalingFactor) {
 	super.handleDPIChange(event, scalingFactor);
-	try {
-		if (images != null) {
-			for (int i = 1; i < images.length; i++) {
-				setImage(i, images[i]);
-			}
+	if (images != null) {
+		for (int i = 1; i < images.length; i++) {
+			setImage(i, images[i]);
 		}
-		if (font != null) {
-			setFont(font);
-		}
-		Font[] cellFonts = cellFont;
-		if (cellFonts != null) {
-			for (int index = 0; index < cellFonts.length; index++) {
-				Font cellFont = cellFonts[index];
-				cellFonts[index] = cellFont == null ? null : Font.win32_new(cellFont, nativeZoom);
-			}
-		}
-	} catch (Error | RuntimeException ex) {
-		// A failure of the adaptation of this item, e.g. because one of its images has
-		// already been disposed, must not prevent the child items from being adapted
-		stashZoomChangeFailure(event, ex);
 	}
-	for (TreeItem item : getItems()) {
-		notifyZoomChanged(item, event);
+	if (font != null) {
+		setFont(font);
+	}
+	Font[] cellFonts = cellFont;
+	if (cellFonts != null) {
+		for (int index = 0; index < cellFonts.length; index++) {
+			Font cellFont = cellFonts[index];
+			cellFonts[index] = cellFont == null ? null : Font.win32_new(cellFont, nativeZoom);
+		}
 	}
 }
 }

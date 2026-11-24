@@ -280,6 +280,86 @@ class WidgetWin32Tests {
 	}
 
 	@Test
+	public void testVirtualTableZoomChangeRequestsNoItemData() {
+		Display display = Display.getDefault();
+		Shell shell = new Shell(display);
+		int scaledZoom = shell.nativeZoom * 2;
+		Font font = new Font(display, "Arial", 12, SWT.BOLD);
+
+		Table table = new Table(shell, SWT.VIRTUAL);
+		int[] setDataCount = new int[1];
+		table.addListener(SWT.SetData, event -> {
+			setDataCount[0]++;
+			((TableItem) event.item).setFont(font);
+		});
+		table.setItemCount(1000);
+		TableItem cachedItem = table.getItem(0);
+		cachedItem.getText();
+		int fontHeightBefore = cachedItem.getFont().getFontData()[0].data.lfHeight;
+		TableItem clearedItem = table.getItem(1);
+		clearedItem.getText();
+		table.clear(1);
+		TableItem unreadItem = table.getItem(2);
+
+		setDataCount[0] = 0;
+		DPITestUtil.changeDPIZoom(shell, scaledZoom);
+
+		assertEquals(0, setDataCount[0], "A zoom change must not request the data of virtual items");
+		assertEquals(fontHeightBefore * 2, cachedItem.getFont().getFontData()[0].data.lfHeight,
+				"Font of a cached virtual item should be doubled after zooming to 200");
+		clearedItem.getText();
+		assertEquals(fontHeightBefore * 2, clearedItem.getFont().getFontData()[0].data.lfHeight,
+				"Font set for a cleared virtual item after zooming to 200 should be doubled");
+		unreadItem.getText();
+		assertEquals(fontHeightBefore * 2, unreadItem.getFont().getFontData()[0].data.lfHeight,
+				"Font set for an unread virtual item after zooming to 200 should be doubled");
+	}
+
+	@Test
+	public void testVirtualTreeZoomChangeRequestsNoItemData() {
+		Display display = Display.getDefault();
+		Shell shell = new Shell(display);
+		int scaledZoom = shell.nativeZoom * 2;
+		Font font = new Font(display, "Arial", 12, SWT.BOLD);
+
+		Tree tree = new Tree(shell, SWT.VIRTUAL);
+		int[] setDataCount = new int[1];
+		tree.addListener(SWT.SetData, event -> {
+			setDataCount[0]++;
+			TreeItem item = (TreeItem) event.item;
+			item.setFont(font);
+			if (item.getParentItem() == null) {
+				item.setItemCount(10);
+			}
+		});
+		tree.setItemCount(100);
+		TreeItem cachedRoot = tree.getItem(0);
+		cachedRoot.getText();
+		TreeItem cachedChild = cachedRoot.getItem(0);
+		cachedChild.getText();
+		int fontHeightBefore = cachedChild.getFont().getFontData()[0].data.lfHeight;
+		TreeItem clearedChild = cachedRoot.getItem(1);
+		clearedChild.getText();
+		cachedRoot.clear(1, false);
+		TreeItem unreadRoot = tree.getItem(1);
+
+		setDataCount[0] = 0;
+		DPITestUtil.changeDPIZoom(shell, scaledZoom);
+
+		assertEquals(0, setDataCount[0], "A zoom change must not request the data of virtual items");
+		assertEquals(fontHeightBefore * 2, cachedRoot.getFont().getFontData()[0].data.lfHeight,
+				"Font of a cached virtual root item should be doubled after zooming to 200");
+		assertEquals(fontHeightBefore * 2, cachedChild.getFont().getFontData()[0].data.lfHeight,
+				"Font of a cached virtual child item should be doubled after zooming to 200");
+		clearedChild.getText();
+		assertEquals(fontHeightBefore * 2, clearedChild.getFont().getFontData()[0].data.lfHeight,
+				"Font set for a cleared virtual child item after zooming to 200 should be doubled");
+		unreadRoot.getText();
+		assertEquals(fontHeightBefore * 2, unreadRoot.getFont().getFontData()[0].data.lfHeight,
+				"Font set for an unread virtual root item after zooming to 200 should be doubled");
+	}
+
+	@Test
 	public void testCaretInStyledTextAfterZooming() {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);

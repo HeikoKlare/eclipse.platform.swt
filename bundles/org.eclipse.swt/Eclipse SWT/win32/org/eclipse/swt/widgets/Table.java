@@ -7353,8 +7353,15 @@ void handleDPIChange(Event event, float scalingFactor) {
 	// Resetting it will re-enable the default behavior again
 	setItemHeight(-1);
 
-	for (TableItem item : getItems()) {
-		notifyZoomChanged(item, event);
+	// Not getItems(), which would materialize all virtual items
+	for (TableItem item : items.clone()) {
+		if (item == null || item.isDisposed()) continue;
+		if ((style & SWT.VIRTUAL) == 0 || item.cached) {
+			notifyZoomChanged(item, event);
+		} else {
+			// Notifying would request the data, which then has to be created at the new zoom
+			item.handleDPIChange(event, scalingFactor);
+		}
 	}
 	for (TableColumn tableColumn : getColumns()) {
 		notifyZoomChanged(tableColumn, event);
